@@ -1,0 +1,86 @@
+const notifications = [
+  {
+    id: 1,
+    title: 'Notificação 01',
+    content: 'Texto que vai na notificação com 1 linha',
+    date: '01/07/2020 - 15:10',
+    newNotification: true,
+    read: false,
+  },
+  {
+    id: 2,
+    title: 'Notificação 02',
+    content:
+      'Texto que vai na notificação com 2 linhas mas alinhada à esquerda, que ficará assim',
+    date: '01/07/2020 - 15:10',
+    newNotification: false,
+    read: false,
+  },
+  {
+    id: 3,
+    title: 'Notificação 03',
+    content:
+      'Texto que vai na notificação com 3 linhas mas alinhada à esquerda, que ficará assim. Contando que fique sempre fique... Ver mais',
+    date: '01/07/2020 - 15:10',
+    newNotification: false,
+    read: true,
+  },
+  {
+    id: 3,
+    title: 'Notificação 01',
+    content: 'Texto que vai na notificação com 1 linha',
+    date: '01/07/2020 - 15:10',
+    newNotification: false,
+    read: true,
+  },
+  {
+    id: 3,
+    title: 'Notificação 01',
+    content: 'Texto que vai na notificação com 1 linha',
+    date: '01/07/2020 - 15:10',
+    newNotification: false,
+    read: true,
+  },
+  {
+    id: 3,
+    title: 'Notificação 01',
+    content: 'Texto que vai na notificação com 1 linha',
+    date: '01/07/2020 - 15:10',
+    newNotification: false,
+    read: true,
+  },
+  {
+    id: 3,
+    title: 'Notificação 01',
+    content: 'Texto que vai na notificação com 1 linha',
+    date: '01/07/2020 - 15:10',
+    newNotification: false,
+    read: true,
+  },
+  {
+    id: 3,
+    title: 'Notificação 01',
+    content: 'Texto que vai na notificação com 1 linha',
+    date: '01/07/2020 - 15:10',
+    newNotification: false,
+    read: true,
+  },
+  {
+    id: 3,
+    title: 'Notificação 01',
+    content: 'Texto que vai na notificação com 1 linha',
+    date: '01/07/2020 - 15:10',
+    newNotification: false,
+    read: true,
+  },
+  {
+    id: 3,
+    title: 'Notificação 01',
+    content: 'Texto que vai na notificação com 1 linha',
+    date: '01/07/2020 - 15:10',
+    newNotification: false,
+    read: true,
+  },
+];
+
+export default notifications;
