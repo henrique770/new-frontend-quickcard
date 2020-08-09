@@ -11,84 +11,19 @@ import * as U from '~/styles/utilities';
 import * as S from './styled';
 
 function Statistics() {
-  const weekDayShort = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'];
+  const utilization = {
+    series: [20, 50, 30],
 
-  const alunos = {
-    series: [
-      {
-        name: 'porcentagem anterior',
-        data: [44, 55, 41, 67, 22, 43, 50],
-      },
-      {
-        name: 'aumento',
-        data: [13, 23, 20, 20, 13, 27, 50],
-      },
-    ],
     options: {
-      colors: ['#FF9800', '#66DA26'],
+      labels: ['Cartões Difíceis', 'Cartões Bons', 'Cartões Fáceis'],
       chart: {
-        height: 350,
-        type: 'bar',
-        stacked: true,
-      },
-
-      plotOptions: {
-        bar: {
-          horizontal: false,
-          columnWidth: '50%',
-
-          dataLabels: {
-            position: 'top', // top, center, bottom
-          },
-        },
+        type: 'donut',
       },
       dataLabels: {
         enabled: false,
-        offsetY: -20,
-        style: {
-          fontSize: '12px',
-          colors: ['#304758'],
-        },
-      },
-
-      xaxis: {
-        categories: weekDayShort,
-        position: 'bottom',
-        axisBorder: {
-          show: false,
-        },
-
-        axisTicks: {
-          show: false,
-        },
-        crosshairs: {
-          fill: {
-            type: 'gradient',
-            gradient: {
-              colorFrom: '#D8E3F0',
-              colorTo: '#BED1E6',
-              stops: [0, 100],
-              opacityFrom: 0.4,
-              opacityTo: 0.5,
-            },
-          },
-        },
-        tooltip: {
-          enabled: true,
-        },
       },
 
       yaxis: {
-        title: {
-          text: 'Porcentagem',
-        },
-
-        axisBorder: {
-          show: false,
-        },
-        axisTicks: {
-          show: false,
-        },
         labels: {
           show: false,
           formatter(val) {
@@ -96,16 +31,12 @@ function Statistics() {
           },
         },
       },
-      title: {
-        floating: true,
-        offsetY: 330,
-        align: 'center',
-        style: {
-          color: '#444',
-        },
+      legend: {
+        position: 'bottom',
       },
     },
   };
+
   return (
     <>
       <Layout childrenTitle={<U.Title component="h1">Estatíticas</U.Title>}>
@@ -131,7 +62,7 @@ function Statistics() {
           <Grid item xs={12} md={6} lg={4}>
             <Card
               noFlex
-              titleCard="Acertos/ Erros"
+              titleCard="Baralhos"
               paddingBody="0 3rem 3rem 3rem"
               radius="10"
               justifyContent="center"
@@ -142,13 +73,13 @@ function Statistics() {
                     12370
                   </Text>
                   <Spacing mr={1} />
-                  <Text size={1.4}>quantidade de cartões</Text>
+                  <Text size={1.4}>quantidade de cartões respondidos</Text>
                 </S.DashInfo>
                 <ApexCharts
-                  options={alunos.options}
-                  series={alunos.series}
-                  type="bar"
-                  height={222}
+                  options={utilization.options}
+                  series={utilization.series}
+                  type="donut"
+                  height={300}
                 />
               </Spacing>
             </Card>

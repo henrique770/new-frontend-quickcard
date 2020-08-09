@@ -55,6 +55,7 @@ function Layout({ children, childrenHeader, childrenTitle, noHeader }) {
         <Menu.Container
           open={open}
           setOpen={setOpen}
+          linkLogo="/"
           logo={themeContext.mode === 'dark' ? whiteLogo : darkLogo}
         >
           <Menu.Item
@@ -175,7 +176,7 @@ function Layout({ children, childrenHeader, childrenTitle, noHeader }) {
                       </>
                     }
                     icon={<MenuOutline size={30} color="#fe650e" />}
-                    description="Admin"
+                    description="Estudante"
                     name="Henrique Araújo"
                     logoutFunc={() => {}}
                   >
