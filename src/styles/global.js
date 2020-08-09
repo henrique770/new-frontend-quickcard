@@ -202,39 +202,6 @@ ${'' /* editor */}
   font-size: 1.6rem!important;
 }
 
-${'' /* colorpicker */}
-
-.twitter-picker {
-  background: ${(props) => props.theme.selectBackground}!important;
-
-  input {
-    height: 30px!important;
-  }
-}
-
-/* DayPicker styles */
-
-.DayPicker {
-  display: inline-block;
-  font-size: 1.6rem;
-  width: 100%;
-}
-
-.DayPicker-Day {
-  display: table-cell;
-  padding: 0.5em;
-  border-radius: 0;
-  vertical-align: middle;
-  text-align: center;
-  cursor: pointer;
-  width: 40px;
-  height: 40px;
-}
-
-.DayPicker-Month {
-  width: 100%;
-}
-
 ${'' /* toast */}
 
 .Toastify__toast {
