@@ -1,5 +1,5 @@
 import React from 'react';
-import { Switch, HashRouter } from 'react-router-dom';
+import { Switch } from 'react-router-dom';
 
 import Route from './Route';
 
@@ -9,14 +9,12 @@ import Profile from '~/pages/Profile';
 
 export default function Routes() {
   return (
-    <HashRouter>
-      <Switch>
-        <Route path="/login" exact component={Login} />
-        <Route path="/" exact component={Dash} isPrivate />
-        <Route path="/perfil" exact component={Profile} isPrivate />
+    <Switch>
+      <Route path="/login" exact component={Login} />
+      <Route path="/" exact component={Dash} isPrivate />
+      <Route path="/perfil" exact component={Profile} isPrivate />
 
-        <Route path="*" component={() => <h1>404</h1>} />
-      </Switch>
-    </HashRouter>
+      <Route path="*" component={() => <h1>404</h1>} />
+    </Switch>
   );
 }
