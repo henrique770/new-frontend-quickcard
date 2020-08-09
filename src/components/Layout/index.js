@@ -83,7 +83,9 @@ function Layout({ children, childrenHeader, childrenTitle, noHeader }) {
           />
 
           <Menu.Item
+            active={currentRoute === '/statistics'}
             title="Estatísticas"
+            link="/statistics"
             icon={<DoneAll size={20} color="#fe650e" />}
           />
           {themeContext.mode === 'dark' ? (
