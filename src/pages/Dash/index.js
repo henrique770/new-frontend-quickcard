@@ -2,7 +2,7 @@ import React from 'react';
 
 import { SearchOutline } from '@styled-icons/evaicons-outline';
 
-import BlockCard from '~/components/BlockCard';
+import FlatList from '~/components/FlatList';
 import { Grid, Input, Spacing } from '~/lib';
 
 import Layout from '~/components/Layout';
@@ -48,7 +48,7 @@ function Dash() {
         <Grid>
           <U.NoteGridContainer>
             {notes.map((item) => {
-              return <BlockCard title={item.title} previewText={item.text} />;
+              return <FlatList title={item.title} previewText={item.text} />;
             })}
           </U.NoteGridContainer>
         </Grid>

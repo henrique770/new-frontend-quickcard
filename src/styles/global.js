@@ -98,6 +98,10 @@ ${'' /* material ui */}
   color: #f44336!important;
 }
 
+.MuiInput-underline:after {
+  border-bottom: 2px solid #fe650e!important;
+}
+
 
 ${'' /* apexcharts */}
 

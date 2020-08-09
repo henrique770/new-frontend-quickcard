@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import HTMLEllipsis from 'react-lines-ellipsis/lib/html';
 
 export const Options = styled.div`
   position: absolute;
@@ -11,4 +12,8 @@ export const Options = styled.div`
       props.theme.shadow ? props.theme.shadow : `rgba(20, 46, 110, 0.1)`};
   border-radius: 0.5rem;
   padding: 0.5rem;
+`;
+
+export const TextLimit = styled(HTMLEllipsis)`
+  font-size: 1.6rem;
 `;

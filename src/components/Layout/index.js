@@ -44,7 +44,7 @@ function Layout({ children, childrenHeader, childrenTitle, noHeader }) {
   const dropdownOptions = [
     {
       name: 'Perfil',
-      func: () => history.push('/admin/profile'),
+      func: () => history.push('/perfil'),
       icon: <AccountCircle size={25} />,
     },
   ];

@@ -1,14 +1,12 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { MoreVert } from '@styled-icons/material-outlined';
 
-import { ThemeContext } from 'styled-components';
 import { Text, Card } from '~/lib';
 import * as U from '~/styles/utilities';
 import * as S from './styled';
 
-export default function BlockCard({ title, previewText }) {
-  const themeContext = useContext(ThemeContext);
+export default function FlatList({ title, previewText }) {
   const [isShown, setIsShown] = useState(false);
 
   return (
@@ -21,7 +19,12 @@ export default function BlockCard({ title, previewText }) {
         radius="10"
         justifyContent="left"
       >
-        <Text color={themeContext.textColorSecondary}>{previewText}</Text>
+        <S.TextLimit
+          unsafeHTML={previewText}
+          maxLine="10"
+          ellipsis="..."
+          basedOn="letters"
+        />
         {isShown && (
           <S.Options>
             <Text>
@@ -34,7 +37,7 @@ export default function BlockCard({ title, previewText }) {
   );
 }
 
-BlockCard.propTypes = {
+FlatList.propTypes = {
   title: PropTypes.string,
   previewText: PropTypes.string,
 };
