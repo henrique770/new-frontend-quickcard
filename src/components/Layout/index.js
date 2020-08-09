@@ -79,7 +79,9 @@ function Layout({ children, childrenHeader, childrenTitle, noHeader }) {
           />
 
           <Menu.Item
+            active={currentRoute === '/pomodoro'}
             title="Pomodoro"
+            link="/pomodoro"
             icon={<WatchLater size={20} color="#fe650e" />}
           />
 

@@ -23,12 +23,12 @@ export const TitleCard = styled.h1`
 export const TextFooter = styled.p`
   padding: 0 3rem 2rem 3rem;
   font-size: 1.4rem;
-
   color: #fe650e;
 `;
 
 export const BodyCard = styled.div`
   ${({ noFlex }) => (noFlex ? `` : `display: flex`)};
+  ${({ textCenter }) => (textCenter ? `text-align: center;` : ``)};
 
   ${({ alignItems }) => (alignItems ? `align-items: ${alignItems}` : ``)};
 

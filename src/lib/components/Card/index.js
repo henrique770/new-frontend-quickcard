@@ -8,6 +8,7 @@ export default function Card({
   noFlex,
   paddingBody,
   justifyContent,
+  textCenter,
   alignItems,
   radius,
   shadow,
@@ -28,6 +29,7 @@ export default function Card({
         <S.BodyCard
           alignItems={alignItems}
           noFlex={noFlex}
+          textCenter={textCenter}
           paddingBody={textFooter ? '0 3rem 1rem 3rem' : paddingBody}
           justifyContent={justifyContent}
         >
@@ -53,6 +55,10 @@ Card.propTypes = {
    * display flex disabled
    */
   noFlex: PropTypes.bool,
+  /**
+   * text align center
+   */
+  textCenter: PropTypes.bool,
   /**
    * justify content (flex-start, center, flex-end...)
    */

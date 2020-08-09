@@ -1,9 +1,7 @@
 import React from 'react';
 
-import { SearchOutline } from '@styled-icons/evaicons-outline';
-
 import ApexCharts from 'react-apexcharts';
-import { Grid, Input, Spacing, Text, Card } from '~/lib';
+import { Grid, Spacing, Text, Card } from '~/lib';
 
 import Layout from '~/components/Layout';
 
@@ -44,18 +42,6 @@ function Statistics() {
           <U.Responsive width="769px" dsGreater="none" dsLess="block">
             <U.Title component="h1">Estatíticas</U.Title>
           </U.Responsive>
-
-          <Spacing mt={2} mb={2.2}>
-            <Grid item xs={12}>
-              <Input
-                icon={<SearchOutline size={17} color="#636D73" />}
-                type="email"
-                padding="1rem 1.6rem 1rem 4.6rem"
-                radius="8px"
-                placeholder="Pesquisar baralho"
-              />
-            </Grid>
-          </Spacing>
         </U.Responsive>
         <Spacing mb={1} />
         <Grid container spacing={3}>
