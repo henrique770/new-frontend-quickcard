@@ -3,30 +3,36 @@ const notes = [
     title: 'Hello World',
     text:
       'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Architecto sed est atque sequi delectus at fugit numquam voluptate temporibus praesentium iure, repellendus laborum porro amet qua!',
+    block_name: 'Primeiro caderno',
   },
   {
     title: 'React Hooks',
     text: 'useStateconst [sidebarOn, setSidebarOn] React.useState(false);',
+    block_name: 'React',
   },
   {
     title: 'Arquitetura Flux',
     text:
       'Biblioteca : Redux implementa a arquitetura flux Controle de estados globais manipulado por vários componentes O',
+    block_name: 'Redux',
   },
   {
     title: 'prova java oo',
     text:
       'Lorem ipsum, dolor sit amet voluptate temporibus praesentium iure, repellendus laborum porro amet quas voluptatibus? Atque, facilis quo!',
+    block_name: 'Faculdade',
   },
   {
     title: 'Pendências',
     text:
       'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Architecto sed est atque sequi delectus at fugit numquam voluptate temporibus praesentium iure, repellendus laborum porro amet quas voluptatibus? Atque, facilis quo!',
+    block_name: 'Primeiro caderno',
   },
   {
     title: 'Leitura',
     text:
       'Lorem ipsum, dolor dipisicing elit. Architecto sed est atque sequi delectus at fugit numquam voluptate temporibus praesentium iure, repellendus laborum porro amet quas voluptatibus? Atque, facilis quo!',
+    block_name: 'Marcações, livros',
   },
   // {
   //   title: 'Dados site',
@@ -67,6 +73,62 @@ const notes = [
   //   text:
   //     'Lorem ipsum, dolor dipisicing elit. Architecto sed est atque sequi delectus at fugit numquam voluptate temporibus praesentium iure, repellendus laborum porro amet quas voluptatibus? Atque, facilis quo!',
   // },
+];
+
+const decks = [
+  {
+    id: 1,
+    title: 'Atalhos teclado',
+    cards: 32,
+    review: 12,
+    reviewed: 12,
+  },
+  {
+    id: 2,
+    title: 'Conceitos React',
+    cards: 21,
+    review: 10,
+    reviewed: 8,
+  },
+  {
+    id: 3,
+    title: 'Palavras em inglês',
+    cards: 43,
+    review: 22,
+    reviewed: 4,
+  },
+  {
+    id: 3,
+    title: 'Marcações, livros',
+    cards: 76,
+    review: 42,
+    reviewed: 11,
+  },
+];
+
+const blocknotes = [
+  {
+    id: 1,
+    title: 'Primeiro caderno',
+    notes: 32,
+  },
+  {
+    id: 2,
+    title: 'Faculdade',
+    notes: 21,
+    review: 10,
+    reviewed: 8,
+  },
+  {
+    id: 3,
+    title: 'Redux',
+    notes: 43,
+  },
+  {
+    id: 3,
+    title: 'Marcações, livros',
+    notes: 76,
+  },
 ];
 
 const notifications = [
@@ -154,4 +216,4 @@ const notifications = [
   },
 ];
 
-export { notes, notifications };
+export { notes, notifications, decks, blocknotes };

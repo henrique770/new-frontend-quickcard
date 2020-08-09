@@ -6,7 +6,13 @@ import { Text, Card } from '~/lib';
 import * as U from '~/styles/utilities';
 import * as S from './styled';
 
-export default function FlatList({ title, previewText }) {
+export default function FlatList({
+  title,
+  previewText,
+  textFooter,
+  deck,
+  notepad,
+}) {
   const [isShown, setIsShown] = useState(false);
 
   return (
@@ -15,16 +21,23 @@ export default function FlatList({ title, previewText }) {
         onMouseEnter={() => setIsShown(true)}
         onMouseLeave={() => setIsShown(false)}
         titleCard={title}
+        textFooter={textFooter}
         paddingBody="0 3rem 3rem 3rem"
         radius="10"
         justifyContent="left"
       >
-        <S.TextLimit
-          unsafeHTML={previewText}
-          maxLine="10"
-          ellipsis="..."
-          basedOn="letters"
-        />
+        {previewText && (
+          <S.TextLimit
+            unsafeHTML={previewText}
+            maxLine="10"
+            ellipsis="..."
+            basedOn="letters"
+          />
+        )}
+
+        {deck && deck}
+        {notepad && notepad}
+
         {isShown && (
           <S.Options>
             <Text>
@@ -40,4 +53,6 @@ export default function FlatList({ title, previewText }) {
 FlatList.propTypes = {
   title: PropTypes.string,
   previewText: PropTypes.string,
+  deck: PropTypes.oneOfType([PropTypes.bool, PropTypes.node]),
+  notepad: PropTypes.oneOfType([PropTypes.bool, PropTypes.node]),
 };

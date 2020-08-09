@@ -9,11 +9,6 @@ export const Card = styled.div`
     props.theme.backgroundSecondary ? props.theme.backgroundSecondary : `#fff`};
 
   ${({ radius }) => (radius ? `border-radius: ${radius}px` : ``)};
-
-  /* ${({ shadow }) =>
-    shadow
-      ? `box-shadow: ${shadow};`
-      : `box-shadow: 0px 1px 8px rgba(20, 46, 110, 0.1);`}; */
 `;
 
 export const TitleCard = styled.h1`
@@ -23,6 +18,13 @@ export const TitleCard = styled.h1`
   font-weight: bold;
   color: ${(props) =>
     props.theme.textColorPrimary ? props.theme.textColorPrimary : `#414D55`};
+`;
+
+export const TextFooter = styled.p`
+  padding: 0 3rem 2rem 3rem;
+  font-size: 1.4rem;
+
+  color: #fe650e;
 `;
 
 export const BodyCard = styled.div`

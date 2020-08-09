@@ -4,6 +4,7 @@ import * as S from './styled';
 
 export default function Card({
   titleCard,
+  textFooter,
   noFlex,
   paddingBody,
   justifyContent,
@@ -27,11 +28,13 @@ export default function Card({
         <S.BodyCard
           alignItems={alignItems}
           noFlex={noFlex}
-          paddingBody={paddingBody}
+          paddingBody={textFooter ? '0 3rem 1rem 3rem' : paddingBody}
           justifyContent={justifyContent}
         >
           {children}
         </S.BodyCard>
+
+        {textFooter && <S.TextFooter>{textFooter}</S.TextFooter>}
       </S.Card>
     </>
   );
@@ -42,6 +45,10 @@ Card.propTypes = {
    * title of card
    */
   titleCard: PropTypes.string,
+  /**
+   * text on footer of card
+   */
+  textFooter: PropTypes.string,
   /**
    * display flex disabled
    */

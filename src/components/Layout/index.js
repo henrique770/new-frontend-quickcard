@@ -44,7 +44,7 @@ function Layout({ children, childrenHeader, childrenTitle, noHeader }) {
   const dropdownOptions = [
     {
       name: 'Perfil',
-      func: () => history.push('/perfil'),
+      func: () => history.push('/profile'),
       icon: <AccountCircle size={25} />,
     },
   ];
@@ -64,13 +64,16 @@ function Layout({ children, childrenHeader, childrenTitle, noHeader }) {
             icon={<CalendarToday size={20} color="#fe650e" />}
           />
           <Menu.Item
+            active={currentRoute === '/deck'}
             title="Baralhos"
+            link="/deck"
             icon={<Dashboard size={20} color="#fe650e" />}
           />
 
           <Menu.Item
-            active
+            active={currentRoute === '/notepad'}
             title="Blocos de notas"
+            link="/notepad"
             icon={<PeopleOutline size={20} color="#fe650e" />}
           />
 

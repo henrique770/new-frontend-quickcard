@@ -3,18 +3,18 @@ import React from 'react';
 import { SearchOutline } from '@styled-icons/evaicons-outline';
 
 import FlatList from '~/components/FlatList';
-import { Grid, Input, Spacing } from '~/lib';
+import { Grid, Input, Spacing, Text } from '~/lib';
 
 import Layout from '~/components/Layout';
-import { notes } from '~/data/fake';
+import { blocknotes } from '~/data/fake';
 
 import * as U from '~/styles/utilities';
 
-function Dash() {
+function NotePad() {
   return (
     <>
       <Layout
-        childrenTitle={<U.Title component="h1">Todas as notas</U.Title>}
+        childrenTitle={<U.Title component="h1">Blocos de notas</U.Title>}
         childrenHeader={
           <U.Responsive width="1180px" dsGreater="block" dsLess="none">
             <Input
@@ -22,14 +22,14 @@ function Dash() {
               type="email"
               padding="1rem 1.6rem 1rem 4.6rem"
               radius="8px"
-              placeholder="Pesquisar anotação"
+              placeholder="Pesquisar bloco de nota"
             />
           </U.Responsive>
         }
       >
         <U.Responsive width="1180px" dsGreater="none" dsLess="block">
           <U.Responsive width="769px" dsGreater="none" dsLess="block">
-            <U.Title component="h1">Todas as notas</U.Title>
+            <U.Title component="h1">Blocos de notas</U.Title>
           </U.Responsive>
 
           <Spacing mt={2} mb={2.2}>
@@ -39,7 +39,7 @@ function Dash() {
                 type="email"
                 padding="1rem 1.6rem 1rem 4.6rem"
                 radius="8px"
-                placeholder="Pesquisar anotação"
+                placeholder="Pesquisar bloco de nota"
               />
             </Grid>
           </Spacing>
@@ -47,12 +47,24 @@ function Dash() {
         <Spacing mb={1} />
         <Grid>
           <U.NoteGridContainer>
-            {notes.map((item) => {
+            {blocknotes.map((item) => {
               return (
                 <FlatList
                   title={item.title}
-                  previewText={item.text}
-                  textFooter={item.block_name}
+                  notepad={
+                    <Grid>
+                      <Grid container spacing={1}>
+                        <Grid item>
+                          <Text>Notas:</Text>
+                        </Grid>
+                        <Grid item>
+                          <Text weight="bold" color="#fe650e">
+                            {item.notes}
+                          </Text>
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  }
                 />
               );
             })}
@@ -63,4 +75,4 @@ function Dash() {
   );
 }
 
-export default Dash;
+export default NotePad;
