@@ -1,9 +1,9 @@
-import React, { useContext } from 'react';
+import React from 'react';
 
 import { SearchOutline } from '@styled-icons/evaicons-outline';
-import { ThemeContext } from 'styled-components';
+
 import BlockCard from '~/components/BlockCard';
-import { Grid, Input, Spacing, Card, Text } from '~/lib';
+import { Grid, Input, Spacing } from '~/lib';
 
 import Layout from '~/components/Layout';
 import { notes } from '~/data/fake';
@@ -11,7 +11,6 @@ import { notes } from '~/data/fake';
 import * as U from '~/styles/utilities';
 
 function Dash() {
-  const themeContext = useContext(ThemeContext);
   return (
     <>
       <Layout
