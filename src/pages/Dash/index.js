@@ -50,6 +50,7 @@ function Dash() {
             {notes.map((item) => {
               return (
                 <FlatList
+                  link="/note"
                   title={item.title}
                   previewText={item.text}
                   textFooter={item.block_name}

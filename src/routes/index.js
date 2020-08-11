@@ -5,6 +5,7 @@ import Route from './Route';
 
 import Login from '~/pages/Login';
 import Dash from '~/pages/Dash';
+import Note from '~/pages/Dash/Note';
 import NotePad from '~/pages/NotePad';
 import Deck from '~/pages/Deck';
 import Pomodoro from '~/pages/Pomodoro';
@@ -16,6 +17,7 @@ export default function Routes() {
     <Switch>
       <Route path="/login" exact component={Login} />
       <Route path="/" exact component={Dash} isPrivate />
+      <Route path="/note" exact component={Note} isPrivate />
       <Route path="/notepad" exact component={NotePad} isPrivate />
       <Route path="/deck" exact component={Deck} isPrivate />
       <Route path="/pomodoro" exact component={Pomodoro} isPrivate />

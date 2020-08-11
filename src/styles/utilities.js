@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import media from 'styled-media-query';
+import { Link } from 'react-router-dom';
 import { Text, Grid, Button } from '~/lib';
 
 export const Responsive = styled.div`
@@ -66,4 +67,9 @@ export const NoteGrid = styled(Grid)`
   -webkit-column-break-inside: avoid;
   page-break-inside: avoid;
   break-inside: avoid;
+`;
+
+export const LinkNoDecoration = styled(Link)`
+  text-decoration: none;
+  color: ${(props) => props.theme.textColorSecondary};
 `;

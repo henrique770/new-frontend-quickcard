@@ -16,4 +16,5 @@ export const Options = styled.div`
 
 export const TextLimit = styled(HTMLEllipsis)`
   font-size: 1.6rem;
+  color: ${(props) => props.theme.textColorSecondary};
 `;
