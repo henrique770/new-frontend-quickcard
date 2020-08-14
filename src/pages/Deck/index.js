@@ -2,6 +2,7 @@ import React from 'react';
 
 import { SearchOutline } from '@styled-icons/evaicons-outline';
 
+import swal from 'sweetalert';
 import FlatList from '~/components/FlatList';
 import { Grid, Input, Spacing, Text } from '~/lib';
 
@@ -11,6 +12,21 @@ import { decks } from '~/data/fake';
 import * as U from '~/styles/utilities';
 
 function Deck() {
+  function deleteDeck() {
+    swal({
+      title: 'Tem certeza que quer deletar?',
+      text: 'Uma vez excluído, você não poderá recuperar esse baralho!',
+      icon: 'warning',
+      buttons: ['Não', 'Sim'],
+      dangerMode: true,
+    }).then((willDelete) => {
+      if (willDelete) {
+        swal('O baralho foi excluído com sucesso!', {
+          icon: 'success',
+        });
+      }
+    });
+  }
   return (
     <>
       <Layout
@@ -50,6 +66,7 @@ function Deck() {
             {decks.map((item) => {
               return (
                 <FlatList
+                  remove={() => deleteDeck(item.id)}
                   deck={
                     <Grid>
                       <Grid container spacing={1}>
