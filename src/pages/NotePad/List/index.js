@@ -6,11 +6,12 @@ import history from '~/services/history';
 import { Grid, Spacing, Text, Card } from '~/lib';
 
 import Layout from '~/components/Layout';
-// import { notes } from '~/data/fake';
+import FlatList from '~/components/FlatList';
+import { notesblock } from '~/data/fake';
 
 import * as U from '~/styles/utilities';
 
-function Note() {
+function ListNotePad() {
   const themeContext = useContext(ThemeContext);
   return (
     <>
@@ -38,12 +39,25 @@ function Note() {
             </Card>
           </Grid>
         </Spacing>
-        <U.Title component="h1">Notas</U.Title>
+        <U.Title component="h1">Notas do bloco</U.Title>
         <Spacing mb={2.2} />
-        <Grid />
+        <Grid>
+          <U.NoteGridContainer>
+            {notesblock.map((item) => {
+              return (
+                <FlatList
+                  link="/note"
+                  title={item.title}
+                  previewText={item.text}
+                  textFooter={item.block_name}
+                />
+              );
+            })}
+          </U.NoteGridContainer>
+        </Grid>
       </Layout>
     </>
   );
 }
 
-export default Note;
+export default ListNotePad;

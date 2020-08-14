@@ -50,6 +50,7 @@ function NotePad() {
             {blocknotes.map((item) => {
               return (
                 <FlatList
+                  link="/notepad/notes"
                   title={item.title}
                   notepad={
                     <Grid>

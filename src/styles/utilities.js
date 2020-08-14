@@ -67,6 +67,7 @@ export const NoteGrid = styled(Grid)`
   -webkit-column-break-inside: avoid;
   page-break-inside: avoid;
   break-inside: avoid;
+  position: relative;
 `;
 
 export const LinkNoDecoration = styled(Link)`

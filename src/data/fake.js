@@ -75,6 +75,44 @@ const notes = [
   // },
 ];
 
+const notesblock = [
+  {
+    title: 'Hello World',
+    text:
+      'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Architecto sed est atque sequi delectus at fugit numquam voluptate temporibus praesentium iure, repellendus laborum porro amet qua!',
+    block_name: 'Primeiro caderno',
+  },
+  {
+    title: 'React Hooks',
+    text: 'useStateconst [sidebarOn, setSidebarOn] React.useState(false);',
+    block_name: 'Primeiro caderno',
+  },
+  {
+    title: 'Arquitetura Flux',
+    text:
+      'Biblioteca : Redux implementa a arquitetura flux Controle de estados globais manipulado por vários componentes O',
+    block_name: 'Primeiro caderno',
+  },
+  {
+    title: 'prova java oo',
+    text:
+      'Lorem ipsum, dolor sit amet voluptate temporibus praesentium iure, repellendus laborum porro amet quas voluptatibus? Atque, facilis quo!',
+    block_name: 'Primeiro caderno',
+  },
+  {
+    title: 'Pendências',
+    text:
+      'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Architecto sed est atque sequi delectus at fugit numquam voluptate temporibus praesentium iure, repellendus laborum porro amet quas voluptatibus? Atque, facilis quo!',
+    block_name: 'Primeiro caderno',
+  },
+  {
+    title: 'Leitura',
+    text:
+      'Lorem ipsum, dolor dipisicing elit. Architecto sed est atque sequi delectus at fugit numquam voluptate temporibus praesentium iure, repellendus laborum porro amet quas voluptatibus? Atque, facilis quo!',
+    block_name: 'Primeiro caderno',
+  },
+];
+
 const decks = [
   {
     id: 1,
@@ -216,4 +254,4 @@ const notifications = [
   },
 ];
 
-export { notes, notifications, decks, blocknotes };
+export { notes, notifications, decks, blocknotes, notesblock };

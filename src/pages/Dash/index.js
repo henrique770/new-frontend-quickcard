@@ -2,6 +2,7 @@ import React from 'react';
 
 import { SearchOutline } from '@styled-icons/evaicons-outline';
 
+import swal from 'sweetalert';
 import FlatList from '~/components/FlatList';
 import { Grid, Input, Spacing } from '~/lib';
 
@@ -11,6 +12,21 @@ import { notes } from '~/data/fake';
 import * as U from '~/styles/utilities';
 
 function Dash() {
+  function deleteNote() {
+    swal({
+      title: 'Tem certeza que quer deletar?',
+      text: 'Uma vez excluído, você não poderá recuperar essa anotação!',
+      icon: 'warning',
+      buttons: ['Não', 'Sim'],
+      dangerMode: true,
+    }).then((willDelete) => {
+      if (willDelete) {
+        swal('A anotação foi excluída com sucesso!', {
+          icon: 'success',
+        });
+      }
+    });
+  }
   return (
     <>
       <Layout
@@ -51,6 +67,7 @@ function Dash() {
               return (
                 <FlatList
                   link="/note"
+                  remove={() => deleteNote(item.id)}
                   title={item.title}
                   previewText={item.text}
                   textFooter={item.block_name}
