@@ -18,10 +18,10 @@ export const ButtonSubmit = styled.button`
   cursor: pointer;
   right: -24px;
   top: 3px;
-  background: #ff9a00;
+  background: #fe650e;
 
   &:hover {
-    background: ${darken(0.1, '#ff9a00')};
+    background: ${darken(0.1, '#fe650e')};
   }
 `;
 

@@ -34,30 +34,31 @@ const notes = [
       'Lorem ipsum, dolor dipisicing elit. Architecto sed est atque sequi delectus at fugit numquam voluptate temporibus praesentium iure, repellendus laborum porro amet quas voluptatibus? Atque, facilis quo!',
     block_name: 'Marcações, livros',
   },
-  // {
-  //   title: 'Dados site',
-  //   text: 'Lorem ipsum, dolor sit amet ',
-  // },
-  // {
-  //   title: 'Javascript select item',
-  //   text:
-  //     'Lorem ipsum, dolor sit amet consectetur temporibus praesentium iure, repellendus laborum porro amet quas voluptatibus? Atque, facilis quo!',
-  // },
-  // {
-  //   title: 'Bootcamp',
-  //   text:
-  //     'met consectetur  Architecto sed est atque sequi delectus at fugit numquam voluptate temporibus praesentium iure, repellendus laborum porro amet quas voluptatibus? Atque, facilis quo!',
-  // },
-  // {
-  //   title: 'Redux, Redux Saga, Axios',
-  //   text:
-  //     'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Architecto sed est atque ',
-  // },
-  // {
-  //   title: 'Sistemas Operacionais',
-  //   text:
-  //     'conteúdo para prova possível questão: Um processador não executa vários processos "ao mesmo tempo", oque acontece é uma mudança de contexto lembrar osregistradores ** Shell - interpretador de comandos Gui - interface gráfica',
-  // },
+
+  {
+    title: 'Javascript select item',
+    text:
+      'Lorem ipsum, dolor sit amet consectetur temporibus praesentium iure, repellendus laborum porro amet quas voluptatibus? Atque, facilis quo!',
+    block_name: 'Javascript',
+  },
+  {
+    title: 'Bootcamp',
+    text:
+      'met consectetur  Architecto sed est atque sequi delectus at fugit numquam voluptate temporibus praesentium iure, repellendus laborum porro amet quas voluptatibus? Atque, facilis quo!',
+    block_name: 'Cursos',
+  },
+  {
+    title: 'Redux, Redux Saga, Axios',
+    text:
+      'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Architecto sed est atque ',
+    block_name: 'Redux',
+  },
+  {
+    title: 'Sistemas Operacionais',
+    text:
+      'conteúdo para prova possível questão: Um processador não executa vários processos "ao mesmo tempo", oque acontece é uma mudança de contexto lembrar osregistradores ** Shell - interpretador de comandos Gui - interface gráfica',
+    block_name: 'Faculdade',
+  },
   // {
   //   title: 'prova java oo',
   //   text:

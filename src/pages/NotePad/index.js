@@ -1,17 +1,39 @@
-import React from 'react';
-
-import { SearchOutline } from '@styled-icons/evaicons-outline';
+import React, { useState } from 'react';
 
 import swal from 'sweetalert';
 import FlatList from '~/components/FlatList';
-import { Grid, Input, Spacing, Text } from '~/lib';
+import { Grid, Spacing, Text } from '~/lib';
+import history from '~/services/history';
+import useQuery from '~/utils/queryParams';
 
 import Layout from '~/components/Layout';
+import Search from '~/components/Search';
 import { blocknotes } from '~/data/fake';
 
 import * as U from '~/styles/utilities';
 
 function NotePad() {
+  const query = useQuery();
+  const [status] = useState({
+    text: query.get('text'),
+  });
+
+  const [searchValue, setSearchValue] = useState('');
+
+  const OnChangeSearch = (e) => {
+    setSearchValue(e.target.value);
+  };
+
+  const HandleSearch = (e) => {
+    e.preventDefault();
+
+    history.push(`?text=${searchValue}`);
+  };
+
+  const resetSearch = () => {
+    history.push(`/`);
+    window.location.reload(false);
+  };
   function deleteNotePad() {
     swal({
       title: 'Tem certeza que quer deletar?',
@@ -33,11 +55,11 @@ function NotePad() {
         childrenTitle={<U.Title component="h1">Blocos de notas</U.Title>}
         childrenHeader={
           <U.Responsive width="1180px" dsGreater="block" dsLess="none">
-            <Input
-              icon={<SearchOutline size={17} color="#636D73" />}
-              type="email"
-              padding="1rem 1.6rem 1rem 4.6rem"
-              radius="8px"
+            <Search
+              query={status.text}
+              onSubmit={HandleSearch}
+              onChange={OnChangeSearch}
+              resetFunc={resetSearch}
               placeholder="Pesquisar bloco de nota"
             />
           </U.Responsive>
@@ -50,11 +72,11 @@ function NotePad() {
 
           <Spacing mt={2} mb={2.2}>
             <Grid item xs={12}>
-              <Input
-                icon={<SearchOutline size={17} color="#636D73" />}
-                type="email"
-                padding="1rem 1.6rem 1rem 4.6rem"
-                radius="8px"
+              <Search
+                query={status.text}
+                onSubmit={HandleSearch}
+                onChange={OnChangeSearch}
+                resetFunc={resetSearch}
                 placeholder="Pesquisar bloco de nota"
               />
             </Grid>
