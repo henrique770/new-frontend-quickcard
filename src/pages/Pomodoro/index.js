@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
-// import { CircularProgressbar } from 'react-circular-progressbar';
-// import 'react-circular-progressbar/dist/styles.css';
+import { CircularProgressbar } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
 
 import {
   PlayCircleOutline,
@@ -13,10 +13,9 @@ import { ThemeContext } from 'styled-components';
 import moment from 'moment';
 import { Grid, Spacing, Text, Button, Card } from '~/lib';
 
-import Layout from '~/components/Layout';
 import { useInterval } from '~/hooks/useInterval';
 
-import * as U from '~/styles/utilities';
+import * as S from './styled';
 
 function Pomodoro() {
   const themeContext = useContext(ThemeContext);
@@ -53,34 +52,96 @@ function Pomodoro() {
     setTime(25 * 60 * 1000);
   };
 
-  console.log(time);
+  const handlePomodoro = () => {
+    setSessionVal(25);
+  };
+
+  const handleShortBreak = () => {
+    setSessionVal(5);
+  };
 
   return (
     <>
-      <Layout childrenTitle={<U.Title component="h1">Baralhos</U.Title>}>
-        <U.Responsive width="1180px" dsGreater="none" dsLess="block">
-          <U.Responsive width="769px" dsGreater="none" dsLess="block">
-            <U.Title component="h1">Baralhos</U.Title>
-          </U.Responsive>
-        </U.Responsive>
-        <Spacing mb={1} />
+      {/* <U.Title component="h1">Pomodoro</U.Title> */}
+
+      <S.Container>
         <Grid container xs={12} justify="center" alignItems="center">
           <Grid xs={12} md={4}>
             <Card
+              titleCard="Pomodoro"
               noFlex
               textCenter
-              paddingBody="3rem"
+              paddingBody="0 3rem 3rem 3rem"
               radius="10"
               justifyContent="center"
             >
               <Text size={2} weight="bold" color="#fe650e">
-                {mode === 'session' ? 'Sessão' : 'Pausa'}
+                {mode === 'session' && sessionVal === 25 ? 'Sessão' : 'Pausa'}
               </Text>
-              {/* <CircularProgressbar value={time} maxValue={1500000} /> */}
-              <Text size={10} weight="bold">
-                {moment(time).format('mm:ss')}
-              </Text>
+              <Spacing mt={2} mb={3}>
+                <Grid container justify="center">
+                  <S.ProgressContainer>
+                    <CircularProgressbar
+                      text={moment(time).format('mm:ss')}
+                      value={time}
+                      maxValue={
+                        (sessionVal === 25 && 1500000) ||
+                        (sessionVal === 5 && 300000)
+                      }
+                      styles={{
+                        root: {},
+
+                        path: {
+                          stroke: `rgba(62, 152, 199, ${
+                            moment(time).format('mm:ss') / 100
+                          })`,
+
+                          strokeLinecap: 'butt',
+
+                          transition: 'stroke-dashoffset 0.5s ease 0s',
+
+                          transform: 'rotate(0.25turn)',
+                          transformOrigin: 'center center',
+                        },
+
+                        trail: {
+                          stroke: '#d6d6d6',
+
+                          strokeLinecap: 'butt',
+
+                          transform: 'rotate(0.25turn)',
+                          transformOrigin: 'center center',
+                        },
+                      }}
+                    />
+                  </S.ProgressContainer>
+                </Grid>
+              </Spacing>
+
               <Grid container xs={12} justify="center">
+                <Button
+                  radius="8px"
+                  bgColor={themeContext.backgroundSecondary}
+                  shadow="0px 1px 8px rgba(20, 46, 110, 0.1)"
+                  padding="1rem"
+                  onClick={() => handlePomodoro()}
+                >
+                  <Text color="#fe650e">Pomodoro</Text>
+                </Button>
+
+                <Spacing mr={2} />
+                <Button
+                  radius="8px"
+                  bgColor={themeContext.backgroundSecondary}
+                  shadow="0px 1px 8px rgba(20, 46, 110, 0.1)"
+                  padding="1rem"
+                  onClick={() => handleShortBreak()}
+                >
+                  <Text color="#fe650e">Intervalo curto</Text>
+                </Button>
+
+                <Spacing mr={2} />
+
                 <Button
                   radius="8px"
                   bgColor={themeContext.backgroundSecondary}
@@ -109,7 +170,7 @@ function Pomodoro() {
             </Card>
           </Grid>
         </Grid>
-      </Layout>
+      </S.Container>
     </>
   );
 }

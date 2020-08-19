@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable import/no-extraneous-dependencies */
 import React, { useState, useRef, useContext } from 'react';
+
 import PropTypes from 'prop-types';
 import {
   Notifications,
@@ -77,13 +78,13 @@ function Layout({ children, childrenHeader, childrenTitle, noHeader }) {
             link="/notepad"
             icon={<PeopleOutline size={20} color="#fe650e" />}
           />
-
-          <Menu.Item
-            active={currentRoute === '/pomodoro'}
-            title="Pomodoro"
-            link="/pomodoro"
-            icon={<WatchLater size={20} color="#fe650e" />}
-          />
+          <S.LinkWithStyle to="/pomodoro" target="_blank">
+            <Menu.Item
+              active={currentRoute === '/pomodoro'}
+              title="Pomodoro"
+              icon={<WatchLater size={20} color="#fe650e" />}
+            />
+          </S.LinkWithStyle>
 
           <Menu.Item
             active={currentRoute === '/statistics'}

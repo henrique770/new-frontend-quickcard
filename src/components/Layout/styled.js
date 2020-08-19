@@ -1,9 +1,10 @@
 /* eslint-disable no-nested-ternary */
 import styled from 'styled-components';
 import media from 'styled-media-query';
-import { Header } from '~/lib';
+import { Link } from 'react-router-dom';
 import PerfectScrollBar from 'react-perfect-scrollbar';
 import { darken } from 'polished';
+import { Header } from '~/lib';
 
 export const Wrapper = styled.div`
   display: flex;
@@ -143,9 +144,10 @@ export const CleanAllNotifications = styled.div`
   cursor: pointer;
 `;
 
-export const Link = styled.a`
-  span:hover {
+export const LinkWithStyle = styled(Link)`
+  text-decoration: none;
+  p:hover {
     transition: 0.5s;
-    color: #7ed321 !important;
+    color: #fe650e !important;
   }
 `;
