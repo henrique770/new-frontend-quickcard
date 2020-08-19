@@ -11,6 +11,7 @@ import {
 import { ThemeContext } from 'styled-components';
 
 import moment from 'moment';
+import { Helmet } from 'react-helmet';
 import { Grid, Spacing, Text, Button, Card } from '~/lib';
 
 import { useInterval } from '~/hooks/useInterval';
@@ -62,8 +63,11 @@ function Pomodoro() {
 
   return (
     <>
-      {/* <U.Title component="h1">Pomodoro</U.Title> */}
-
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>Pomodoro: {moment(time).format('mm:ss')}</title>
+        <link rel="canonical" href="http://mysite.com/example" />
+      </Helmet>
       <S.Container>
         <Grid container xs={12} justify="center" alignItems="center">
           <Grid xs={12} md={4}>
