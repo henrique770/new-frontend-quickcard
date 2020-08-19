@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 
 import { ThemeContext } from 'styled-components';
 import { ArrowBack } from '@styled-icons/material-outlined';
+import swal from 'sweetalert';
 import history from '~/services/history';
 import { Grid, Spacing, Text, Card } from '~/lib';
 
@@ -13,6 +14,23 @@ import * as U from '~/styles/utilities';
 
 function ListNotePad() {
   const themeContext = useContext(ThemeContext);
+
+  function deleteNote() {
+    swal({
+      title: 'Tem certeza que quer deletar?',
+      text: 'Uma vez excluído, você não poderá recuperar essa anotação!',
+      icon: 'warning',
+      buttons: ['Não', 'Sim'],
+      dangerMode: true,
+    }).then((willDelete) => {
+      if (willDelete) {
+        swal('A anotação foi excluída com sucesso!', {
+          icon: 'success',
+        });
+      }
+    });
+  }
+
   return (
     <>
       <Layout noHeader>
@@ -47,6 +65,7 @@ function ListNotePad() {
               return (
                 <FlatList
                   link="/note"
+                  remove={() => deleteNote(item.id)}
                   title={item.title}
                   previewText={item.text}
                   textFooter={item.block_name}

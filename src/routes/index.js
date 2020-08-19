@@ -7,7 +7,7 @@ import Login from '~/pages/Login';
 import Dash from '~/pages/Dash';
 import Note from '~/pages/Dash/Note';
 import NotePad from '~/pages/NotePad';
-import ListNotePad from '~/pages/NotePad/List';
+import ListNotePad from '~/pages/NotePad/ListNotePad';
 import Deck from '~/pages/Deck';
 import Pomodoro from '~/pages/Pomodoro';
 import Statistics from '~/pages/Statistics';

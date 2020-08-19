@@ -17,6 +17,7 @@ import { Grid, Spacing, Text, Button, Card } from '~/lib';
 import { useInterval } from '~/hooks/useInterval';
 
 import * as S from './styled';
+import * as U from '~/styles/utilities';
 
 function Pomodoro() {
   const themeContext = useContext(ThemeContext);
@@ -122,54 +123,60 @@ function Pomodoro() {
                 </Grid>
               </Spacing>
 
-              <Grid container xs={12} justify="center">
-                <Button
-                  radius="8px"
-                  bgColor={themeContext.backgroundSecondary}
-                  shadow="0px 1px 8px rgba(20, 46, 110, 0.1)"
-                  padding="1rem"
-                  onClick={() => handlePomodoro()}
-                >
-                  <Text color="#fe650e">Pomodoro</Text>
-                </Button>
+              <Grid container xs={12} justify="center" spacing={2}>
+                <Grid item>
+                  <U.ButtonResponsive
+                    radius="8px"
+                    bgColor={themeContext.backgroundSecondary}
+                    shadow="0px 1px 8px rgba(20, 46, 110, 0.1)"
+                    padding="1rem"
+                    style={{ height: 60 }}
+                    onClick={() => handlePomodoro()}
+                  >
+                    <Text color="#fe650e">Pomodoro</Text>
+                  </U.ButtonResponsive>
+                </Grid>
+                <Grid item>
+                  <U.ButtonResponsive
+                    radius="8px"
+                    bgColor={themeContext.backgroundSecondary}
+                    shadow="0px 1px 8px rgba(20, 46, 110, 0.1)"
+                    padding="1rem"
+                    style={{ height: 60 }}
+                    onClick={() => handleShortBreak()}
+                  >
+                    <Text color="#fe650e">Intervalo curto</Text>
+                  </U.ButtonResponsive>
+                </Grid>
 
-                <Spacing mr={2} />
-                <Button
-                  radius="8px"
-                  bgColor={themeContext.backgroundSecondary}
-                  shadow="0px 1px 8px rgba(20, 46, 110, 0.1)"
-                  padding="1rem"
-                  onClick={() => handleShortBreak()}
-                >
-                  <Text color="#fe650e">Intervalo curto</Text>
-                </Button>
-
-                <Spacing mr={2} />
-
-                <Button
-                  radius="8px"
-                  bgColor={themeContext.backgroundSecondary}
-                  shadow="0px 1px 8px rgba(20, 46, 110, 0.1)"
-                  padding="1rem"
-                  onClick={() => setActive(!active)}
-                >
-                  {active ? (
-                    <PauseCircleOutline size={40} color="#fe650e" />
-                  ) : (
-                    <PlayCircleOutline size={40} color="#fe650e" />
-                  )}
-                </Button>
-                <Spacing mr={2} />
-
-                <Button
-                  radius="8px"
-                  bgColor={themeContext.backgroundSecondary}
-                  shadow="0px 1px 8px rgba(20, 46, 110, 0.1)"
-                  padding="1rem"
-                  onClick={() => handleReset()}
-                >
-                  <Replay size={40} color="#fe650e" />
-                </Button>
+                <Grid item>
+                  <U.ButtonResponsive
+                    radius="8px"
+                    bgColor={themeContext.backgroundSecondary}
+                    shadow="0px 1px 8px rgba(20, 46, 110, 0.1)"
+                    padding="1rem"
+                    style={{ height: 60 }}
+                    onClick={() => setActive(!active)}
+                  >
+                    {active ? (
+                      <PauseCircleOutline size={40} color="#fe650e" />
+                    ) : (
+                      <PlayCircleOutline size={40} color="#fe650e" />
+                    )}
+                  </U.ButtonResponsive>
+                </Grid>
+                <Grid item>
+                  <U.ButtonResponsive
+                    radius="8px"
+                    bgColor={themeContext.backgroundSecondary}
+                    shadow="0px 1px 8px rgba(20, 46, 110, 0.1)"
+                    style={{ height: 60 }}
+                    padding="1rem"
+                    onClick={() => handleReset()}
+                  >
+                    <Replay size={40} color="#fe650e" />
+                  </U.ButtonResponsive>
+                </Grid>
               </Grid>
             </Card>
           </Grid>
