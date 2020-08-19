@@ -2,9 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import CKEditor from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import { injectIntl } from 'react-intl';
 
-function TextEditor({ intl, onChange }) {
+function TextEditor({ onChange }) {
   const editorConfig = {
     removePlugins: [
       'Image',
@@ -18,9 +17,7 @@ function TextEditor({ intl, onChange }) {
       options: [
         {
           model: 'paragraph',
-          title: intl.formatMessage({
-            id: 'paragraph',
-          }),
+          title: 'Parágrafo',
           class: 'ck-heading_paragraph',
         },
         {
@@ -58,4 +55,4 @@ TextEditor.propTypes = {
   onChange: PropTypes.func,
 };
 
-export default injectIntl(TextEditor);
+export default TextEditor;

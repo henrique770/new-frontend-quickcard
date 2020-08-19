@@ -161,8 +161,21 @@ ${'' /* editor */}
 .ck {
   border-color: ${(props) => props.theme.selectBackground}!important;
   border: none!important;
-  height: 15rem;
+  height: 80vh;
+  border-radius: 8px;
+
+
+  ul,ol {
+    margin-left: 2rem;
+  }
+
 }
+
+.ck.ck-editor__editable:not(.ck-editor__nested-editable).ck-focused {
+  box-shadow: none!important;
+}
+
+
 
 .ck.ck-editor__main>.ck-editor__editable {
   background: ${(props) => props.theme.selectBackground};
@@ -202,9 +215,11 @@ ${'' /* editor */}
   color: ${(props) => props.theme.textColorPrimary};
 }
 
-.ck.ck-editor__editable_inline>:first-child {
+.ck.ck-editor__editable_inline {
   font-size: 1.6rem!important;
+  padding: 2rem;
 }
+
 
 ${'' /* toast */}
 
