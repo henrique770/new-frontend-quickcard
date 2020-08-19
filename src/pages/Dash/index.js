@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 
 import swal from 'sweetalert';
 import { Link } from 'react-router-dom';
-import { List, GridOn } from '@styled-icons/material-outlined';
+
 import FlatList from '~/components/FlatList';
-import { Grid, Spacing, Text, Button } from '~/lib';
+import { Grid, Spacing, Text } from '~/lib';
 import history from '~/services/history';
 import Layout from '~/components/Layout';
 import Search from '~/components/Search';
+import VariationList from '~/components/VariationList';
 import { notes } from '~/data/fake';
 import useQuery from '~/utils/queryParams';
 
@@ -20,6 +21,7 @@ function Dash() {
   });
 
   const [searchValue, setSearchValue] = useState('');
+  const [listState, setListState] = useState(false);
 
   const OnChangeSearch = (e) => {
     setSearchValue(e.target.value);
@@ -86,19 +88,16 @@ function Dash() {
           </Spacing>
         </U.Responsive>
         <Grid container justify="space-between" alignItems="center">
-          <Grid item>
-            <Spacing ds="flex">
-              <Button padding="0.7rem" bgColor="#fff" radius="4px">
-                <GridOn size={20} color="#fe650e" />
-              </Button>
-              <Spacing mr={1} />
-              <Button padding="0.7rem" bgColor="#fff" radius="4px">
-                <List size={20} color="#fe650e" />
-              </Button>
-            </Spacing>
-          </Grid>
+          <U.Responsive width="600px" dsGreater="block" dsLess="none">
+            <Grid item>
+              <VariationList
+                Gridfunc={() => setListState(false)}
+                Listfunc={() => setListState(true)}
+              />
+            </Grid>
+          </U.Responsive>
 
-          <Grid item xs={12} sm={4} style={{ textAlign: 'end' }}>
+          <Grid item xs={12} sm={6} style={{ textAlign: 'end' }}>
             <Link to="/note">
               <U.ButtonResponsive bgColor="#fe650e" radius="4px">
                 <Text size={1.4}>Adicionar nota</Text>
@@ -108,7 +107,7 @@ function Dash() {
         </Grid>
         <Spacing mb={2.2} />
         <Grid>
-          <U.NoteGridContainer>
+          <U.NoteGridContainer list={listState}>
             {notes.map((item) => {
               return (
                 <FlatList

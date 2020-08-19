@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ThemeContext } from 'styled-components';
 import { ArrowBack } from '@styled-icons/material-outlined';
@@ -8,12 +8,14 @@ import { Grid, Spacing, Text, Card } from '~/lib';
 
 import Layout from '~/components/Layout';
 import FlatList from '~/components/FlatList';
+import VariationList from '~/components/VariationList';
 import { notesblock } from '~/data/fake';
 
 import * as U from '~/styles/utilities';
 
 function ListNotePad() {
   const themeContext = useContext(ThemeContext);
+  const [listState, setListState] = useState(false);
 
   function deleteNote() {
     swal({
@@ -35,7 +37,7 @@ function ListNotePad() {
     <>
       <Layout noHeader>
         <Spacing mt={4} mb={4}>
-          <Grid container xs={4}>
+          <Grid container justify="space-between" xs={12}>
             <Card
               style={{ cursor: 'pointer' }}
               onClick={history.goBack}
@@ -55,6 +57,12 @@ function ListNotePad() {
                 </Text>
               </Grid>
             </Card>
+            <U.Responsive width="520px" dsGreater="block" dsLess="none">
+              <VariationList
+                Gridfunc={() => setListState(false)}
+                Listfunc={() => setListState(true)}
+              />
+            </U.Responsive>
           </Grid>
         </Spacing>
 
@@ -62,7 +70,7 @@ function ListNotePad() {
           <Grid item xs={12} sm={4}>
             <U.Title component="h1">Notas do bloco</U.Title>
           </Grid>
-          <Grid item xs={12} sm={4} style={{ textAlign: 'end' }}>
+          <Grid item xs={12} sm={6} style={{ textAlign: 'end' }}>
             <Link to="/note">
               <U.ButtonResponsive bgColor="#fe650e" radius="4px">
                 <Text size={1.4}>Adicionar nota ao bloco</Text>
@@ -72,7 +80,7 @@ function ListNotePad() {
         </Grid>
         <Spacing mb={2.2} />
         <Grid>
-          <U.NoteGridContainer>
+          <U.NoteGridContainer list={listState}>
             {notesblock.map((item) => {
               return (
                 <FlatList

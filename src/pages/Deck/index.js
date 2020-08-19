@@ -6,6 +6,7 @@ import { Grid, Spacing, Text } from '~/lib';
 
 import Layout from '~/components/Layout';
 import Search from '~/components/Search';
+import VariationList from '~/components/VariationList';
 import { decks } from '~/data/fake';
 import useQuery from '~/utils/queryParams';
 import history from '~/services/history';
@@ -19,6 +20,7 @@ function Deck() {
   });
 
   const [searchValue, setSearchValue] = useState('');
+  const [listState, setListState] = useState(false);
 
   const OnChangeSearch = (e) => {
     setSearchValue(e.target.value);
@@ -83,12 +85,30 @@ function Deck() {
             </Grid>
           </Spacing>
         </U.Responsive>
-        <Spacing mb={1} />
+        <Grid container justify="space-between" alignItems="center">
+          <U.Responsive width="600px" dsGreater="block" dsLess="none">
+            <Grid item>
+              <VariationList
+                Gridfunc={() => setListState(false)}
+                Listfunc={() => setListState(true)}
+              />
+            </Grid>
+          </U.Responsive>
+
+          <Grid item xs={12} sm={6} style={{ textAlign: 'end' }}>
+            <U.ButtonResponsive bgColor="#fe650e" radius="4px">
+              <Text size={1.4}>Adicionar baralho</Text>
+            </U.ButtonResponsive>
+          </Grid>
+        </Grid>
+
+        <Spacing mb={2.2} />
         <Grid>
-          <U.NoteGridContainer>
+          <U.NoteGridContainer list={listState}>
             {decks.map((item) => {
               return (
                 <FlatList
+                  link="/deck/card"
                   remove={() => deleteDeck(item.id)}
                   deck={
                     <Grid>

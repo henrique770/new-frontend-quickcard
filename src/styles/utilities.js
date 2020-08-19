@@ -54,12 +54,16 @@ export const ButtonResponsive = styled(Button)`
 // block card
 
 export const NoteGridContainer = styled(Grid)`
+  ${({ list }) =>
+    list
+      ? ''
+      : `
   -webkit-columns: 25rem;
   -moz-columns: 25rem;
   columns: 25rem;
   -webkit-column-gap: 2rem;
   -moz-column-gap: 2rem;
-  column-gap: 2rem;
+  column-gap: 2rem;`}
 `;
 
 export const NoteGrid = styled(Grid)`

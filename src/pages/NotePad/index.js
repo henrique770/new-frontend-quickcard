@@ -10,6 +10,7 @@ import Layout from '~/components/Layout';
 import Modal from '~/components/Modal';
 import TextField from '~/components/TextField';
 import Search from '~/components/Search';
+import VariationList from '~/components/VariationList';
 import { blocknotes } from '~/data/fake';
 
 import * as U from '~/styles/utilities';
@@ -22,6 +23,7 @@ function NotePad() {
 
   const [searchValue, setSearchValue] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
+  const [listState, setListState] = useState(false);
 
   const modal = useRef();
 
@@ -93,8 +95,18 @@ function NotePad() {
             </Grid>
           </Spacing>
         </U.Responsive>
-        <Grid container justify="flex-end" spacing={3}>
-          <Grid item xs={12} sm={4} style={{ textAlign: 'end' }}>
+
+        <Grid container justify="space-between" alignItems="center">
+          <U.Responsive width="600px" dsGreater="block" dsLess="none">
+            <Grid item>
+              <VariationList
+                Gridfunc={() => setListState(false)}
+                Listfunc={() => setListState(true)}
+              />
+            </Grid>
+          </U.Responsive>
+
+          <Grid item xs={12} sm={6} style={{ textAlign: 'end' }}>
             <U.ButtonResponsive
               bgColor="#fe650e"
               radius="4px"
@@ -104,9 +116,10 @@ function NotePad() {
             </U.ButtonResponsive>
           </Grid>
         </Grid>
+
         <Spacing mb={2.2} />
         <Grid>
-          <U.NoteGridContainer>
+          <U.NoteGridContainer list={listState}>
             {blocknotes.map((item) => {
               return (
                 <FlatList

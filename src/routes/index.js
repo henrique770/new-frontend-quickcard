@@ -9,6 +9,7 @@ import Note from '~/pages/Dash/Note';
 import NotePad from '~/pages/NotePad';
 import ListNotePad from '~/pages/NotePad/ListNotePad';
 import Deck from '~/pages/Deck';
+import Card from '~/pages/Deck/Card';
 import Pomodoro from '~/pages/Pomodoro';
 import Statistics from '~/pages/Statistics';
 import Profile from '~/pages/Profile';
@@ -22,6 +23,7 @@ export default function Routes() {
       <Route path="/notepad" exact component={NotePad} isPrivate />
       <Route path="/notepad/notes" exact component={ListNotePad} isPrivate />
       <Route path="/deck" exact component={Deck} isPrivate />
+      <Route path="/deck/card" exact component={Card} isPrivate />
       <Route path="/pomodoro" exact component={Pomodoro} isPrivate />
       <Route path="/statistics" exact component={Statistics} isPrivate />
       <Route path="/profile" exact component={Profile} isPrivate />
