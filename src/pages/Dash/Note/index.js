@@ -62,7 +62,7 @@ function Note() {
 
         <Grid container justify="space-between" spacing={3}>
           <Grid item xs={12} sm={4}>
-            <U.Title component="h1">Notas</U.Title>
+            <U.Title component="h1">Nome da anotação</U.Title>
           </Grid>
           <Grid item xs={12} sm={4} style={{ textAlign: 'end' }}>
             <U.ButtonResponsive

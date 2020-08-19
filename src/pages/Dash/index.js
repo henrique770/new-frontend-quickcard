@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 
 import swal from 'sweetalert';
+import { Link } from 'react-router-dom';
+import { List, GridOn } from '@styled-icons/material-outlined';
 import FlatList from '~/components/FlatList';
-import { Grid, Spacing } from '~/lib';
+import { Grid, Spacing, Text, Button } from '~/lib';
 import history from '~/services/history';
 import Layout from '~/components/Layout';
 import Search from '~/components/Search';
@@ -83,7 +85,28 @@ function Dash() {
             </Grid>
           </Spacing>
         </U.Responsive>
-        <Spacing mb={1} />
+        <Grid container justify="space-between" alignItems="center">
+          <Grid item>
+            <Spacing ds="flex">
+              <Button padding="0.7rem" bgColor="#fff" radius="4px">
+                <GridOn size={20} color="#fe650e" />
+              </Button>
+              <Spacing mr={1} />
+              <Button padding="0.7rem" bgColor="#fff" radius="4px">
+                <List size={20} color="#fe650e" />
+              </Button>
+            </Spacing>
+          </Grid>
+
+          <Grid item xs={12} sm={4} style={{ textAlign: 'end' }}>
+            <Link to="/note">
+              <U.ButtonResponsive bgColor="#fe650e" radius="4px">
+                <Text size={1.4}>Adicionar nota</Text>
+              </U.ButtonResponsive>
+            </Link>
+          </Grid>
+        </Grid>
+        <Spacing mb={2.2} />
         <Grid>
           <U.NoteGridContainer>
             {notes.map((item) => {

@@ -12,7 +12,7 @@ import { ThemeContext } from 'styled-components';
 
 import moment from 'moment';
 import { Helmet } from 'react-helmet';
-import { Grid, Spacing, Text, Button, Card } from '~/lib';
+import { Grid, Spacing, Text, Card } from '~/lib';
 
 import { useInterval } from '~/hooks/useInterval';
 

@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-
+import { Link } from 'react-router-dom';
 import { ThemeContext } from 'styled-components';
 import { ArrowBack } from '@styled-icons/material-outlined';
 import swal from 'sweetalert';
@@ -57,7 +57,19 @@ function ListNotePad() {
             </Card>
           </Grid>
         </Spacing>
-        <U.Title component="h1">Notas do bloco</U.Title>
+
+        <Grid container justify="space-between" spacing={3}>
+          <Grid item xs={12} sm={4}>
+            <U.Title component="h1">Notas do bloco</U.Title>
+          </Grid>
+          <Grid item xs={12} sm={4} style={{ textAlign: 'end' }}>
+            <Link to="/note">
+              <U.ButtonResponsive bgColor="#fe650e" radius="4px">
+                <Text size={1.4}>Adicionar nota ao bloco</Text>
+              </U.ButtonResponsive>
+            </Link>
+          </Grid>
+        </Grid>
         <Spacing mb={2.2} />
         <Grid>
           <U.NoteGridContainer>
