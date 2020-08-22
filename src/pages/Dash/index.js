@@ -100,7 +100,9 @@ function Dash() {
           <Grid item xs={12} sm={6} style={{ textAlign: 'end' }}>
             <Link to="/note">
               <U.ButtonResponsive bgColor="#fe650e" radius="4px">
-                <Text size={1.4}>Adicionar nota</Text>
+                <Text size={1.4} weight="bold">
+                  Adicionar nota
+                </Text>
               </U.ButtonResponsive>
             </Link>
           </Grid>

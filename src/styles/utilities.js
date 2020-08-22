@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import media from 'styled-media-query';
 import { Link } from 'react-router-dom';
+
 import { Text, Grid, Button } from '~/lib';
 
 export const Responsive = styled.div`
@@ -103,5 +104,11 @@ export const ContainerLimit = styled.div`
 
   ${media.lessThan('769px')`
     padding: 0 3rem!important;
+  `}
+`;
+
+export const ActionButtons = styled(Button)`
+  ${media.lessThan('medium')`
+    width: 100%;
   `}
 `;

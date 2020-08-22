@@ -7,6 +7,7 @@ export const Button = styled.button`
     text-decoration: none;
     color: #fff;
     cursor: pointer;
+    transition: 0.5s;
 
   ${({ padding }) =>
     padding ? `padding: ${padding};` : 'padding: 1rem 3.3rem 1rem 3.3rem;'}

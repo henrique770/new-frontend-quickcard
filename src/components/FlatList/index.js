@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Close } from '@styled-icons/material-outlined';
+import { Close, MoreVert } from '@styled-icons/material-outlined';
 import history from '~/services/history';
 
 import { Text, Card } from '~/lib';
@@ -13,6 +13,8 @@ export default function FlatList({
   textFooter,
   deck,
   link,
+  edit,
+  editFunc,
   remove,
   notepad,
 }) {
@@ -47,9 +49,13 @@ export default function FlatList({
       </Card>
 
       {isShown && (
-        <S.Options onClick={remove}>
+        <S.Options onClick={edit ? editFunc : remove}>
           <Text>
-            <Close size={25} color="#fe650e" />
+            {edit ? (
+              <MoreVert size={25} color="#fe650e" />
+            ) : (
+              <Close size={25} color="#fe650e" />
+            )}
           </Text>
         </S.Options>
       )}
@@ -62,6 +68,7 @@ FlatList.propTypes = {
   previewText: PropTypes.string,
   link: PropTypes.string,
   remove: PropTypes.func,
+  editFunc: PropTypes.func,
   deck: PropTypes.oneOfType([PropTypes.bool, PropTypes.node]),
   notepad: PropTypes.oneOfType([PropTypes.bool, PropTypes.node]),
 };

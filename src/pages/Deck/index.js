@@ -1,8 +1,9 @@
 import React, { useState, useRef } from 'react';
 
 import swal from 'sweetalert';
+
 import FlatList from '~/components/FlatList';
-import { Grid, Spacing, Text, useOutsideClick } from '~/lib';
+import { Grid, Spacing, Text, useOutsideClick, Button } from '~/lib';
 
 import Layout from '~/components/Layout';
 import Search from '~/components/Search';
@@ -25,9 +26,14 @@ function Deck() {
   const [listState, setListState] = useState(false);
   const [modalOpenDeck, setModalOpenDeck] = useState(false);
   const [modalOpenCard, setModalOpenCard] = useState(false);
+  const [modalEditDeck, setModalEditDeck] = useState({
+    state: false,
+    id: undefined,
+  });
 
   const modalDeck = useRef();
   const modalCard = useRef();
+  const modalEditionDeck = useRef();
 
   useOutsideClick(modalDeck, () => {
     if (modalOpenDeck) {
@@ -38,6 +44,12 @@ function Deck() {
   useOutsideClick(modalCard, () => {
     if (modalOpenCard) {
       setModalOpenCard(false);
+    }
+  });
+
+  useOutsideClick(modalEditionDeck, () => {
+    if (modalEditDeck) {
+      setModalEditDeck(false);
     }
   });
 
@@ -115,20 +127,31 @@ function Deck() {
           </U.Responsive>
 
           <Grid item xs={12} sm={6} style={{ textAlign: 'end' }}>
-            <U.ButtonResponsive
-              bgColor="#fe650e"
-              radius="4px"
-              onClick={() => setModalOpenDeck(true)}
-            >
-              <Text size={1.4}>Adicionar baralho</Text>
-            </U.ButtonResponsive>{' '}
-            <U.ButtonResponsive
-              bgColor="#fe650e"
-              radius="4px"
-              onClick={() => setModalOpenCard(true)}
-            >
-              <Text size={1.4}>Adicionar cartão</Text>
-            </U.ButtonResponsive>
+            <Spacing ds="flex" style={{ justifyContent: 'flex-end' }}>
+              <U.ActionButtons
+                active={modalOpenCard}
+                bgColor="#fe650e"
+                radius="4px"
+                padding="1rem 2rem"
+                onClick={() => setModalOpenCard(true)}
+              >
+                <Text size={1.4} weight="bold">
+                  Adicionar cartão
+                </Text>
+              </U.ActionButtons>
+              <Spacing mr={1} />
+              <U.ActionButtons
+                active={modalOpenDeck}
+                bgColor="#fe650e"
+                radius="4px"
+                padding="1rem 2rem"
+                onClick={() => setModalOpenDeck(true)}
+              >
+                <Text size={1.4} weight="bold">
+                  Criar baralho
+                </Text>
+              </U.ActionButtons>
+            </Spacing>
           </Grid>
         </Grid>
 
@@ -139,7 +162,10 @@ function Deck() {
               return (
                 <FlatList
                   link="/deck/card"
-                  remove={() => deleteDeck(item.id)}
+                  edit
+                  editFunc={() =>
+                    setModalEditDeck({ state: true, id: item.id })
+                  }
                   deck={
                     <Grid>
                       <Grid container spacing={1}>
@@ -208,12 +234,77 @@ function Deck() {
                 radius="4px"
                 onClick={() => setModalOpenDeck(true)}
               >
-                <Text size={1.4}>Salvar</Text>
+                <Text size={1.4} weight="bold">
+                  Salvar
+                </Text>
               </U.ButtonResponsive>
             </Grid>
           </U.FormCard>
         </Modal>
       )}
+
+      {/* modal editar adicionar baralho */}
+      {modalEditDeck.state && (
+        <Modal size={50} onClose={() => setModalOpenDeck(false)}>
+          <U.FormCard ref={modalEditionDeck}>
+            <Text component="h1" size={1.8}>
+              Editar baralho
+            </Text>
+            <Spacing mb={3} />
+            <Grid container spacing={3}>
+              <Grid item xs={12}>
+                <TextField
+                  id="outlined-basic"
+                  label="Nome do baralho"
+                  type="text"
+                  placeholder="Digite o nome do baralho"
+                />
+              </Grid>
+            </Grid>
+            <Spacing mb={3} />
+            <Grid
+              xs={12}
+              container
+              direction="row"
+              justify="flex-start"
+              spacing={1}
+            >
+              <Grid item xs={12}>
+                <Button
+                  type="button"
+                  style={{ width: '100%' }}
+                  radius="4px"
+                  bgColor="#fe650e"
+                  padding="1rem"
+                  onClick={() => {}}
+                >
+                  <Text size={1.4} weight="bold">
+                    Salvar
+                  </Text>
+                </Button>
+              </Grid>
+              <Grid item xs={12}>
+                <Button
+                  type="button"
+                  style={{ width: '100%' }}
+                  radius="4px"
+                  padding="1rem"
+                  bgColor="#fe650e"
+                  onClick={() => {
+                    deleteDeck(modalEditDeck.id);
+                    setModalEditDeck(false);
+                  }}
+                >
+                  <Text size={1.4} weight="bold">
+                    Excluir
+                  </Text>
+                </Button>
+              </Grid>
+            </Grid>
+          </U.FormCard>
+        </Modal>
+      )}
+
       {/* modal adicionar cartão */}
       {modalOpenCard && (
         <Modal size={50} onClose={() => setModalOpenDeck(false)}>
@@ -249,7 +340,9 @@ function Deck() {
                 radius="4px"
                 onClick={() => setModalOpenDeck(true)}
               >
-                <Text size={1.4}>Salvar</Text>
+                <Text size={1.4} weight="bold">
+                  Salvar
+                </Text>
               </U.ButtonResponsive>
             </Grid>
           </U.FormCard>

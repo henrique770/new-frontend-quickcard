@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 
 import swal from 'sweetalert';
 import FlatList from '~/components/FlatList';
-import { Grid, Spacing, Text, useOutsideClick } from '~/lib';
+import { Grid, Spacing, Text, useOutsideClick, Button } from '~/lib';
 import history from '~/services/history';
 import useQuery from '~/utils/queryParams';
 
@@ -22,14 +22,22 @@ function NotePad() {
   });
 
   const [searchValue, setSearchValue] = useState('');
-  const [modalOpen, setModalOpen] = useState(false);
+  const [modalOpenCreate, setModalOpenCreate] = useState(false);
+  const [modalEdit, setModalEdit] = useState({ state: false, id: undefined });
   const [listState, setListState] = useState(false);
 
-  const modal = useRef();
+  const modalCreate = useRef();
+  const modalEdition = useRef();
 
-  useOutsideClick(modal, () => {
-    if (modalOpen) {
-      setModalOpen(false);
+  useOutsideClick(modalCreate, () => {
+    if (modalOpenCreate) {
+      setModalOpenCreate(false);
+    }
+  });
+
+  useOutsideClick(modalEdition, () => {
+    if (modalEdit) {
+      setModalEdit(false);
     }
   });
 
@@ -110,9 +118,11 @@ function NotePad() {
             <U.ButtonResponsive
               bgColor="#fe650e"
               radius="4px"
-              onClick={() => setModalOpen(true)}
+              onClick={() => setModalOpenCreate(true)}
             >
-              <Text size={1.4}>Adicionar bloco de notas</Text>
+              <Text size={1.4} weight="bold">
+                Criar bloco de notas
+              </Text>
             </U.ButtonResponsive>
           </Grid>
         </Grid>
@@ -123,7 +133,8 @@ function NotePad() {
             {blocknotes.map((item) => {
               return (
                 <FlatList
-                  remove={() => deleteNotePad(item.id)}
+                  edit
+                  editFunc={() => setModalEdit({ state: true, id: item.id })}
                   link="/notepad/notes"
                   title={item.title}
                   notepad={
@@ -146,10 +157,11 @@ function NotePad() {
           </U.NoteGridContainer>
         </Grid>
       </Layout>
+
       {/* modal adicionar bloco de notas */}
-      {modalOpen && (
-        <Modal size={50} onClose={() => setModalOpen(false)}>
-          <U.FormCard ref={modal}>
+      {modalOpenCreate && (
+        <Modal size={50} onClose={() => setModalOpenCreate(false)}>
+          <U.FormCard ref={modalCreate}>
             <Text component="h1" size={1.8}>
               Adicionar bloco de notas
             </Text>
@@ -169,10 +181,73 @@ function NotePad() {
               <U.ButtonResponsive
                 bgColor="#fe650e"
                 radius="4px"
-                onClick={() => setModalOpen(true)}
+                onClick={() => setModalOpenCreate(true)}
               >
                 <Text size={1.4}>Salvar</Text>
               </U.ButtonResponsive>
+            </Grid>
+          </U.FormCard>
+        </Modal>
+      )}
+
+      {/* modal edição do bloco de notas */}
+      {modalEdit.state && (
+        <Modal size={50} onClose={() => setModalOpenCreate(false)}>
+          <U.FormCard ref={modalEdition}>
+            <Text component="h1" size={1.8}>
+              Editar bloco de notas
+            </Text>
+            <Spacing mb={3} />
+            <Grid container spacing={3}>
+              <Grid item xs={12}>
+                <TextField
+                  id="outlined-basic"
+                  label="Nome do bloco de notas"
+                  type="text"
+                  placeholder="Digite o nome do bloco de notas"
+                />
+              </Grid>
+            </Grid>
+            <Spacing mb={3} />
+
+            <Grid
+              xs={12}
+              container
+              direction="row"
+              justify="flex-start"
+              spacing={1}
+            >
+              <Grid item xs={12}>
+                <Button
+                  type="button"
+                  style={{ width: '100%' }}
+                  radius="4px"
+                  bgColor="#fe650e"
+                  padding="1rem"
+                  onClick={() => {}}
+                >
+                  <Text size={1.4} weight="bold">
+                    Salvar
+                  </Text>
+                </Button>
+              </Grid>
+              <Grid item xs={12}>
+                <Button
+                  type="button"
+                  style={{ width: '100%' }}
+                  radius="4px"
+                  padding="1rem"
+                  bgColor="#fe650e"
+                  onClick={() => {
+                    deleteNotePad(modalEdit.id);
+                    setModalEdit(false);
+                  }}
+                >
+                  <Text size={1.4} weight="bold">
+                    Excluir
+                  </Text>
+                </Button>
+              </Grid>
             </Grid>
           </U.FormCard>
         </Modal>

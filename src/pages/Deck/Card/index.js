@@ -83,7 +83,9 @@ function FlashCard() {
                 radius="4px"
                 onClick={() => setModalOpen(true)}
               >
-                <Text size={1.4}>Salvar</Text>
+                <Text size={1.4} weight="bold">
+                  Salvar
+                </Text>
               </U.ButtonResponsive>
             </Grid>
           </U.FormCard>
@@ -130,7 +132,9 @@ function FlashCard() {
                   radius="4px"
                   onClick={() => setModalOpen(true)}
                 >
-                  <Text size={1.4}>Editar cartão</Text>
+                  <Text size={1.4} weight="bold">
+                    Editar cartão
+                  </Text>
                 </U.ButtonResponsive>
               </Grid>
             </Grid>

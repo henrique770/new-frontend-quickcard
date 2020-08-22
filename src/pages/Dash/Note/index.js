@@ -70,7 +70,9 @@ function Note() {
               radius="4px"
               onClick={() => setModalOpen(true)}
             >
-              <Text size={1.4}>Adicionar cartão</Text>
+              <Text size={1.4} weight="bold">
+                Adicionar cartão
+              </Text>
             </U.ButtonResponsive>
           </Grid>
         </Grid>
