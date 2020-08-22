@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 
 import swal from 'sweetalert';
 import FlatList from '~/components/FlatList';
-import { Grid, Spacing, Text } from '~/lib';
+import { Grid, Spacing, Text, useOutsideClick } from '~/lib';
 
 import Layout from '~/components/Layout';
 import Search from '~/components/Search';
+import TextField from '~/components/TextField';
+import Modal from '~/components/Modal';
 import VariationList from '~/components/VariationList';
 import { decks } from '~/data/fake';
 import useQuery from '~/utils/queryParams';
@@ -21,6 +23,23 @@ function Deck() {
 
   const [searchValue, setSearchValue] = useState('');
   const [listState, setListState] = useState(false);
+  const [modalOpenDeck, setModalOpenDeck] = useState(false);
+  const [modalOpenCard, setModalOpenCard] = useState(false);
+
+  const modalDeck = useRef();
+  const modalCard = useRef();
+
+  useOutsideClick(modalDeck, () => {
+    if (modalOpenDeck) {
+      setModalOpenDeck(false);
+    }
+  });
+
+  useOutsideClick(modalCard, () => {
+    if (modalOpenCard) {
+      setModalOpenCard(false);
+    }
+  });
 
   const OnChangeSearch = (e) => {
     setSearchValue(e.target.value);
@@ -96,8 +115,19 @@ function Deck() {
           </U.Responsive>
 
           <Grid item xs={12} sm={6} style={{ textAlign: 'end' }}>
-            <U.ButtonResponsive bgColor="#fe650e" radius="4px">
+            <U.ButtonResponsive
+              bgColor="#fe650e"
+              radius="4px"
+              onClick={() => setModalOpenDeck(true)}
+            >
               <Text size={1.4}>Adicionar baralho</Text>
+            </U.ButtonResponsive>{' '}
+            <U.ButtonResponsive
+              bgColor="#fe650e"
+              radius="4px"
+              onClick={() => setModalOpenCard(true)}
+            >
+              <Text size={1.4}>Adicionar cartão</Text>
             </U.ButtonResponsive>
           </Grid>
         </Grid>
@@ -153,6 +183,78 @@ function Deck() {
           </U.NoteGridContainer>
         </Grid>
       </Layout>
+      {/* modal adicionar baralho */}
+      {modalOpenDeck && (
+        <Modal size={50} onClose={() => setModalOpenDeck(false)}>
+          <U.FormCard ref={modalDeck}>
+            <Text component="h1" size={1.8}>
+              Adicionar baralho
+            </Text>
+            <Spacing mb={3} />
+            <Grid container spacing={3}>
+              <Grid item xs={12}>
+                <TextField
+                  id="outlined-basic"
+                  label="Nome do baralho"
+                  type="text"
+                  placeholder="Digite o nome do baralho"
+                />
+              </Grid>
+            </Grid>
+            <Spacing mb={3} />
+            <Grid container justify="flex-end" alignItems="flex-end">
+              <U.ButtonResponsive
+                bgColor="#fe650e"
+                radius="4px"
+                onClick={() => setModalOpenDeck(true)}
+              >
+                <Text size={1.4}>Salvar</Text>
+              </U.ButtonResponsive>
+            </Grid>
+          </U.FormCard>
+        </Modal>
+      )}
+      {/* modal adicionar cartão */}
+      {modalOpenCard && (
+        <Modal size={50} onClose={() => setModalOpenDeck(false)}>
+          <U.FormCard ref={modalCard}>
+            <Text component="h1" size={1.8}>
+              Adicionar cartão
+            </Text>
+            <Spacing mb={3} />
+            <Grid container spacing={3}>
+              <Grid item xs={12}>
+                <TextField
+                  id="outlined-basic"
+                  label="Frente"
+                  type="text"
+                  placeholder="Digite a frente do cartão"
+                />
+              </Grid>
+
+              <Grid item xs={12}>
+                <TextField
+                  id="outlined-basic"
+                  multiline
+                  label="Verso"
+                  type="text"
+                  placeholder="Digite o verso do cartão"
+                />
+              </Grid>
+            </Grid>
+            <Spacing mb={3} />
+            <Grid container justify="flex-end" alignItems="flex-end">
+              <U.ButtonResponsive
+                bgColor="#fe650e"
+                radius="4px"
+                onClick={() => setModalOpenDeck(true)}
+              >
+                <Text size={1.4}>Salvar</Text>
+              </U.ButtonResponsive>
+            </Grid>
+          </U.FormCard>
+        </Modal>
+      )}
     </>
   );
 }

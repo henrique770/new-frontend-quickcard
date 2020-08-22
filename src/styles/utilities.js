@@ -78,3 +78,30 @@ export const LinkNoDecoration = styled(Link)`
   text-decoration: none;
   color: ${(props) => props.theme.textColorSecondary};
 `;
+
+export const Wrapper = styled.div`
+  display: flex;
+  position: relative;
+`;
+
+export const MainContent = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  ${media.lessThan('769px')`
+    margin-left: 0;
+  `}
+`;
+
+export const ContainerLimit = styled.div`
+  max-width: 192rem;
+  padding: 0 3rem;
+  margin-bottom: 3rem;
+  width: 100%;
+
+  ${media.lessThan('769px')`
+    padding: 0 3rem!important;
+  `}
+`;

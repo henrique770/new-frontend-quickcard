@@ -29,6 +29,7 @@ export const ModalContainer = styled.div`
   position: relative;
 
   ${media.greaterThan('medium')`
+    margin-top: 20rem;
     ${({ size }) => (size ? `width: ${size}rem;` : `width: 70rem;`)}
   `}
 `;
