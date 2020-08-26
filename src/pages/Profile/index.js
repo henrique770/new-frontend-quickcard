@@ -96,7 +96,9 @@ function Profile() {
 
                 <Grid item xs={12} container justify="flex-end">
                   <Button bgColor="#ff6400" radius="4px" padding="1rem 2rem">
-                    <Text size={1.4}>Confirmar</Text>
+                    <Text size={1.4} weight="bold">
+                      Confirmar
+                    </Text>
                   </Button>
                 </Grid>
               </Grid>

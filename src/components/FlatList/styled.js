@@ -9,9 +9,9 @@ export const Options = styled.div`
     props.theme.InputBackground ? props.theme.InputBackground : `#FAFBFD`};
   box-shadow: 0px 1px 8px
     ${(props) =>
-      props.theme.shadow ? props.theme.shadow : `rgba(20, 46, 110, 0.1)`};
+    props.theme.shadow ? props.theme.shadow : `rgba(20, 46, 110, 0.1)`};
   border-radius: 0.5rem;
-  padding: 0.2rem 0.5rem;
+  padding: 0.5rem;
 `;
 
 export const TextLimit = styled(HTMLEllipsis)`

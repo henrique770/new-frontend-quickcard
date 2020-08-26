@@ -15,12 +15,12 @@ html, body, #root {
 input:-webkit-autofill {
   box-shadow: 0 0 0 30px ${(props) => props.theme.InputBackground} inset;
     -webkit-box-shadow: 0 0 0 30px ${(props) =>
-      props.theme.InputBackground} inset;
+    props.theme.InputBackground} inset;
 }
 
 input:-webkit-autofill {
     -webkit-text-fill-color: ${(props) =>
-      props.theme.textColorPrimary} !important;
+    props.theme.textColorPrimary} !important;
 }
 
 ${'' /* material ui */}
@@ -159,10 +159,12 @@ ${'' /* editor */}
 }
 
 .ck {
+  transition: 0.5s;
   border-color: ${(props) => props.theme.selectBackground}!important;
+  background: ${(props) => props.theme.backgroundSecondary};
   border: none!important;
   height: 80vh;
-  border-radius: 8px;
+  border-radius: 8px!important;
 
 
   ul,ol {
@@ -178,7 +180,7 @@ ${'' /* editor */}
 
 
 .ck.ck-editor__main>.ck-editor__editable {
-  background: ${(props) => props.theme.selectBackground};
+  background: ${(props) => props.theme.backgroundSecondary};
 }
 
 .ck.ck-reset, .ck.ck-reset_all, .ck.ck-reset_all  {
@@ -208,7 +210,7 @@ ${'' /* editor */}
 }
 
 .ck.ck-toolbar {
-  background: ${(props) => props.theme.selectBackground};
+  background: ${(props) => props.theme.backgroundSecondary};
 }
 
 .ck.ck-reset_all, .ck.ck-reset_all * {
