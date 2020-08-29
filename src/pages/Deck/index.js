@@ -316,6 +316,25 @@ function Deck() {
             <Grid container spacing={3}>
               <Grid item xs={12}>
                 <TextField
+                  id="filled-select-currency-native"
+                  select
+                  label="Nome do baralho"
+                  SelectProps={{
+                    native: true,
+                  }}
+                  name="status"
+                >
+                  <option selected disabled>
+                    Selecione
+                  </option>
+                  <option value="active">Javascript</option>
+                  <option value="inactive">
+                    Expressões / frases em inglês
+                  </option>
+                </TextField>
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
                   id="outlined-basic"
                   label="Frente"
                   type="text"

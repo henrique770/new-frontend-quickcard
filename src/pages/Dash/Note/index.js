@@ -75,8 +75,8 @@ function Note() {
                     {width > 768 ? <Close size={25} color="#fff" /> : `Fechar`}
                   </>
                 ) : (
-                    `Adicionar cartão`
-                  )}
+                  `Adicionar cartão`
+                )}
               </Text>
             </U.ButtonResponsive>
           </Grid>
