@@ -112,3 +112,10 @@ export const ActionButtons = styled(Button)`
     width: 100%;
   `}
 `;
+
+export const ContainerPomodoro = styled.div`
+  position: fixed;
+  bottom: 3rem;
+  left: 3rem;
+  z-index: 9999;
+`;

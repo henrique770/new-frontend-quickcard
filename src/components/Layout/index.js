@@ -100,13 +100,13 @@ function Layout({ children, childrenHeader, childrenTitle, noHeader }) {
               icon={<Brightness5 size={20} color="#fe650e" />}
             />
           ) : (
-              <Menu.Item
-                onClick={() => themeToggle.toggleTheme()}
-                title="Tema Escuro"
-                link
-                icon={<Brightness2 size={20} color="#fe650e" />}
-              />
-            )}
+            <Menu.Item
+              onClick={() => themeToggle.toggleTheme()}
+              title="Tema Escuro"
+              link
+              icon={<Brightness2 size={20} color="#fe650e" />}
+            />
+          )}
         </Menu.Container>
       </div>
       <S.MainContent>
@@ -139,12 +139,12 @@ function Layout({ children, childrenHeader, childrenTitle, noHeader }) {
                             {notifications.length === 0 ? (
                               <></>
                             ) : (
-                                <S.CleanAllNotifications onClick={() => { }}>
-                                  <Text size={1.2}>Limpar tudo</Text>
-                                  <Spacing mr={1} />
-                                  <Delete size={20} />
-                                </S.CleanAllNotifications>
-                              )}
+                              <S.CleanAllNotifications onClick={() => {}}>
+                                <Text size={1.2}>Limpar tudo</Text>
+                                <Spacing mr={1} />
+                                <Delete size={20} />
+                              </S.CleanAllNotifications>
+                            )}
 
                             {notifications.length === 0 && (
                               <Grid container>
@@ -183,7 +183,7 @@ function Layout({ children, childrenHeader, childrenTitle, noHeader }) {
                     icon={<MenuOutline size={30} color="#fe650e" />}
                     description="Estudante"
                     name="Henrique Araújo"
-                    logoutFunc={() => { }}
+                    logoutFunc={() => {}}
                   >
                     {childrenHeader}
                   </S.HeaderFormat>
