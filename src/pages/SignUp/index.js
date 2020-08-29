@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { Formik } from 'formik';
-import { Link } from 'react-router-dom';
 import { Grid, Button, Text, Spacing } from '~/lib';
 
 import TextField from '~/components/TextField';
@@ -17,7 +17,7 @@ import * as U from '~/styles/utilities';
 import validations from './validations';
 import Loading from '~/components/Loading';
 
-function Login() {
+function SignUp() {
   const dispatch = useDispatch();
 
   const [loading, setLoading] = useState(false);
@@ -69,6 +69,15 @@ function Login() {
 
                   <TextField
                     id="outlined-basic"
+                    label="Nome completo"
+                    type="text"
+                    placeholder="Digite seu nome completo"
+                  />
+
+                  <Spacing mt={1} />
+
+                  <TextField
+                    id="outlined-basic"
                     label="E-mail"
                     type="email"
                     placeholder="Digite seu e-mail"
@@ -95,17 +104,17 @@ function Login() {
                         <Grid container alignItems="center">
                           <Loading />
                           <Spacing mr={1} />
-                          Entrando..
+                          Cadastrando..
                         </Grid>
                       ) : (
-                        <>Acessar</>
+                        <>Criar conta</>
                       )}
                     </Text>
                   </Button>
                   <Spacing mt={2} />
                   <Grid container justify="center">
-                    <Link to="/signup" style={{ textDecoration: 'none' }}>
-                      <Text color="#ff6400">Criar conta gratuita</Text>
+                    <Link to="/login" style={{ textDecoration: 'none' }}>
+                      <Text color="#ff6400">Já tenho conta</Text>
                     </Link>
                   </Grid>
                 </S.Form>
@@ -118,4 +127,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default SignUp;

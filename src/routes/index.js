@@ -4,6 +4,7 @@ import { Switch } from 'react-router-dom';
 import Route from './Route';
 
 import Login from '~/pages/Login';
+import SignUp from '~/pages/SignUp';
 import Dash from '~/pages/Dash';
 import Note from '~/pages/Dash/Note';
 import NotePad from '~/pages/NotePad';
@@ -18,6 +19,7 @@ export default function Routes() {
   return (
     <Switch>
       <Route path="/login" exact component={Login} />
+      <Route path="/signup" exact component={SignUp} />
       <Route path="/" exact component={Dash} isPrivate />
       <Route path="/note" exact component={Note} isPrivate />
       <Route path="/notepad" exact component={NotePad} isPrivate />

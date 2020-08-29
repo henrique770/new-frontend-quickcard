@@ -12,7 +12,7 @@ export default function AdminRoutes({
 }) {
   // const { signed } = store.getState().adminAuth;
 
-  const signed = true;
+  const signed = false;
   if (!signed && isPrivate) {
     return <Redirect to="/login" />;
   }
