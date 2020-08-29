@@ -23,6 +23,7 @@ function SignUp() {
   const [loading, setLoading] = useState(false);
 
   const initialValues = {
+    name: '',
     email: '',
     password: '',
   };
@@ -72,6 +73,14 @@ function SignUp() {
                     label="Nome completo"
                     type="text"
                     placeholder="Digite seu nome completo"
+                    error={errors.name && touched.name ? errors.name : null}
+                    helperText={
+                      errors.name && touched.name ? errors.name : null
+                    }
+                    name="name"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.name}
                   />
 
                   <Spacing mt={1} />
@@ -81,6 +90,14 @@ function SignUp() {
                     label="E-mail"
                     type="email"
                     placeholder="Digite seu e-mail"
+                    error={errors.email && touched.email ? errors.email : null}
+                    helperText={
+                      errors.email && touched.email ? errors.email : null
+                    }
+                    name="email"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.email}
                   />
 
                   <Spacing mt={1} />
@@ -90,6 +107,20 @@ function SignUp() {
                     label="Senha"
                     type="password"
                     placeholder="Digite sua senha"
+                    error={
+                      errors.password && touched.password
+                        ? errors.password
+                        : null
+                    }
+                    helperText={
+                      errors.password && touched.password
+                        ? errors.password
+                        : null
+                    }
+                    name="password"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.password}
                   />
 
                   <Spacing mt={2} />

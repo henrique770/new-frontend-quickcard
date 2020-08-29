@@ -72,6 +72,14 @@ function Login() {
                     label="E-mail"
                     type="email"
                     placeholder="Digite seu e-mail"
+                    error={errors.email && touched.email ? errors.email : null}
+                    helperText={
+                      errors.email && touched.email ? errors.email : null
+                    }
+                    name="email"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.email}
                   />
 
                   <Spacing mt={1} />
@@ -81,6 +89,20 @@ function Login() {
                     label="Senha"
                     type="password"
                     placeholder="Digite sua senha"
+                    error={
+                      errors.password && touched.password
+                        ? errors.password
+                        : null
+                    }
+                    helperText={
+                      errors.password && touched.password
+                        ? errors.password
+                        : null
+                    }
+                    name="password"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.password}
                   />
 
                   <Spacing mt={2} />
