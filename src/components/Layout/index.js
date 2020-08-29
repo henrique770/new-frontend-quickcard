@@ -10,7 +10,7 @@ import {
   Delete,
   CalendarToday,
   PeopleOutline,
-  WatchLater,
+  // WatchLater,
   DoneAll,
   Brightness2,
   Brightness5,
@@ -78,13 +78,13 @@ function Layout({ children, childrenHeader, childrenTitle, noHeader }) {
             link="/notepad"
             icon={<PeopleOutline size={20} color="#fe650e" />}
           />
-          <S.LinkWithStyle to="/pomodoro" target="_blank">
+          {/* <S.LinkWithStyle to="/pomodoro" target="_blank">
             <Menu.Item
               active={currentRoute === '/pomodoro'}
               title="Pomodoro"
               icon={<WatchLater size={20} color="#fe650e" />}
             />
-          </S.LinkWithStyle>
+          </S.LinkWithStyle> */}
 
           <Menu.Item
             active={currentRoute === '/statistics'}

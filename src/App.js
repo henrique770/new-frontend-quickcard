@@ -1,11 +1,19 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Router } from 'react-router-dom';
 import { ThemeContext } from 'styled-components';
+import { CircularProgressbar } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
 
 import { Provider } from 'react-redux';
-import { WatchLater, Close } from '@styled-icons/material-outlined';
+import {
+  WatchLater,
+  Replay,
+  PauseCircleOutline,
+  PlayCircleOutline,
+} from '@styled-icons/material-outlined';
 import moment from 'moment';
-import { GlobalStyles, Button } from '~/lib';
+import { CloseCircle } from '@styled-icons/ionicons-sharp/CloseCircle';
+import { GlobalStyles, Button, Spacing, Grid, Text } from '~/lib';
 import GlobalLocalStyles from '~/styles/global';
 import * as U from '~/styles/utilities';
 
@@ -51,15 +59,15 @@ function App() {
     setTime(25 * 60 * 1000);
   };
 
-  const handlePomodoro = () => {
-    setActive(true);
-    setSessionVal(25);
-  };
+  // const handlePomodoro = () => {
+  //   setActive(true);
+  //   setSessionVal(25);
+  // };
 
-  const handleShortBreak = () => {
-    setActive(true);
-    setSessionVal(5);
-  };
+  // const handleShortBreak = () => {
+  //   setActive(true);
+  //   setSessionVal(5);
+  // };
 
   const [isShow, setIsShow] = useState(false);
 
@@ -67,27 +75,101 @@ function App() {
     <Provider store={store}>
       <Router history={history}>
         <U.ContainerPomodoro>
-          <Button
-            padding="0.7rem"
-            bgColor={themeContext.backgroundSecondary}
-            radius="4px"
-            onClick={() => setIsShow(!isShow)}
-          >
-            {isShow ? (
-              <Close size={30} color="#fe650e" />
-            ) : (
-              <WatchLater size={30} color="#fe650e" />
-            )}
-          </Button>
+          {!isShow && (
+            <Button
+              padding="0.7rem"
+              bgColor="#fe650e"
+              radius="50%"
+              onClick={() => setIsShow(true)}
+            >
+              <WatchLater size={30} color="#fff" />
+            </Button>
+          )}
 
           {isShow && (
-            <>
-              <h1>{moment(time).format('mm:ss')}</h1>
-              <button onClick={() => setActive(!active)}>
-                {active ? `pausar` : `iniciar`}
-              </button>
-              <button onClick={() => handleReset()}>resetar</button>
-            </>
+            <U.PomodoroCard
+              noFlex
+              textCenter
+              paddingBody="2rem 4rem"
+              radius="10"
+              shadow="0px 1px 8px rgba(20, 46, 110, 0.1)"
+              justifyContent="center"
+            >
+              <Text size={1.4} weight="bold" color="#fe650e">
+                {mode === 'session' && sessionVal === 25 ? 'Sessão' : 'Pausa'}
+              </Text>
+              <Spacing mt={1} />
+              <U.ProgressContainer>
+                <CircularProgressbar
+                  text={moment(time).format('mm:ss')}
+                  value={time}
+                  maxValue={
+                    (sessionVal === 25 && 1500000) ||
+                    (sessionVal === 5 && 300000)
+                  }
+                  styles={{
+                    root: {},
+
+                    path: {
+                      stroke: `rgba(62, 152, 199, ${
+                        moment(time).format('mm:ss') / 100
+                      })`,
+
+                      strokeLinecap: 'butt',
+
+                      transition: 'stroke-dashoffset 0.5s ease 0s',
+
+                      transform: 'rotate(0.25turn)',
+                      transformOrigin: 'center center',
+                    },
+
+                    trail: {
+                      stroke: '#d6d6d6',
+
+                      strokeLinecap: 'butt',
+
+                      transform: 'rotate(0.25turn)',
+                      transformOrigin: 'center center',
+                    },
+                  }}
+                />
+              </U.ProgressContainer>
+
+              <Spacing mb={2} />
+              <Grid container xs={12} justify="center" spacing={2}>
+                <Grid item xs={6}>
+                  <U.ButtonResponsive
+                    radius="8px"
+                    style={{ width: 60 }}
+                    bgColor={themeContext.backgroundSecondary}
+                    shadow="0px 1px 8px rgba(20, 46, 110, 0.1)"
+                    padding="1rem"
+                    onClick={() => setActive(!active)}
+                  >
+                    {active ? (
+                      <PauseCircleOutline size={20} color="#fe650e" />
+                    ) : (
+                      <PlayCircleOutline size={20} color="#fe650e" />
+                    )}
+                  </U.ButtonResponsive>
+                </Grid>
+                <Grid item xs={6}>
+                  <U.ButtonResponsive
+                    radius="8px"
+                    style={{ width: 60 }}
+                    bgColor={themeContext.backgroundSecondary}
+                    shadow="0px 1px 8px rgba(20, 46, 110, 0.1)"
+                    padding="1rem"
+                    onClick={() => handleReset()}
+                  >
+                    <Replay size={20} color="#fe650e" />
+                  </U.ButtonResponsive>
+                </Grid>
+              </Grid>
+              <U.ButtonClose onClick={() => setIsShow(false)}>
+                <CloseCircle style={{ cursor: 'pointer' }} size={25} />
+              </U.ButtonClose>
+            </U.PomodoroCard>
           )}
         </U.ContainerPomodoro>
 

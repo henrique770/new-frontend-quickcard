@@ -15,12 +15,12 @@ html, body, #root {
 input:-webkit-autofill {
   box-shadow: 0 0 0 30px ${(props) => props.theme.InputBackground} inset;
     -webkit-box-shadow: 0 0 0 30px ${(props) =>
-    props.theme.InputBackground} inset;
+      props.theme.InputBackground} inset;
 }
 
 input:-webkit-autofill {
     -webkit-text-fill-color: ${(props) =>
-    props.theme.textColorPrimary} !important;
+      props.theme.textColorPrimary} !important;
 }
 
 ${'' /* material ui */}
@@ -100,6 +100,11 @@ ${'' /* material ui */}
 
 .MuiInput-underline:after {
   border-bottom: 2px solid #fe650e!important;
+}
+
+.MuiInput-underline.Mui-error:after {
+    transform: scaleX(1);
+    border-bottom-color: #f44336!important;
 }
 
 

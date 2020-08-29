@@ -1710,7 +1710,15 @@
     "@babel/runtime" "^7.10.5"
     "@styled-icons/styled-icon" "^10.6.0"
 
-"@styled-icons/ionicons-sharp@^10.14.1", "@styled-icons/ionicons-sharp@^10.6.0":
+"@styled-icons/ionicons-sharp@^10.18.0":
+  version "10.18.0"
+  resolved "https://registry.yarnpkg.com/@styled-icons/ionicons-sharp/-/ionicons-sharp-10.18.0.tgz#a5fd0ba1953290410aacd14f0c761b6cf49a68cd"
+  integrity sha512-lvz08n79pxuLmLnNUHMxy1t+1AhtQ4eVryyCbq+Ywda+TRgST+o+Dun3EF54td7QPq4gvKcJLqM8ScinQWCenQ==
+  dependencies:
+    "@babel/runtime" "^7.10.5"
+    "@styled-icons/styled-icon" "^10.6.0"
+
+"@styled-icons/ionicons-sharp@^10.6.0":
   version "10.14.1"
   resolved "https://registry.yarnpkg.com/@styled-icons/ionicons-sharp/-/ionicons-sharp-10.14.1.tgz#01150079376c6c4f6041cfe3fa306451bb855006"
   integrity sha512-lEu0HvbNGRqrvsBiP/coHYmFwMWqHnAUvsu+Iy+tDSWl9aVr6fdeuvDAVBvZ2v0cqZMQ8I06nk3IbT/hcwy9lA==

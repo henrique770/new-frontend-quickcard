@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import media from 'styled-media-query';
 import { Link } from 'react-router-dom';
 
-import { Text, Grid, Button } from '~/lib';
+import { Text, Grid, Button, Card } from '~/lib';
 
 export const Responsive = styled.div`
   @media (max-width: ${({ width }) => (width ? `${width}` : '')}) {
@@ -117,5 +117,36 @@ export const ContainerPomodoro = styled.div`
   position: fixed;
   bottom: 3rem;
   left: 3rem;
-  z-index: 9999;
+  z-index: 999;
+`;
+
+export const PomodoroCard = styled(Card)`
+  box-shadow: 0px 1px 8px rgba(20, 46, 110, 0.1);
+  position: relative;
+`;
+
+export const ButtonClose = styled.div`
+  position: absolute;
+  right: -10px;
+  top: -10px;
+`;
+
+export const ProgressContainer = styled.div`
+  width: 13rem;
+  position: relative;
+
+  .CircularProgressbar-path {
+    stroke: #3e98c7;
+  }
+  .CircularProgressbar-trail {
+    stroke: gray;
+  }
+  .CircularProgressbar-text {
+    fill: ${(props) => props.theme.textColorSecondary};
+    font-size: 25px;
+    font-weight: bold;
+  }
+  .CircularProgressbar-background {
+    fill: green;
+  }
 `;
