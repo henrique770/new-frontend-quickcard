@@ -61,15 +61,16 @@ function Layout({ children, childrenHeader, childrenTitle, noHeader }) {
         >
           <Menu.Item
             active={currentRoute === '/'}
-            title="Todas as notas"
-            link="/"
-            icon={<CalendarToday size={20} color="#fe650e" />}
-          />
-          <Menu.Item
-            active={currentRoute === '/deck'}
             title="Baralhos"
-            link="/deck"
+            link="/"
             icon={<Dashboard size={20} color="#fe650e" />}
+          />
+
+          <Menu.Item
+            active={currentRoute === '/dash'}
+            title="Todas as notas"
+            link="/dash"
+            icon={<CalendarToday size={20} color="#fe650e" />}
           />
 
           <Menu.Item

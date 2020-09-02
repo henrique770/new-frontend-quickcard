@@ -70,9 +70,9 @@ function SignUp() {
 
                   <TextField
                     id="outlined-basic"
-                    label="Nome completo"
+                    label="Nome"
                     type="text"
-                    placeholder="Digite seu nome completo"
+                    placeholder="Digite seu nome"
                     error={errors.name && touched.name ? errors.name : null}
                     helperText={
                       errors.name && touched.name ? errors.name : null

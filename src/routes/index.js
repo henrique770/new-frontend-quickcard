@@ -20,12 +20,13 @@ export default function Routes() {
     <Switch>
       <Route path="/login" exact component={Login} />
       <Route path="/signup" exact component={SignUp} />
-      <Route path="/" exact component={Dash} isPrivate />
+      <Route path="/" exact component={Deck} isPrivate />
+      <Route path="/deck/card" exact component={Card} isPrivate />
+      <Route path="/dash" exact component={Dash} isPrivate />
       <Route path="/note" exact component={Note} isPrivate />
       <Route path="/notepad" exact component={NotePad} isPrivate />
       <Route path="/notepad/notes" exact component={ListNotePad} isPrivate />
-      <Route path="/deck" exact component={Deck} isPrivate />
-      <Route path="/deck/card" exact component={Card} isPrivate />
+
       <Route path="/pomodoro" exact component={Pomodoro} isPrivate />
       <Route path="/statistics" exact component={Statistics} isPrivate />
       <Route path="/profile" exact component={Profile} isPrivate />

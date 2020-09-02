@@ -4,11 +4,11 @@ export default function validations() {
   return yup.object().shape({
     email: yup
       .string()
-      .email('Email inválido')
+      .email('Insira um e-mail válido')
       .required('O e-mail é obrigatório'),
     password: yup
       .string()
-      .min(6, 'No mínimo 6 catacteres')
+      .min(6, 'A senha precisa ter no mínimo 6 caracteres')
       .required('A senha é obrigatória'),
   });
 }
