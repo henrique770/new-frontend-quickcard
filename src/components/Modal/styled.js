@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import media from 'styled-media-query';
 
 export const Modal = styled.div`
   position: fixed;
@@ -28,10 +27,12 @@ export const ModalContainer = styled.div`
   justify-content: center;
   position: relative;
 
-  ${media.greaterThan('medium')`
-    margin-top: 20rem;
-    ${({ size }) => (size ? `width: ${size}rem;` : `width: 70rem;`)}
-  `}
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  margin-top: 0;
+  ${({ size }) => (size ? `width: ${size}rem;` : `width: 70rem;`)}
 `;
 
 export const ModalContent = styled.div`
