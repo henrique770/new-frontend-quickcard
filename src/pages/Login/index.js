@@ -9,6 +9,7 @@ import welcomeImage from '~/assets/img/background.jpg';
 import whiteLogo from '~/assets/img/white_main_logo.png';
 import darkLogo from '~/assets/img/logo_quickcard.png';
 import * as S from './styled';
+import { AuthContext } from '~/context/AuthContext';
 
 import * as U from '~/styles/utilities';
 // import Loading from '~/components/Loading';
@@ -23,8 +24,10 @@ function Login() {
     password: '',
   };
 
-  function handleSubmitForm(values) {
-    console.log(values);
+  const { signIn } = useContext(AuthContext);
+
+  function handleSubmitForm({ email, password }) {
+    signIn(email, password);
   }
   return (
     <S.Container>

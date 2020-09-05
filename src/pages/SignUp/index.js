@@ -14,6 +14,8 @@ import * as S from './styled';
 
 import * as U from '~/styles/utilities';
 
+// import AuthContext from '~/context/AuthContext';
+
 import validations from './validations';
 // import Loading from '~/components/Loading';
 
@@ -26,6 +28,8 @@ function SignUp() {
     email: '',
     password: '',
   };
+
+  // const auth = useContext(AuthContext);
 
   function handleSubmitForm(values) {
     console.log(values);
