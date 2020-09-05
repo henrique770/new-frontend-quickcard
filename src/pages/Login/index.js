@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import React from 'react'; // { useState }
+// import { useDispatch } from 'react-redux';
 import { Formik } from 'formik';
 import { Link } from 'react-router-dom';
 import { Grid, Button, Text, Spacing } from '~/lib';
@@ -10,30 +10,30 @@ import welcomeImage from '~/assets/img/background.jpg';
 import logo from '~/assets/img/logo_quickcard.png';
 import * as S from './styled';
 
-import { signInRequest } from '~/store/modules/auth/actions';
+// import { signInRequest } from '~/store/modules/auth/actions';
 
 import * as U from '~/styles/utilities';
 
 import validations from './validations';
-import Loading from '~/components/Loading';
+// import Loading from '~/components/Loading';
 
 function Login() {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
 
   const initialValues = {
     email: '',
     password: '',
   };
 
-  function handleSubmitForm({ email, password }) {
-    setLoading(true);
-    try {
-      dispatch(signInRequest(email, password));
-    } catch {}
-    setLoading(false);
-  }
+  // function handleSubmitForm({ email, password }) {
+  //  setLoading(true);
+  //  try {
+  //  dispatch(signInRequest(email, password));
+  //  } catch {}
+  //  setLoading(false);
+  // }
   return (
     <S.Container>
       <Grid container xs={12}>
@@ -48,7 +48,10 @@ function Login() {
         <S.GridForm item xs={12} md={6} lg={4} container>
           <Formik
             initialValues={initialValues}
-            onSubmit={handleSubmitForm}
+            onSubmit={
+              // handleSubmitForm
+              () => {}
+            }
             validationSchema={validations()}
           >
             {({
@@ -113,7 +116,7 @@ function Login() {
                     padding="1.5rem"
                   >
                     <Text color="#fff" weight="bold">
-                      {loading ? (
+                      {/* {loading ? (
                         <Grid container alignItems="center">
                           <Loading />
                           <Spacing mr={1} />
@@ -121,7 +124,8 @@ function Login() {
                         </Grid>
                       ) : (
                         <>Acessar</>
-                      )}
+                      )} */}
+                      Acessar
                     </Text>
                   </Button>
                   <Spacing mt={2} />
