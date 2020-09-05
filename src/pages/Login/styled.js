@@ -5,7 +5,7 @@ import { Grid } from '~/lib';
 export const Container = styled.div`
   flex: 1;
   height: 100%;
-  background: #fff;
+  background: ${(props) => props.theme && props.theme.backgroundAuth};
 `;
 
 export const Form = styled.form`

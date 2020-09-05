@@ -22,4 +22,5 @@ export default {
   tableTextColor: '#A0A9AF',
   tableBorder: '#25292D',
   tableDescMobileBackground: '#131414ba',
+  backgroundAuth: '#1a1a1a',
 };

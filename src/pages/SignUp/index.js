@@ -1,16 +1,16 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
-// import { useDispatch } from 'react-redux';
+
 import { Formik } from 'formik';
+import { ThemeContext } from 'styled-components';
 import { Grid, Button, Text, Spacing } from '~/lib';
 
 import TextField from '~/components/TextField';
 
 import welcomeImage from '~/assets/img/background.jpg';
-import logo from '~/assets/img/logo_quickcard.png';
+import whiteLogo from '~/assets/img/white_main_logo.png';
+import darkLogo from '~/assets/img/logo_quickcard.png';
 import * as S from './styled';
-
-// import { signInRequest } from '~/store/modules/auth/actions';
 
 import * as U from '~/styles/utilities';
 
@@ -18,8 +18,7 @@ import validations from './validations';
 // import Loading from '~/components/Loading';
 
 function SignUp() {
-  // const dispatch = useDispatch();
-
+  const themeContext = useContext(ThemeContext);
   // const [loading, setLoading] = useState(false);
 
   const initialValues = {
@@ -28,13 +27,9 @@ function SignUp() {
     password: '',
   };
 
-  // function handleSubmitForm({ email, password }) {
-  //    setLoading(true);
-  //    try {
-  //      dispatch(signInRequest(email, password));
-  //    } catch {}
-  //    setLoading(false);
-  // }
+  function handleSubmitForm(values) {
+    console.log(values);
+  }
   return (
     <S.Container>
       <Grid container xs={12}>
@@ -49,10 +44,7 @@ function SignUp() {
         <S.GridForm item xs={12} md={6} lg={4} container>
           <Formik
             initialValues={initialValues}
-            onSubmit={
-              // handleSubmitForm
-              () => {}
-            }
+            onSubmit={handleSubmitForm}
             validationSchema={validations()}
           >
             {({
@@ -66,7 +58,11 @@ function SignUp() {
               <>
                 <S.Form onSubmit={handleSubmit}>
                   <Grid container justify="center">
-                    <img style={{ width: 230 }} src={logo} alt="logo" />
+                    <img
+                      style={{ width: 230 }}
+                      src={themeContext.mode === 'dark' ? whiteLogo : darkLogo}
+                      alt="logo"
+                    />
                   </Grid>
 
                   <Spacing mb={3} />
