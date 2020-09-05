@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import media from 'styled-media-query';
 import { Grid } from '~/lib';
 
@@ -8,11 +8,22 @@ export const Container = styled.div`
   background: ${(props) => props.theme && props.theme.backgroundAuth};
 `;
 
+const appearFromLeft = keyframes`
+    from {
+      opacity: 0;
+      transform: translateX(-50px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+`;
+
 export const Form = styled.form`
   display: flex;
   align-items: flex-start;
   flex-direction: column;
-
+  animation: ${appearFromLeft} 1s;
   input {
     width: 35rem;
     ${media.lessThan('medium')`

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import { Formik } from 'formik';
@@ -11,6 +11,7 @@ import welcomeImage from '~/assets/img/background.jpg';
 import whiteLogo from '~/assets/img/white_main_logo.png';
 import darkLogo from '~/assets/img/logo_quickcard.png';
 import * as S from './styled';
+import api from '~/services/api';
 
 import * as U from '~/styles/utilities';
 
@@ -31,14 +32,33 @@ function SignUp() {
 
   // const auth = useContext(AuthContext);
 
-  function handleSubmitForm(values) {
-    console.log(values);
+  async function handleSubmitForm(values) {
+    try {
+      await api.post('/student', { values });
+      alert('cadastro feito com sucesso!');
+    } catch {
+      alert('falha no cadastro');
+    }
   }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await api.get('/student', {
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+        },
+      });
+      console.log(response.data);
+    };
+    fetchData();
+  }, []);
+
   return (
     <S.Container>
       <Grid container xs={12}>
         <Grid item xs={12} md={6} lg={8}>
-          <U.Responsive width="768px" dsLess="none" dsGreater="block">
+          <U.Responsive width="960px" dsLess="none" dsGreater="block">
             <S.ImageContainer>
               <img src={welcomeImage} alt="welcome" />
             </S.ImageContainer>

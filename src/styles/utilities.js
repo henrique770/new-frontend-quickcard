@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import media from 'styled-media-query';
 import { Link } from 'react-router-dom';
 
@@ -67,7 +67,19 @@ export const NoteGridContainer = styled(Grid)`
   column-gap: 2rem;`}
 `;
 
+const appearFromBottom = keyframes`
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+`;
+
 export const NoteGrid = styled(Grid)`
+  animation: ${appearFromBottom} 0.7s;
   margin-bottom: 2rem;
   -webkit-column-break-inside: avoid;
   page-break-inside: avoid;

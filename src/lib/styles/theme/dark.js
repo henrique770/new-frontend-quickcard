@@ -1,6 +1,6 @@
 export default {
   mode: 'dark',
-  background: '#090A0A',
+  background: '#111',
   backgroundSecondary: '#171819',
   textColorPrimary: '#fff',
   textColorSecondary: '#9EA7AC',

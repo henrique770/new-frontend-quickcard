@@ -26,14 +26,14 @@ function Login() {
 
   const { signIn } = useContext(AuthContext);
 
-  function handleSubmitForm({ email, password }) {
-    signIn(email, password);
+  function handleSubmitForm(values) {
+    signIn(values);
   }
   return (
     <S.Container>
       <Grid container xs={12}>
         <Grid item xs={12} md={6} lg={8}>
-          <U.Responsive width="768px" dsLess="none" dsGreater="block">
+          <U.Responsive width="960px" dsLess="none" dsGreater="block">
             <S.ImageContainer>
               <img src={welcomeImage} alt="welcome" />
             </S.ImageContainer>
