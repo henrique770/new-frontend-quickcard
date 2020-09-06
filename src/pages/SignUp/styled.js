@@ -40,6 +40,8 @@ export const GridForm = styled(Grid)`
   justify-content: center;
   align-items: center;
   display: flex;
+  background: ${(props) => props.theme && props.theme.backgroundAuth};
+  z-index: 9999999999;
 `;
 
 export const ImageContainer = styled.div`

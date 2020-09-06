@@ -28,6 +28,7 @@ import darkLogo from '~/assets/img/logo_quickcard.png';
 import { notifications } from '~/data/fake';
 
 import history from '~/services/history';
+import { AuthContext } from '~/context/AuthContext';
 
 import * as S from './styled';
 
@@ -49,6 +50,8 @@ function Layout({ children, childrenHeader, childrenTitle, noHeader }) {
       icon: <AccountCircle size={25} />,
     },
   ];
+
+  const { signOut } = useContext(AuthContext);
 
   return (
     <S.Wrapper>
@@ -184,7 +187,7 @@ function Layout({ children, childrenHeader, childrenTitle, noHeader }) {
                     icon={<MenuOutline size={30} color="#fe650e" />}
                     description="Estudante"
                     name="Henrique Araújo"
-                    logoutFunc={() => {}}
+                    logoutFunc={signOut}
                   >
                     {childrenHeader}
                   </S.HeaderFormat>

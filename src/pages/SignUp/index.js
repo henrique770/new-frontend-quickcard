@@ -1,6 +1,7 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
-
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { Formik } from 'formik';
 import { ThemeContext } from 'styled-components';
 import { Grid, Button, Text, Spacing } from '~/lib';
@@ -19,6 +20,7 @@ import * as U from '~/styles/utilities';
 
 import validations from './validations';
 // import Loading from '~/components/Loading';
+toast.configure();
 
 function SignUp() {
   const themeContext = useContext(ThemeContext);
@@ -32,27 +34,30 @@ function SignUp() {
 
   // const auth = useContext(AuthContext);
 
-  async function handleSubmitForm(values) {
+  async function handleSubmitForm({ name, email, password }) {
     try {
-      await api.post('/student', { values });
-      alert('cadastro feito com sucesso!');
+      await api.post('/student', { name, email, password });
+      toast.success('cadastro feito com sucesso!', {
+        position: 'top-right',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     } catch {
-      alert('falha no cadastro');
+      toast.error('falha no cadastro', {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     }
   }
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const response = await api.get('/student', {
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
-        },
-      });
-      console.log(response.data);
-    };
-    fetchData();
-  }, []);
 
   return (
     <S.Container>
@@ -60,7 +65,11 @@ function SignUp() {
         <Grid item xs={12} md={6} lg={8}>
           <U.Responsive width="960px" dsLess="none" dsGreater="block">
             <S.ImageContainer>
-              <img src={welcomeImage} alt="welcome" />
+              <img
+                style={{ zIndex: 999999 }}
+                src={welcomeImage}
+                alt="welcome"
+              />
             </S.ImageContainer>
           </U.Responsive>
         </Grid>
