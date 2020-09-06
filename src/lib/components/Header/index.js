@@ -23,7 +23,7 @@ export default function Header({
   setOpen,
   name,
   image,
-  description,
+
   childrenTitle,
   dropDownOptions = [],
   childrenNotification,
@@ -131,7 +131,6 @@ export default function Header({
                     <S.DropDownItem onClick={showDropdown}>
                       <Spacing mr={2}>
                         <S.TextCard>{name}</S.TextCard>
-                        <S.DescCard>{description}</S.DescCard>
                       </Spacing>
                       <Spacing ds="flex" style={{ alignItems: 'center' }}>
                         {image && <S.ImageProfile src={image} alt="" />}
@@ -199,10 +198,7 @@ Header.propTypes = {
    * name on card profile.
    */
   name: PropTypes.string,
-  /**
-   * description on card profile.
-   */
-  description: PropTypes.string,
+
   /**
    * image on card profile.
    */

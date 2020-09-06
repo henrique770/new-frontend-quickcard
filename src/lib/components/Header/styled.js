@@ -58,6 +58,7 @@ export const DropDownItem = styled.div`
     props.theme.selectBackground ? props.theme.selectBackground : `#edeff569`};
   padding: 1rem 0 1rem 1.2rem;
   display: flex;
+  align-items: center;
   justify-content: space-between;
   border-radius: 0.8rem;
   z-index: 999 !important;

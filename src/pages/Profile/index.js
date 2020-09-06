@@ -13,8 +13,11 @@ import Loading from '~/components/Loading';
 
 import * as U from '~/styles/utilities';
 import * as S from './styled';
+import { AuthContext } from '~/context/AuthContext';
 
 function Profile() {
+  const { user } = useContext(AuthContext);
+
   const themeContext = useContext(ThemeContext);
   const [isShown, setIsShown] = useState(false);
 
@@ -28,9 +31,11 @@ function Profile() {
 
   const [loading] = useState(false);
 
+  console.log(user);
+
   const initialValues = {
-    name: '',
-    email: '',
+    name: user.name,
+    email: user.email,
     current_password: '',
     new_password: '',
     password_confirmation: '',
@@ -88,9 +93,9 @@ function Profile() {
                         <Grid item xs={12}>
                           <TextField
                             id="outlined-basic"
-                            label="Nome completo"
+                            label="Nome"
                             type="text"
-                            placeholder="Digite seu nome completo"
+                            placeholder="Digite seu nome"
                             error={
                               errors.name && touched.name ? errors.name : null
                             }
@@ -275,7 +280,7 @@ function Profile() {
                         >
                           <div>
                             <Text component="h1" size={1.8}>
-                              Henrique
+                              {user.name}
                             </Text>
                             <Text
                               size={1.3}
@@ -284,7 +289,7 @@ function Profile() {
                               href="mailto:"
                               color="#636D73"
                             >
-                              henrique.1360@gmail.com
+                              {user.email}
                             </Text>
                           </div>
                         </Grid>
