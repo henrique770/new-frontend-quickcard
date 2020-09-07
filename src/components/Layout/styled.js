@@ -80,7 +80,7 @@ export const Notification = styled.div`
 
   color: ${(props) =>
     props.theme.textColorPrimary ? props.theme.textColorPrimary : `#414D55`};
-    transition: 0.3s;
+  transition: 0.3s;
   &:hover {
     transition: 0.3s;
     ${({ ...props }) =>
@@ -99,16 +99,17 @@ export const Notification = styled.div`
   ${({ newNotification }) =>
     newNotification ? `box-shadow: 0px 2px 4px #00000029;` : ``}
 
-    ${({ newNotification, ...props }) =>
-      newNotification
-        ? props.theme.mode === 'light'
-          ? `background: #edeff569;`
-          : `background: #2a2b2c;`
-        : ``}
+  ${({ newNotification, ...props }) =>
+    newNotification
+      ? props.theme.mode === 'light'
+        ? `background: #edeff569;`
+        : `background: #2a2b2c;`
+      : ``}
 
 
 
-  ${({ ReadNotification }) => (ReadNotification ? `opacity: 40%;` : ``)}
+  ${({ ReadNotification }) =>
+    ReadNotification ? `opacity: 40%;` : ``}
 `;
 
 export const TitleNotification = styled.h1`

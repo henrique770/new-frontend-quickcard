@@ -271,4 +271,7 @@ ${'' /* scroll */}
 }
 
 
+.Toastify__toast-container {
+  z-index: 9999;
+}
 `;
