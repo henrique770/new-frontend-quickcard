@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 
 import swal from 'sweetalert';
 
+import { Formik } from 'formik';
 import FlatList from '~/components/FlatList';
 import { Grid, Spacing, Text, useOutsideClick, Button } from '~/lib';
 
@@ -13,6 +14,8 @@ import VariationList from '~/components/VariationList';
 import { decks } from '~/data/fake';
 import useQuery from '~/utils/queryParams';
 import history from '~/services/history';
+
+import api from '~/services/api';
 
 import * as U from '~/styles/utilities';
 
@@ -83,6 +86,20 @@ function Deck() {
       }
     });
   }
+
+  const initialValuesDeck = {
+    name: '',
+  };
+
+  async function createDeck(values) {
+    try {
+      api.post('deck', values);
+      alert('baralho criado com sucesso!');
+    } catch {
+      alert('Falha na criação');
+    }
+  }
+
   return (
     <>
       <Layout
@@ -212,34 +229,42 @@ function Deck() {
       {/* modal adicionar baralho */}
       {modalOpenDeck && (
         <Modal size={50} onClose={() => setModalOpenDeck(false)}>
-          <U.FormCard ref={modalDeck}>
-            <Text component="h1" size={1.8}>
-              Adicionar baralho
-            </Text>
-            <Spacing mb={3} />
-            <Grid container spacing={3}>
-              <Grid item xs={12}>
-                <TextField
-                  id="outlined-basic"
-                  label="Nome do baralho"
-                  type="text"
-                  placeholder="Digite o nome do baralho"
-                />
-              </Grid>
-            </Grid>
-            <Spacing mb={3} />
-            <Grid container justify="flex-end" alignItems="flex-end">
-              <U.ButtonResponsive
-                bgColor="#fe650e"
-                radius="4px"
-                onClick={() => setModalOpenDeck(true)}
-              >
-                <Text size={1.4} weight="bold">
-                  Salvar
+          <Formik initialValues={initialValuesDeck} onSubmit={createDeck}>
+            {({ handleSubmit, handleBlur, handleChange, values }) => (
+              <U.FormCard ref={modalDeck} onSubmit={handleSubmit}>
+                <Text component="h1" size={1.8}>
+                  Adicionar baralho
                 </Text>
-              </U.ButtonResponsive>
-            </Grid>
-          </U.FormCard>
+                <Spacing mb={3} />
+                <Grid container spacing={3}>
+                  <Grid item xs={12}>
+                    <TextField
+                      id="outlined-basic"
+                      label="Nome do baralho"
+                      type="text"
+                      placeholder="Digite o nome do baralho"
+                      name="name"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.name}
+                    />
+                  </Grid>
+                </Grid>
+                <Spacing mb={3} />
+                <Grid container justify="flex-end" alignItems="flex-end">
+                  <U.ButtonResponsive
+                    bgColor="#fe650e"
+                    radius="4px"
+                    onClick={() => setModalOpenDeck(true)}
+                  >
+                    <Text size={1.4} weight="bold">
+                      Salvar
+                    </Text>
+                  </U.ButtonResponsive>
+                </Grid>
+              </U.FormCard>
+            )}
+          </Formik>
         </Modal>
       )}
 

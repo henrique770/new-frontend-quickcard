@@ -8,6 +8,7 @@ export const AuthContext = createContext({ user: {} });
 toast.configure();
 
 export const AuthProvider = ({ children }) => {
+  const [loadingSignIn, setLoadingSignIn] = useState(false);
   const [data, setData] = useState(() => {
     const token = localStorage.getItem('@QuickCard:token');
     const student = localStorage.getItem('@QuickCard:student');
@@ -19,6 +20,7 @@ export const AuthProvider = ({ children }) => {
   });
 
   const signIn = useCallback(async ({ email, password }) => {
+    setLoadingSignIn(true);
     try {
       const response = await api.post('/login', {
         email,
@@ -52,6 +54,7 @@ export const AuthProvider = ({ children }) => {
         progress: undefined,
       });
     }
+    setLoadingSignIn(false);
   }, []);
 
   const signOut = useCallback(() => {
@@ -62,7 +65,9 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user: data.student, signIn, signOut }}>
+    <AuthContext.Provider
+      value={{ user: data.student, signIn, signOut, loadingSignIn }}
+    >
       {children}
     </AuthContext.Provider>
   );

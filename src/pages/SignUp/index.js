@@ -65,11 +65,7 @@ function SignUp() {
         <Grid item xs={12} md={6} lg={8}>
           <U.Responsive width="960px" dsLess="none" dsGreater="block">
             <S.ImageContainer>
-              <img
-                style={{ zIndex: 999999 }}
-                src={welcomeImage}
-                alt="welcome"
-              />
+              <img style={{ zIndex: 999 }} src={welcomeImage} alt="welcome" />
             </S.ImageContainer>
           </U.Responsive>
         </Grid>

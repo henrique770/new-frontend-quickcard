@@ -12,19 +12,17 @@ import * as S from './styled';
 import { AuthContext } from '~/context/AuthContext';
 
 import * as U from '~/styles/utilities';
-// import Loading from '~/components/Loading';
+import Loading from '~/components/Loading';
 import validations from './validations';
 
 function Login() {
+  const { signIn, loadingSignIn } = useContext(AuthContext);
   const themeContext = useContext(ThemeContext);
-  // const [loading, setLoading] = useState(false);
 
   const initialValues = {
     email: '',
     password: '',
   };
-
-  const { signIn } = useContext(AuthContext);
 
   function handleSubmitForm(values) {
     signIn(values);
@@ -35,11 +33,7 @@ function Login() {
         <Grid item xs={12} md={6} lg={8}>
           <U.Responsive width="960px" dsLess="none" dsGreater="block">
             <S.ImageContainer>
-              <img
-                style={{ zIndex: 999999 }}
-                src={welcomeImage}
-                alt="welcome"
-              />
+              <img style={{ zIndex: 999 }} src={welcomeImage} alt="welcome" />
             </S.ImageContainer>
           </U.Responsive>
         </Grid>
@@ -116,16 +110,15 @@ function Login() {
                     padding="1.5rem"
                   >
                     <Text color="#fff" weight="bold">
-                      {/* {loading ? (
-                        <Grid container alignItems="center">
+                      {loadingSignIn ? (
+                        <Grid container justify="center" alignItems="center">
                           <Loading />
                           <Spacing mr={1} />
-                          Entrando..
+                          Entrando...
                         </Grid>
                       ) : (
                         <>Acessar</>
-                      )} */}
-                      Acessar
+                      )}
                     </Text>
                   </Button>
                   <Spacing mt={2} />

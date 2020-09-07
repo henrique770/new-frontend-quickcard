@@ -52,8 +52,6 @@ function Layout({ children, childrenHeader, childrenTitle, noHeader }) {
 
   const { signOut, user } = useContext(AuthContext);
 
-  console.log(user);
-
   return (
     <S.Wrapper>
       <div ref={node}>
