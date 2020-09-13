@@ -1,7 +1,8 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect, useCallback } from 'react';
 import { ArrowBack, AddAPhoto } from '@styled-icons/material-outlined';
 import { ThemeContext } from 'styled-components';
 import { Formik } from 'formik';
+import { toast } from 'react-toastify';
 import { Grid, Text, Card, Spacing, Button } from '~/lib';
 
 import Layout from '~/components/Layout';
@@ -10,10 +11,13 @@ import history from '~/services/history';
 import DefaultProfileImage from '~/utils/ProfileImage';
 import validations from './validations';
 import Loading from '~/components/Loading';
-
+import api from '~/services/api';
 import * as U from '~/styles/utilities';
 import * as S from './styled';
 import { AuthContext } from '~/context/AuthContext';
+import 'react-toastify/dist/ReactToastify.css';
+
+const url = 'http://quickcard-io.herokuapp.com/api/v1';
 
 function Profile() {
   const { user } = useContext(AuthContext);
@@ -21,27 +25,94 @@ function Profile() {
   const themeContext = useContext(ThemeContext);
   const [isShown, setIsShown] = useState(false);
 
-  // file
+  const [loading, setLoading] = useState(false);
 
-  const [filePreview, setFilePreview] = useState({ link: null });
+  const { _id } = user;
+
+  const [initialValues, setInitialValues] = useState({
+    name: '',
+    email: '',
+    oldPassword: '',
+    password: '',
+    confirmPassword: '',
+    imgPerfil: null,
+  });
+
+  const fetchData = useCallback(async () => {
+    const response = await api.get(`student/${_id}`);
+
+    const result = response.data;
+
+    setInitialValues({
+      name: result.name ? result.name : undefined,
+      email: result.email ? result.email : undefined,
+    });
+  }, [_id]);
+
+  const [, setHasImage] = useState();
+  const [fileUpload, setFileUpload] = useState();
+
+  const fetchImage = useCallback(async () => {
+    try {
+      await api.get(`student/imgProfile/${_id}`);
+      setFileUpload(`${url}/student/imgProfile/${_id}`);
+    } catch {
+      setHasImage(false);
+      setFileUpload(null);
+    }
+  }, [_id]);
+
+  useEffect(() => {
+    fetchData();
+    fetchImage();
+  }, [fetchData, fetchImage]);
 
   const PutImage = (e) => {
-    setFilePreview({ ...e, link: URL.createObjectURL(e.target.files[0]) });
+    const reader = new FileReader();
+    reader.readAsDataURL(e.target.files[0]);
+    reader.onloadend = () => {
+      const base64data = reader.result;
+
+      setFileUpload(base64data);
+    };
   };
 
-  const [loading] = useState(false);
+  async function handleSubmitForm(values) {
+    setLoading(true);
 
-  console.log(user);
+    try {
+      const response = await api.put(`student/${_id}`, {
+        Name: values.name,
+        Email: values.email,
+        OldPassword: values.oldPassword ? values.oldPassword : null,
+        Password: values.password ? values.password : null,
+        ImgPerfil: fileUpload,
+      });
 
-  const initialValues = {
-    name: user.name,
-    email: user.email,
-    current_password: '',
-    new_password: '',
-    password_confirmation: '',
-  };
+      toast.success('O perfil foi atualizado!', {
+        position: 'top-right',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
 
-  function handleSubmitForm({ email, password }) {}
+      setInitialValues(response.data);
+    } catch (err) {
+      toast.error('Falha na atualização', {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
+    setLoading(false);
+  }
 
   return (
     <>
@@ -75,6 +146,7 @@ function Profile() {
           initialValues={initialValues}
           onSubmit={handleSubmitForm}
           validationSchema={validations()}
+          enableReinitialize
         >
           {({
             handleSubmit,
@@ -139,21 +211,19 @@ function Profile() {
                             type="password"
                             placeholder="Digite sua senha atual"
                             error={
-                              errors.current_password &&
-                              touched.current_password
-                                ? errors.current_password
+                              errors.oldPassword && touched.oldPassword
+                                ? errors.oldPassword
                                 : null
                             }
                             helperText={
-                              errors.current_password &&
-                              touched.current_password
-                                ? errors.current_password
+                              errors.oldPassword && touched.oldPassword
+                                ? errors.oldPassword
                                 : null
                             }
-                            name="current_password"
+                            name="oldPassword"
                             onChange={handleChange}
                             onBlur={handleBlur}
-                            value={values.current_password}
+                            value={values.oldPassword}
                           />
                         </Grid>
 
@@ -164,19 +234,19 @@ function Profile() {
                             type="password"
                             placeholder="Digite sua nova senha"
                             error={
-                              errors.new_password && touched.new_password
-                                ? errors.new_password
+                              errors.password && touched.password
+                                ? errors.password
                                 : null
                             }
                             helperText={
-                              errors.new_password && touched.new_password
-                                ? errors.new_password
+                              errors.password && touched.password
+                                ? errors.password
                                 : null
                             }
-                            name="new_password"
+                            name="password"
                             onChange={handleChange}
                             onBlur={handleBlur}
-                            value={values.new_password}
+                            value={values.password}
                           />
                         </Grid>
                         <Grid item xs={12}>
@@ -186,21 +256,19 @@ function Profile() {
                             type="password"
                             placeholder="Confirme sua senha"
                             error={
-                              errors.password_confirmation &&
-                              touched.password_confirmation
-                                ? errors.password_confirmation
+                              errors.confirmPassword && touched.confirmPassword
+                                ? errors.confirmPassword
                                 : null
                             }
                             helperText={
-                              errors.password_confirmation &&
-                              touched.password_confirmation
-                                ? errors.password_confirmation
+                              errors.confirmPassword && touched.confirmPassword
+                                ? errors.confirmPassword
                                 : null
                             }
-                            name="password_confirmation"
+                            name="confirmPassword"
                             onChange={handleChange}
                             onBlur={handleBlur}
-                            value={values.password_confirmation}
+                            value={values.confirmPassword}
                           />
                         </Grid>
 
@@ -253,11 +321,15 @@ function Profile() {
                           >
                             <img
                               src={
-                                filePreview.link === null
+                                fileUpload == null
                                   ? DefaultProfileImage()
-                                  : filePreview.link
+                                  : fileUpload
                               }
-                              // src={profileStudent}
+                              // src={
+                              //   hasImage
+                              //     ? `${url}/student/imgProfile/${_id}`
+                              //     : DefaultProfileImage()
+                              // }
                               alt="profileImage"
                             />
                             {isShown && (
@@ -280,7 +352,7 @@ function Profile() {
                         >
                           <div>
                             <Text component="h1" size={1.8}>
-                              {user.name}
+                              {initialValues.name}
                             </Text>
                             <Text
                               size={1.3}
@@ -289,7 +361,7 @@ function Profile() {
                               href="mailto:"
                               color="#636D73"
                             >
-                              {user.email}
+                              {initialValues.email}
                             </Text>
                           </div>
                         </Grid>

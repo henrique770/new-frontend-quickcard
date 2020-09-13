@@ -43,16 +43,21 @@ export const AuthProvider = ({ children }) => {
         draggable: true,
         progress: undefined,
       });
-    } catch {
-      toast.error('falha no login', {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
+    } catch (err) {
+      toast.error(
+        err.response.status === 400
+          ? 'Login ou senha incorretos'
+          : 'falha no login, por favor verificar os dados',
+        {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        }
+      );
     }
     setLoadingSignIn(false);
   }, []);
@@ -66,7 +71,13 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user: data.student, signIn, signOut, loadingSignIn }}
+      value={{
+        user: data.student,
+        token: data.token,
+        signIn,
+        signOut,
+        loadingSignIn,
+      }}
     >
       {children}
     </AuthContext.Provider>

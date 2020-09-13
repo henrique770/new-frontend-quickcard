@@ -7,12 +7,13 @@ import {
   PauseCircleOutline,
   Replay,
   WatchLater,
+  RemoveCircle,
 } from '@styled-icons/material-outlined';
 
 import { ThemeContext } from 'styled-components';
 
 import moment from 'moment';
-import { CloseCircle } from '@styled-icons/ionicons-sharp/CloseCircle';
+
 import { Grid, Spacing, Text, Button } from '~/lib';
 import { useInterval } from '~/hooks/useInterval';
 import * as U from '~/styles/utilities';
@@ -148,7 +149,7 @@ function Pomodoro() {
               </Grid>
             </Grid>
             <U.ButtonClose onClick={() => setIsShow(false)}>
-              <CloseCircle style={{ cursor: 'pointer' }} size={25} />
+              <RemoveCircle style={{ cursor: 'pointer' }} size={25} />
             </U.ButtonClose>
           </U.PomodoroCard>
         )}

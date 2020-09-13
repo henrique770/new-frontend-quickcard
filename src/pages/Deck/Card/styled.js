@@ -15,7 +15,7 @@ export const TitleCard = styled(Text)`
 `;
 
 export const CardContainer = styled.div`
-  height: 70vh;
+  /* height: 70vh; */
   display: flex;
   flex-direction: column;
   justify-content: center;

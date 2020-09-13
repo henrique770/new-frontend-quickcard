@@ -1,7 +1,8 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
 export const Modal = styled.div`
   position: fixed;
+  transition: ease-in 0.5s;
   top: 0;
   left: 0;
   width: 100%;
@@ -35,7 +36,19 @@ export const ModalContainer = styled.div`
   ${({ size }) => (size ? `width: ${size}rem;` : `width: 70rem;`)}
 `;
 
+const appearFromBottom = keyframes`
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+`;
+
 export const ModalContent = styled.div`
+  animation: ${appearFromBottom} 0.5s;
   background: ${(props) =>
     props.theme.backgroundSecondary ? props.theme.backgroundSecondary : `#fff`};
   border-radius: 0.8rem;
@@ -46,6 +59,7 @@ export const ModalContent = styled.div`
 `;
 
 export const ButtonClose = styled.div`
+  animation: ${appearFromBottom} 0.5s;
   position: absolute;
   right: 33px;
   top: -2.5rem;
