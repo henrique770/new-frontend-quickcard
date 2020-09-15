@@ -45,6 +45,7 @@
     "styled-icons": "^10.2.1",
     "styled-media-query": "^2.1.2",
     "sweetalert": "^2.1.2",
+    "uniqid": "^5.2.0",
     "webfontloader": "^1.6.28",
     "yup": "^0.29.1"
   },

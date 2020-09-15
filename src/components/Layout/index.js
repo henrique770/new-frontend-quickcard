@@ -1,6 +1,12 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable import/no-extraneous-dependencies */
-import React, { useState, useRef, useContext } from 'react';
+import React, {
+  useState,
+  useRef,
+  useContext,
+  useCallback,
+  useEffect,
+} from 'react';
 
 import PropTypes from 'prop-types';
 import {
@@ -20,16 +26,18 @@ import { ThemeContext } from 'styled-components';
 import { useOutsideClick, Menu, Grid, Spacing, Text } from '~/lib';
 import { useTheme } from '~/components/ThemeContext';
 
-import profilepic from '~/assets/img/h.png';
+import DefaultProfileImage from '~/utils/ProfileImage';
 import whiteLogo from '~/assets/img/white_main_logo.png';
 import darkLogo from '~/assets/img/logo_quickcard.png';
-
+import api from '~/services/api';
 import { notifications } from '~/data/fake';
 
 import history from '~/services/history';
 import { AuthContext } from '~/context/AuthContext';
 
 import * as S from './styled';
+
+const url = 'http://quickcard-io.herokuapp.com/api/v1';
 
 function Layout({ children, childrenHeader, childrenTitle, noHeader }) {
   const themeToggle = useTheme();
@@ -51,6 +59,37 @@ function Layout({ children, childrenHeader, childrenTitle, noHeader }) {
   ];
 
   const { signOut, user } = useContext(AuthContext);
+  const { _id } = user;
+
+  const [userData, SetUserData] = useState();
+
+  const fetchData = useCallback(async () => {
+    const response = await api.get(`student/${_id}`);
+
+    const result = response.data;
+
+    SetUserData({
+      name: result.name ? result.name : undefined,
+      email: result.email ? result.email : undefined,
+    });
+  }, [_id]);
+
+  const [, setHasImage] = useState();
+  const [fileUpload, setFileUpload] = useState();
+  const fetchImage = useCallback(async () => {
+    try {
+      await api.get(`student/imgProfile/${_id}`);
+      setFileUpload(`${url}/student/imgProfile/${_id}`);
+    } catch {
+      setHasImage(false);
+      setFileUpload(null);
+    }
+  }, [_id]);
+
+  useEffect(() => {
+    fetchData();
+    fetchImage();
+  }, [fetchData, fetchImage]);
 
   return (
     <S.Wrapper>
@@ -116,7 +155,9 @@ function Layout({ children, childrenHeader, childrenTitle, noHeader }) {
                     dropDownOptions={dropdownOptions}
                     open={open}
                     setOpen={setOpen}
-                    image={profilepic}
+                    image={
+                      fileUpload == null ? DefaultProfileImage() : fileUpload
+                    }
                     iconNotification={
                       <Notifications size={30} color="#fe650e" />
                     }
@@ -177,7 +218,7 @@ function Layout({ children, childrenHeader, childrenTitle, noHeader }) {
                       </>
                     }
                     icon={<MenuOutline size={30} color="#fe650e" />}
-                    name={user.name}
+                    name={userData ? userData.name : ``}
                     logoutFunc={signOut}
                   >
                     {childrenHeader}

@@ -1,8 +1,15 @@
-import React, { useState, useRef } from 'react';
+import React, {
+  useState,
+  useRef,
+  useContext,
+  useCallback,
+  useEffect,
+} from 'react';
 
 import swal from 'sweetalert';
 
 import { Formik } from 'formik';
+import uniqid from 'uniqid';
 import FlatList from '~/components/FlatList';
 import { Grid, Spacing, Text, useOutsideClick, Button } from '~/lib';
 
@@ -14,12 +21,15 @@ import VariationList from '~/components/VariationList';
 import { decks } from '~/data/fake';
 import useQuery from '~/utils/queryParams';
 import history from '~/services/history';
-
 import api from '~/services/api';
+import { AuthContext } from '~/context/AuthContext';
 
 import * as U from '~/styles/utilities';
 
 function Deck() {
+  const { user, token } = useContext(AuthContext);
+  const { _id } = user;
+
   const query = useQuery();
   const [status] = useState({
     text: query.get('text'),
@@ -91,15 +101,49 @@ function Deck() {
     name: '',
   };
 
+  // REQUESTS
+
   async function createDeck(values) {
     try {
-      api.post('deck', values);
+      await api.post(
+        'deck',
+        { Name: values.name, Id: uniqid(), idStudent: _id },
+        {
+          headers: {
+            // 'Access-Control-Allow-Origin': '*',
+            // 'Content-type': 'Application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       alert('baralho criado com sucesso!');
     } catch {
       alert('Falha na criação');
     }
   }
 
+  const [deckss, setDecks] = useState();
+
+  const fetchData = useCallback(async () => {
+    try {
+      const response = await api.get(`deck`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const { data } = response;
+      setDecks(data);
+    } catch (err) {
+      console.log(err);
+    }
+  }, [token]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  console.log(deckss);
   return (
     <>
       <Layout

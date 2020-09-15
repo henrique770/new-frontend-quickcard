@@ -7,17 +7,31 @@ export default function validations() {
       .string()
       .email('Insira um e-mail válido')
       .required('O e-mail é obrigatório'),
-    current_password: yup
+
+    oldPassword: yup
       .string()
-      .min(6, 'A senha precisa ter no mínimo 6 caracteres')
-      .required('A senha atual é obrigatória'),
-    new_password: yup
-      .string()
-      .min(6, 'A senha precisa ter no mínimo 6 caracteres')
-      .required('A nova senha é obrigatória'),
-    password_confirmation: yup
-      .string()
-      .min(6, 'A senha precisa ter no mínimo 6 caracteres')
-      .oneOf([yup.ref('new_password'), null], 'A senhas não conferem'),
+      .min(6, 'A senha precisa ter no mínimo 6 caracteres'),
+
+    // id do usuário
+    password: yup.string().when('oldPassword', {
+      is: (val) => !!val,
+      then: yup
+        .string()
+        .min(6, 'A senha precisa ter no mínimo 6 caracteres')
+        .required('A nova senha é obrigatória')
+        .nullable(),
+      otherwise: yup.string().nullable(),
+    }),
+
+    confirmPassword: yup.string().when('password', {
+      is: (val) => !!val,
+      then: yup
+        .string()
+        .min(6, 'A senha precisa ter no mínimo 6 caracteres')
+        .required('É obrigatório confirmar a senha')
+        .oneOf([yup.ref('password'), null], 'A senhas não conferem')
+        .nullable(),
+      otherwise: yup.string().nullable(),
+    }),
   });
 }
