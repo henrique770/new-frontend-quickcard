@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useRef,
-  useContext,
-  useCallback,
-  useEffect,
-} from 'react';
+import React, { useState, useRef, useContext } from 'react';
 
 import swal from 'sweetalert';
 
@@ -110,8 +104,6 @@ function Deck() {
         { Name: values.name, Id: uniqid(), idStudent: _id },
         {
           headers: {
-            // 'Access-Control-Allow-Origin': '*',
-            // 'Content-type': 'Application/json',
             Authorization: `Bearer ${token}`,
           },
         }
@@ -122,28 +114,26 @@ function Deck() {
     }
   }
 
-  const [deckss, setDecks] = useState();
+  // const [decks, setDecks] = useState([]);
 
-  const fetchData = useCallback(async () => {
-    try {
-      const response = await api.get(`deck`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await api.get(`deck`, {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       });
 
-      const { data } = response;
-      setDecks(data);
-    } catch (err) {
-      console.log(err);
-    }
-  }, [token]);
+  //       const { data } = response;
+  //       setDecks(data);
+  //     } catch (err) {
+  //       console.log(err);
+  //     }
+  //   };
+  //   fetchData();
+  // }, [token, decks]);
 
-  useEffect(() => {
-    fetchData();
-  }, [fetchData]);
-
-  console.log(deckss);
   return (
     <>
       <Layout
@@ -235,7 +225,7 @@ function Deck() {
                         </Grid>
                         <Grid item>
                           <Text weight="bold" color="#fe650e">
-                            {item.cards}
+                            32
                           </Text>
                         </Grid>
                       </Grid>
@@ -245,7 +235,7 @@ function Deck() {
                         </Grid>
                         <Grid item>
                           <Text weight="bold" color="#fe650e">
-                            {item.review}
+                            12
                           </Text>
                         </Grid>
                       </Grid>
@@ -255,15 +245,14 @@ function Deck() {
                         </Grid>
                         <Grid item>
                           <Text weight="bold" color="#fe650e">
-                            {item.reviewed}
+                            12
                           </Text>
                         </Grid>
                       </Grid>
                     </Grid>
                   }
+                  // title={item.name}
                   title={item.title}
-                  previewText={item.text}
-                  textFooter={item.block_name}
                 />
               );
             })}

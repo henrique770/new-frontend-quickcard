@@ -1,13 +1,15 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Formik } from 'formik';
 import { ThemeContext } from 'styled-components';
 import { Grid, Button, Text, Spacing } from '~/lib';
+import history from '~/services/history';
 
 import TextField from '~/components/TextField';
 
+import Loading from '~/components/Loading';
 import welcomeImage from '~/assets/img/background.jpg';
 import whiteLogo from '~/assets/img/white_main_logo.png';
 import darkLogo from '~/assets/img/logo_quickcard.png';
@@ -16,15 +18,13 @@ import api from '~/services/api';
 
 import * as U from '~/styles/utilities';
 
-// import AuthContext from '~/context/AuthContext';
-
 import validations from './validations';
-// import Loading from '~/components/Loading';
+
 toast.configure();
 
 function SignUp() {
   const themeContext = useContext(ThemeContext);
-  // const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const initialValues = {
     name: '',
@@ -32,9 +32,8 @@ function SignUp() {
     password: '',
   };
 
-  // const auth = useContext(AuthContext);
-
   async function handleSubmitForm({ name, email, password }) {
+    setLoading(true);
     try {
       await api.post('/student', { name, email, password });
       toast.success('cadastro feito com sucesso!', {
@@ -46,6 +45,7 @@ function SignUp() {
         draggable: true,
         progress: undefined,
       });
+      history.push('/login');
     } catch {
       toast.error('falha no cadastro', {
         position: 'top-right',
@@ -57,6 +57,7 @@ function SignUp() {
         progress: undefined,
       });
     }
+    setLoading(false);
   }
 
   return (
@@ -159,16 +160,15 @@ function SignUp() {
                     padding="1.5rem"
                   >
                     <Text color="#fff" weight="bold">
-                      {/* {loading ? (
-                        <Grid container alignItems="center">
+                      {loading ? (
+                        <Grid container justify="center" alignItems="center">
                           <Loading />
                           <Spacing mr={1} />
                           Cadastrando..
                         </Grid>
                       ) : (
                         <>Criar conta</>
-                      )} */}
-                      Criar conta
+                      )}
                     </Text>
                   </Button>
                   <Spacing mt={2} />
