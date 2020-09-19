@@ -1,29 +1,50 @@
-import React, { useState, useRef } from 'react';
+import React, {
+  useState,
+  useRef,
+  useContext,
+  useEffect,
+  useCallback,
+} from 'react';
 
 import swal from 'sweetalert';
+import { Formik } from 'formik';
+import uniqid from 'uniqid';
 import FlatList from '~/components/FlatList';
 import { Grid, Spacing, Text, useOutsideClick, Button } from '~/lib';
 import history from '~/services/history';
 import useQuery from '~/utils/queryParams';
 
+import SkeletonLoad from '~/components/Skeleton';
+import Empty from '~/components/Empty';
 import Layout from '~/components/Layout';
 import Modal from '~/components/Modal';
 import TextField from '~/components/TextField';
 import Search from '~/components/Search';
 import VariationList from '~/components/VariationList';
-import { blocknotes } from '~/data/fake';
+
+import api from '~/services/api';
+import { AuthContext } from '~/context/AuthContext';
 
 import * as U from '~/styles/utilities';
 
 function NotePad() {
+  const { user, token } = useContext(AuthContext);
+  const { _id } = user;
+
   const query = useQuery();
   const [status] = useState({
     text: query.get('text'),
   });
 
+  const [empty, setEmpty] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [searchValue, setSearchValue] = useState('');
   const [modalOpenCreate, setModalOpenCreate] = useState(false);
-  const [modalEdit, setModalEdit] = useState({ state: false, id: undefined });
+  const [modalEdit, setModalEdit] = useState({
+    state: false,
+    id: undefined,
+    values: undefined,
+  });
   const [listState, setListState] = useState(false);
 
   const modalCreate = useRef();
@@ -55,7 +76,93 @@ function NotePad() {
     history.push(`/`);
     window.location.reload(false);
   };
-  function deleteNotePad() {
+
+  const [notepads, setNotePads] = useState([]);
+
+  const fetchData = useCallback(async () => {
+    try {
+      setLoading(true);
+      setEmpty(false);
+      const response = await api.get(`notePad`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const { data } = response;
+      setNotePads(data);
+      setTimeout(() => {
+        setLoading(false);
+      }, 700);
+
+      const hasActive = data.some((item) => item.isActive === true);
+      if (hasActive === false) {
+        setEmpty(true);
+      }
+    } catch {
+      setTimeout(() => {
+        setLoading(false);
+      }, 700);
+      setEmpty(true);
+    }
+  }, [token]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  // create
+  async function createNotePad(values) {
+    try {
+      await api.post(
+        'notePad',
+        { Name: values.name, Id: uniqid(), idStudent: _id },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      swal('Criado!', 'O Bloco de nota foi criado com sucesso!', 'success');
+      setModalOpenCreate(false);
+      fetchData();
+    } catch {
+      swal('Falhou!', 'Falha na criação', 'error');
+    }
+  }
+
+  // update
+  async function editNotePad(values) {
+    try {
+      await api.put(
+        `notePad/${modalEdit.id}`,
+        {
+          Name: values.name,
+          Id: modalEdit.id,
+          idStudent: _id,
+          IsActive: modalEdit.values.isActive,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      swal(
+        'Atualizado!',
+        'O bloco de nota foi atualizado com sucesso!',
+        'success'
+      );
+      fetchData();
+      setModalEdit(false);
+    } catch {
+      swal('Falhou!', 'Falha na atualização', 'error');
+    }
+  }
+
+  function deleteNotePad(id) {
     swal({
       title: 'Tem certeza que quer deletar?',
       text: 'Uma vez excluído, você não poderá recuperar esse bloco de notas!',
@@ -64,12 +171,37 @@ function NotePad() {
       dangerMode: true,
     }).then((willDelete) => {
       if (willDelete) {
-        swal('O bloco de notas foi excluído com sucesso!', {
-          icon: 'success',
-        });
+        api
+          .put(
+            `notePad/${id}`,
+            {
+              Name: modalEdit.values.name,
+              Id: id,
+              idStudent: _id,
+              IsActive: false,
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          )
+          .then(() => {
+            if (willDelete) {
+              swal('O bloco de notas foi excluído com sucesso!', {
+                icon: 'success',
+              });
+              fetchData();
+            }
+          })
+          .catch(() => {
+            swal('Falhou', 'Há algo errado', 'warning');
+          });
       }
     });
   }
+
+  console.log(notepads);
   return (
     <>
       <Layout
@@ -129,127 +261,166 @@ function NotePad() {
 
         <Spacing mb={2.2} />
         <Grid>
-          <U.NoteGridContainer list={listState}>
-            {blocknotes.map((item) => {
-              return (
-                <FlatList
-                  edit
-                  editFunc={() => setModalEdit({ state: true, id: item.id })}
-                  link="/notepad/notes"
-                  title={item.title}
-                  notepad={
-                    <Grid>
-                      <Grid container spacing={1}>
-                        <Grid item>
-                          <Text>Notas:</Text>
-                        </Grid>
-                        <Grid item>
-                          <Text weight="bold" color="#fe650e">
-                            {item.notes}
-                          </Text>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  }
-                />
-              );
-            })}
-          </U.NoteGridContainer>
+          {loading ? (
+            <SkeletonLoad />
+          ) : (
+            <>
+              {empty || notepads.length === 0 ? (
+                <Empty />
+              ) : (
+                <U.NoteGridContainer list={listState}>
+                  {notepads.map((item) => {
+                    if (item.isActive === true) {
+                      return (
+                        <FlatList
+                          edit
+                          editFunc={() =>
+                            setModalEdit({
+                              state: true,
+                              id: item._id,
+                              values: item,
+                            })
+                          }
+                          link="/notepad/notes"
+                          title={item.name}
+                          notepad={
+                            <Grid>
+                              <Grid container spacing={1}>
+                                <Grid item>
+                                  <Text>Notas:</Text>
+                                </Grid>
+                                <Grid item>
+                                  <Text weight="bold" color="#fe650e">
+                                    0
+                                  </Text>
+                                </Grid>
+                              </Grid>
+                            </Grid>
+                          }
+                        />
+                      );
+                    }
+                    return '';
+                  })}
+                </U.NoteGridContainer>
+              )}
+            </>
+          )}
         </Grid>
       </Layout>
 
       {/* modal adicionar bloco de notas */}
       {modalOpenCreate && (
         <Modal size={50} onClose={() => setModalOpenCreate(false)}>
-          <U.FormCard ref={modalCreate}>
-            <Text component="h1" size={1.8}>
-              Adicionar bloco de notas
-            </Text>
-            <Spacing mb={3} />
-            <Grid container spacing={3}>
-              <Grid item xs={12}>
-                <TextField
-                  id="outlined-basic"
-                  label="Nome do bloco de notas"
-                  type="text"
-                  placeholder="Digite o nome do bloco de notas"
-                />
-              </Grid>
-            </Grid>
-            <Spacing mb={3} />
-            <Grid container justify="flex-end" alignItems="flex-end">
-              <U.ButtonResponsive
-                bgColor="#fe650e"
-                radius="4px"
-                onClick={() => setModalOpenCreate(true)}
-              >
-                <Text size={1.4}>Salvar</Text>
-              </U.ButtonResponsive>
-            </Grid>
-          </U.FormCard>
+          <Formik
+            initialValues={{
+              name: '',
+            }}
+            onSubmit={createNotePad}
+          >
+            {({ handleSubmit, handleBlur, handleChange, values }) => (
+              <U.FormCard ref={modalCreate} onSubmit={handleSubmit}>
+                <Text component="h1" size={1.8}>
+                  Adicionar bloco de notas
+                </Text>
+                <Spacing mb={3} />
+                <Grid container spacing={3}>
+                  <Grid item xs={12}>
+                    <TextField
+                      id="outlined-basic"
+                      label="Nome do bloco de notas"
+                      type="text"
+                      placeholder="Digite o nome do bloco de notas"
+                      name="name"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.name}
+                    />
+                  </Grid>
+                </Grid>
+                <Spacing mb={3} />
+                <Grid container justify="flex-end" alignItems="flex-end">
+                  <U.ButtonResponsive
+                    bgColor="#fe650e"
+                    radius="4px"
+                    onClick={() => setModalOpenCreate(true)}
+                  >
+                    <Text size={1.4}>Salvar</Text>
+                  </U.ButtonResponsive>
+                </Grid>
+              </U.FormCard>
+            )}
+          </Formik>
         </Modal>
       )}
 
       {/* modal edição do bloco de notas */}
       {modalEdit.state && (
         <Modal size={50} onClose={() => setModalOpenCreate(false)}>
-          <U.FormCard ref={modalEdition}>
-            <Text component="h1" size={1.8}>
-              Editar bloco de notas
-            </Text>
-            <Spacing mb={3} />
-            <Grid container spacing={3}>
-              <Grid item xs={12}>
-                <TextField
-                  id="outlined-basic"
-                  label="Nome do bloco de notas"
-                  type="text"
-                  placeholder="Digite o nome do bloco de notas"
-                />
-              </Grid>
-            </Grid>
-            <Spacing mb={3} />
+          <Formik initialValues={modalEdit.values} onSubmit={editNotePad}>
+            {({ handleSubmit, handleBlur, handleChange, values }) => (
+              <U.FormCard ref={modalEdition} onSubmit={handleSubmit}>
+                <Text component="h1" size={1.8}>
+                  Editar bloco de notas
+                </Text>
+                <Spacing mb={3} />
+                <Grid container spacing={3}>
+                  <Grid item xs={12}>
+                    <TextField
+                      id="outlined-basic"
+                      label="Nome do bloco de notas"
+                      type="text"
+                      placeholder="Digite o nome do bloco de notas"
+                      name="name"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.name}
+                    />
+                  </Grid>
+                </Grid>
+                <Spacing mb={3} />
 
-            <Grid
-              xs={12}
-              container
-              direction="row"
-              justify="flex-start"
-              spacing={1}
-            >
-              <Grid item xs={12}>
-                <Button
-                  type="button"
-                  style={{ width: '100%' }}
-                  radius="4px"
-                  bgColor="#fe650e"
-                  padding="1rem"
-                  onClick={() => {}}
+                <Grid
+                  xs={12}
+                  container
+                  direction="row"
+                  justify="flex-start"
+                  spacing={1}
                 >
-                  <Text size={1.4} weight="bold">
-                    Salvar
-                  </Text>
-                </Button>
-              </Grid>
-              <Grid item xs={12}>
-                <Button
-                  type="button"
-                  style={{ width: '100%' }}
-                  radius="4px"
-                  padding="1rem"
-                  bgColor="#fe650e"
-                  onClick={() => {
-                    deleteNotePad(modalEdit.id);
-                    setModalEdit(false);
-                  }}
-                >
-                  <Text size={1.4} weight="bold">
-                    Excluir
-                  </Text>
-                </Button>
-              </Grid>
-            </Grid>
-          </U.FormCard>
+                  <Grid item xs={12}>
+                    <Button
+                      type="submit"
+                      style={{ width: '100%' }}
+                      radius="4px"
+                      bgColor="#fe650e"
+                      padding="1rem"
+                    >
+                      <Text size={1.4} weight="bold">
+                        Salvar
+                      </Text>
+                    </Button>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Button
+                      type="button"
+                      style={{ width: '100%' }}
+                      radius="4px"
+                      padding="1rem"
+                      bgColor="#fe650e"
+                      onClick={() => {
+                        deleteNotePad(modalEdit.id);
+                        setModalEdit(false);
+                      }}
+                    >
+                      <Text size={1.4} weight="bold">
+                        Excluir
+                      </Text>
+                    </Button>
+                  </Grid>
+                </Grid>
+              </U.FormCard>
+            )}
+          </Formik>
         </Modal>
       )}
     </>
