@@ -274,4 +274,15 @@ ${'' /* scroll */}
 .Toastify__toast-container {
   z-index: 9999;
 }
+
+${'' /* skeleton */}
+
+.MuiSkeleton-text {
+  transform: initial !important;
+}
+
+.MuiSkeleton-wave {
+
+  border-radius: 10px!important;
+}
 `;
