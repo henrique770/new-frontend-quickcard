@@ -18,7 +18,8 @@ import Search from '~/components/Search';
 import TextField from '~/components/TextField';
 import Modal from '~/components/Modal';
 import VariationList from '~/components/VariationList';
-// import { decks } from '~/data/fake';
+
+import SkeletonLoad from '~/components/Skeleton';
 import Empty from '~/components/Empty';
 import useQuery from '~/utils/queryParams';
 import history from '~/services/history';
@@ -36,6 +37,7 @@ function Deck() {
     text: query.get('text'),
   });
   const [empty, setEmpty] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [searchValue, setSearchValue] = useState('');
   const [listState, setListState] = useState(false);
   const [modalOpenDeck, setModalOpenDeck] = useState(false);
@@ -93,6 +95,7 @@ function Deck() {
 
   const fetchData = useCallback(async () => {
     try {
+      setLoading(true);
       setEmpty(false);
       const response = await api.get(`deck`, {
         headers: {
@@ -102,8 +105,14 @@ function Deck() {
 
       const { data } = response;
       setDecks(data);
-    } catch (err) {
-      console.log(err);
+      setLoading(false);
+
+      const hasActive = data.some((item) => item.isActive === true);
+      if (hasActive === false) {
+        setEmpty(true);
+      }
+    } catch {
+      setLoading(false);
       setEmpty(true);
     }
   }, [token]);
@@ -131,6 +140,8 @@ function Deck() {
       alert('Falha na criação');
     }
   }
+
+  // console.log(decks);
 
   // update
   async function editDeck(values) {
@@ -271,64 +282,71 @@ function Deck() {
 
         <Spacing mb={2.2} />
         <Grid>
-          {empty || decks.length === 0 ? (
-            <Empty />
+          {loading ? (
+            <SkeletonLoad />
           ) : (
-            <U.NoteGridContainer list={listState}>
-              {decks.map((item) => {
-                if (item.isActive === true) {
-                  return (
-                    <FlatList
-                      link="/deck/card"
-                      edit
-                      editFunc={() =>
-                        setModalEditDeck({
-                          state: true,
-                          id: item._id,
-                          values: item,
-                        })
-                      }
-                      deck={
-                        <Grid>
-                          <Grid container spacing={1}>
-                            <Grid item>
-                              <Text>Cartões:</Text>
+            <>
+              {empty || decks.length === 0 ? (
+                <Empty />
+              ) : (
+                <U.NoteGridContainer list={listState}>
+                  {decks.map((item) => {
+                    if (item.isActive === true) {
+                      return (
+                        <FlatList
+                          link="/deck/card"
+                          edit
+                          editFunc={() =>
+                            setModalEditDeck({
+                              state: true,
+                              id: item._id,
+                              values: item,
+                            })
+                          }
+                          deck={
+                            <Grid>
+                              <Grid container spacing={1}>
+                                <Grid item>
+                                  <Text>Cartões:</Text>
+                                </Grid>
+                                <Grid item>
+                                  <Text weight="bold" color="#fe650e">
+                                    32
+                                  </Text>
+                                </Grid>
+                              </Grid>
+                              <Grid container spacing={1}>
+                                <Grid item>
+                                  <Text>A revisar:</Text>
+                                </Grid>
+                                <Grid item>
+                                  <Text weight="bold" color="#fe650e">
+                                    12
+                                  </Text>
+                                </Grid>
+                              </Grid>
+                              <Grid container spacing={1}>
+                                <Grid item>
+                                  <Text>Revisados:</Text>
+                                </Grid>
+                                <Grid item>
+                                  <Text weight="bold" color="#fe650e">
+                                    12
+                                  </Text>
+                                </Grid>
+                              </Grid>
                             </Grid>
-                            <Grid item>
-                              <Text weight="bold" color="#fe650e">
-                                32
-                              </Text>
-                            </Grid>
-                          </Grid>
-                          <Grid container spacing={1}>
-                            <Grid item>
-                              <Text>A revisar:</Text>
-                            </Grid>
-                            <Grid item>
-                              <Text weight="bold" color="#fe650e">
-                                12
-                              </Text>
-                            </Grid>
-                          </Grid>
-                          <Grid container spacing={1}>
-                            <Grid item>
-                              <Text>Revisados:</Text>
-                            </Grid>
-                            <Grid item>
-                              <Text weight="bold" color="#fe650e">
-                                12
-                              </Text>
-                            </Grid>
-                          </Grid>
-                        </Grid>
-                      }
-                      title={item.name}
-                    />
-                  );
-                }
-                return '';
-              })}
-            </U.NoteGridContainer>
+                          }
+                          title={item.name}
+                        />
+                      );
+                    }
+
+                    return '';
+                  })}
+                </U.NoteGridContainer>
+              )}
+            </>
           )}
         </Grid>
       </Layout>

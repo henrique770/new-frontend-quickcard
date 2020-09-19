@@ -34,6 +34,10 @@ export const ModalContainer = styled.div`
   transform: translate(-50%, -50%);
   margin-top: 0;
   ${({ size }) => (size ? `width: ${size}rem;` : `width: 70rem;`)}
+
+  @media(max-width: 500px) {
+    width: 100%;
+  }
 `;
 
 const appearFromBottom = keyframes`
