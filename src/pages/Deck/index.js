@@ -85,10 +85,6 @@ function Deck() {
     window.location.reload(false);
   };
 
-  const initialValuesDeck = {
-    name: '',
-  };
-
   // REQUESTS DECK
 
   const [decks, setDecks] = useState([]);
@@ -105,14 +101,18 @@ function Deck() {
 
       const { data } = response;
       setDecks(data);
-      setLoading(false);
+      setTimeout(() => {
+        setLoading(false);
+      }, 700);
 
       const hasActive = data.some((item) => item.isActive === true);
       if (hasActive === false) {
         setEmpty(true);
       }
     } catch {
-      setLoading(false);
+      setTimeout(() => {
+        setLoading(false);
+      }, 700);
       setEmpty(true);
     }
   }, [token]);
@@ -133,11 +133,12 @@ function Deck() {
           },
         }
       );
-      alert('baralho criado com sucesso!');
+
+      swal('Criado!', 'O baralho foi criado com sucesso!', 'success');
       setModalOpenDeck(false);
       fetchData();
     } catch {
-      alert('Falha na criação');
+      swal('Falhou!', 'Falha na criação', 'error');
     }
   }
 
@@ -160,11 +161,12 @@ function Deck() {
           },
         }
       );
-      alert('baralho foi atualizado com sucesso!');
+
+      swal('Atualizado!', 'O baralho foi atualizado com sucesso!', 'success');
       fetchData();
       setModalEditDeck(false);
     } catch {
-      alert('Falha na atualização');
+      swal('Falhou!', 'Falha na atualização', 'error');
     }
   }
 
@@ -207,7 +209,42 @@ function Deck() {
     });
   }
 
-  // console.log(modalEditDeck.id);
+  // REQUESTS CARD
+
+  // create
+  async function createCard(values) {
+    // try {
+    //   await api.post(
+    //     'card',
+    //     {
+    //       Id: uniqid(),
+    //       IdDeck: values.deck,
+    //       Front: values.front,
+    //       Verse: values.verse,
+    //       IsReviewed: undefined,
+    //       BaseHours: undefined,
+    //       NumGoodCount: undefined,
+    //       NumEasyCount: undefined,
+    //       NumDifficultCount: undefined,
+    //       DateNextView: undefined,
+    //       DateLastView: undefined,
+    //       DisplayDeadline: undefined,
+    //       CodEnumHit: undefined,
+    //     },
+    //     {
+    //       headers: {
+    //         Authorization: `Bearer ${token}`,
+    //       },
+    //     }
+    //   );
+    //   swal('Criado!', 'O cartão foi criado com sucesso!', 'success');
+    //   setModalOpenCard(false);
+    //   fetchData();
+    // } catch {
+    //   swal('Falhou!', 'Falha na criação', 'error');
+    // }
+  }
+
   return (
     <>
       <Layout
@@ -294,7 +331,7 @@ function Deck() {
                     if (item.isActive === true) {
                       return (
                         <FlatList
-                          link="/deck/card"
+                          link={`/deck/card/${item._id}`}
                           edit
                           editFunc={() =>
                             setModalEditDeck({
@@ -353,7 +390,12 @@ function Deck() {
       {/* modal adicionar baralho */}
       {modalOpenDeck && (
         <Modal size={50} onClose={() => setModalOpenDeck(false)}>
-          <Formik initialValues={initialValuesDeck} onSubmit={createDeck}>
+          <Formik
+            initialValues={{
+              name: '',
+            }}
+            onSubmit={createDeck}
+          >
             {({ handleSubmit, handleBlur, handleChange, values }) => (
               <U.FormCard ref={modalDeck} onSubmit={handleSubmit}>
                 <Text component="h1" size={1.8}>
@@ -464,63 +506,87 @@ function Deck() {
       {/* modal adicionar cartão */}
       {modalOpenCard && (
         <Modal size={50} onClose={() => setModalOpenDeck(false)}>
-          <U.FormCard ref={modalCard}>
-            <Text component="h1" size={1.8}>
-              Adicionar cartão
-            </Text>
-            <Spacing mb={3} />
-            <Grid container spacing={3}>
-              <Grid item xs={12}>
-                <TextField
-                  id="filled-select-currency-native"
-                  select
-                  label="Nome do baralho"
-                  SelectProps={{
-                    native: true,
-                  }}
-                  name="status"
-                >
-                  <option selected disabled>
-                    Selecione
-                  </option>
-                  <option value="active">Javascript</option>
-                  <option value="inactive">
-                    Expressões / frases em inglês
-                  </option>
-                </TextField>
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  id="outlined-basic"
-                  label="Frente"
-                  type="text"
-                  placeholder="Digite a frente do cartão"
-                />
-              </Grid>
-
-              <Grid item xs={12}>
-                <TextField
-                  id="outlined-basic"
-                  multiline
-                  label="Verso"
-                  type="text"
-                  placeholder="Digite o verso do cartão"
-                />
-              </Grid>
-            </Grid>
-            <Spacing mb={3} />
-            <Grid container justify="flex-end" alignItems="flex-end">
-              <U.ButtonResponsive
-                bgColor="#fe650e"
-                radius="4px"
-                onClick={() => setModalOpenDeck(true)}
-              >
-                <Text size={1.4} weight="bold">
-                  Salvar
+          <Formik
+            initialValues={{
+              front: '',
+              verse: '',
+            }}
+            onSubmit={createCard}
+          >
+            {({ handleSubmit, handleBlur, handleChange, values }) => (
+              <U.FormCard ref={modalCard} onSubmit={handleSubmit}>
+                <Text component="h1" size={1.8}>
+                  Adicionar cartão
                 </Text>
-              </U.ButtonResponsive>
-            </Grid>
-          </U.FormCard>
+                <Spacing mb={3} />
+                <Grid container spacing={3}>
+                  <Grid item xs={12}>
+                    <TextField
+                      id="filled-select-currency-native"
+                      select
+                      label="Nome do baralho"
+                      SelectProps={{
+                        native: true,
+                      }}
+                      name="deck"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.deck}
+                    >
+                      <option selected disabled>
+                        Selecione
+                      </option>
+                      {decks.map((item) => {
+                        if (item.isActive === true) {
+                          return <option value={item._id}>{item.name}</option>;
+                        }
+                        return '';
+                      })}
+                    </TextField>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      id="outlined-basic"
+                      label="Frente"
+                      type="text"
+                      placeholder="Digite a frente do cartão"
+                      name="front"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.front}
+                    />
+                  </Grid>
+
+                  <Grid item xs={12}>
+                    <TextField
+                      id="outlined-basic"
+                      multiline
+                      label="Verso"
+                      type="text"
+                      placeholder="Digite o verso do cartão"
+                      name="verse"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.verse}
+                    />
+                  </Grid>
+                </Grid>
+                <Spacing mb={3} />
+                <Grid container justify="flex-end" alignItems="flex-end">
+                  <U.ButtonResponsive
+                    type="submit"
+                    bgColor="#fe650e"
+                    radius="4px"
+                    onClick={() => setModalOpenDeck(true)}
+                  >
+                    <Text size={1.4} weight="bold">
+                      Salvar
+                    </Text>
+                  </U.ButtonResponsive>
+                </Grid>
+              </U.FormCard>
+            )}
+          </Formik>
         </Modal>
       )}
     </>

@@ -1,19 +1,49 @@
-import React, { useContext, useState, useRef } from 'react';
+import React, {
+  useContext,
+  useState,
+  useRef,
+  useCallback,
+  useEffect,
+} from 'react';
 
 import { ThemeContext } from 'styled-components';
 import { ArrowBack } from '@styled-icons/material-outlined';
+import { useParams } from 'react-router-dom';
 
 import ReactCardFlip from 'react-card-flip';
 import history from '~/services/history';
-import { Grid, Spacing, Text, Card, useOutsideClick } from '~/lib';
-
+import { Grid, Spacing, Text, Card, useOutsideClick, Button } from '~/lib';
+import api from '~/services/api';
 import Modal from '~/components/Modal';
 import TextField from '~/components/TextField';
-
+import { AuthContext } from '~/context/AuthContext';
 import * as U from '~/styles/utilities';
 import * as S from './styled';
 
 function FlashCard() {
+  const { id } = useParams();
+  const { token } = useContext(AuthContext);
+
+  const [deck, setDeck] = useState({});
+
+  const fetchData = useCallback(async () => {
+    try {
+      const response = await api.get(`deck/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const { data } = response;
+      setDeck(data);
+    } catch {}
+  }, [id, token]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  console.log(deck);
   const themeContext = useContext(ThemeContext);
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -77,16 +107,40 @@ function FlashCard() {
               </Grid>
             </Grid>
             <Spacing mb={3} />
-            <Grid container justify="flex-end" alignItems="flex-end">
-              <U.ButtonResponsive
-                bgColor="#fe650e"
-                radius="4px"
-                onClick={() => setModalOpen(true)}
-              >
-                <Text size={1.4} weight="bold">
-                  Salvar
-                </Text>
-              </U.ButtonResponsive>
+            <Grid
+              xs={12}
+              container
+              direction="row"
+              justify="flex-start"
+              spacing={1}
+            >
+              <Grid item xs={12}>
+                <Button
+                  type="submit"
+                  style={{ width: '100%' }}
+                  radius="4px"
+                  bgColor="#fe650e"
+                  padding="1rem"
+                >
+                  <Text size={1.4} weight="bold">
+                    Salvar
+                  </Text>
+                </Button>
+              </Grid>
+              <Grid item xs={12}>
+                <Button
+                  type="button"
+                  style={{ width: '100%' }}
+                  radius="4px"
+                  padding="1rem"
+                  bgColor="#fe650e"
+                  onClick={() => setModalOpen(true)}
+                >
+                  <Text size={1.4} weight="bold">
+                    Excluir
+                  </Text>
+                </Button>
+              </Grid>
             </Grid>
           </U.FormCard>
         </Modal>
@@ -95,51 +149,54 @@ function FlashCard() {
       <U.Wrapper>
         <U.MainContent>
           <U.ContainerLimit>
-            <Spacing mt={4} mb={4}>
-              <Grid container xs={4}>
-                <Card
-                  style={{ cursor: 'pointer' }}
-                  onClick={history.goBack}
-                  radius="8"
-                  paddingBody="0.8rem 1.5rem 0.8rem 0.8rem"
-                  shadow="none"
-                >
-                  <Grid container alignItems="center">
-                    <ArrowBack
-                      size={20}
-                      color={themeContext.textColorSecondary}
-                    />
-                    <Spacing mr={1} />
-                    <Text
-                      component="h1"
-                      size={1.4}
-                      color={themeContext.textColorSecondary}
-                    >
-                      Voltar
+            <Spacing mt={4}>
+              <Grid container justify="space-between">
+                <Grid>
+                  <Card
+                    style={{ cursor: 'pointer' }}
+                    onClick={history.goBack}
+                    radius="8"
+                    paddingBody="0.8rem 1.5rem 0.8rem 0.8rem"
+                    shadow="none"
+                  >
+                    <Grid container alignItems="center">
+                      <ArrowBack
+                        size={20}
+                        color={themeContext.textColorSecondary}
+                      />
+                      <Spacing mr={1} />
+                      <Text
+                        component="h1"
+                        size={1.4}
+                        color={themeContext.textColorSecondary}
+                      >
+                        Voltar
+                      </Text>
+                    </Grid>
+                  </Card>
+                  <Spacing mb={2} />
+                </Grid>
+                <Grid xs={12} sm={4} style={{ textAlign: 'end' }}>
+                  <U.ButtonResponsive
+                    bgColor="#fe650e"
+                    radius="4px"
+                    onClick={() => setModalOpen(true)}
+                  >
+                    <Text size={1.4} weight="bold">
+                      Editar cartão
                     </Text>
-                  </Grid>
-                </Card>
+                  </U.ButtonResponsive>
+                </Grid>
               </Grid>
             </Spacing>
 
-            <Grid container justify="space-between" spacing={3}>
-              <Grid item xs={12} sm={8}>
-                <U.Title component="h1">Nome do baralho</U.Title>
-              </Grid>
-              <Grid item xs={12} sm={4} style={{ textAlign: 'end' }}>
-                <U.ButtonResponsive
-                  bgColor="#fe650e"
-                  radius="4px"
-                  onClick={() => setModalOpen(true)}
-                >
-                  <Text size={1.4} weight="bold">
-                    Editar cartão
-                  </Text>
-                </U.ButtonResponsive>
+            <Grid container justify="center" xs={12}>
+              <Grid item>
+                <U.Title component="h1">{deck.name}</U.Title>
               </Grid>
             </Grid>
 
-            <Spacing mb={2.2} />
+            <Spacing mb={5} />
 
             <S.CardContainer>
               {cardsVisible && (
