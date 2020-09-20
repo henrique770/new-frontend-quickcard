@@ -93,7 +93,8 @@ function Deck() {
     try {
       setLoading(true);
       setEmpty(false);
-      const response = await api.get(`deck`, {
+
+      const response = await api.get(`deck/info`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -213,36 +214,37 @@ function Deck() {
 
   // create
   async function createCard(values) {
-    // try {
-    //   await api.post(
-    //     'card',
-    //     {
-    //       Id: uniqid(),
-    //       IdDeck: values.deck,
-    //       Front: values.front,
-    //       Verse: values.verse,
-    //       IsReviewed: undefined,
-    //       BaseHours: undefined,
-    //       NumGoodCount: undefined,
-    //       NumEasyCount: undefined,
-    //       NumDifficultCount: undefined,
-    //       DateNextView: undefined,
-    //       DateLastView: undefined,
-    //       DisplayDeadline: undefined,
-    //       CodEnumHit: undefined,
-    //     },
-    //     {
-    //       headers: {
-    //         Authorization: `Bearer ${token}`,
-    //       },
-    //     }
-    //   );
-    //   swal('Criado!', 'O cartão foi criado com sucesso!', 'success');
-    //   setModalOpenCard(false);
-    //   fetchData();
-    // } catch {
-    //   swal('Falhou!', 'Falha na criação', 'error');
-    // }
+    try {
+      await api.post(
+        'card',
+        {
+          Id: uniqid(),
+          IdDeck: values.deck,
+          Front: values.front,
+          Verse: values.verse,
+          IsReviewed: undefined,
+          BaseHours: undefined,
+          NumGoodCount: undefined,
+          NumEasyCount: undefined,
+          NumDifficultCount: undefined,
+          DateNextView: undefined,
+          DateLastView: undefined,
+          DisplayDeadline: undefined,
+          CodEnumHit: undefined,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      swal('Criado!', 'O cartão foi criado com sucesso!', 'success');
+      setModalOpenCard(false);
+      fetchData();
+    } catch {
+      setModalOpenCard(false);
+      swal('Falhou!', 'Falha na criação', 'error');
+    }
   }
 
   return (
@@ -348,7 +350,7 @@ function Deck() {
                                 </Grid>
                                 <Grid item>
                                   <Text weight="bold" color="#fe650e">
-                                    32
+                                    {item.count}
                                   </Text>
                                 </Grid>
                               </Grid>
@@ -358,7 +360,7 @@ function Deck() {
                                 </Grid>
                                 <Grid item>
                                   <Text weight="bold" color="#fe650e">
-                                    12
+                                    {item.isNotReviewed}
                                   </Text>
                                 </Grid>
                               </Grid>
@@ -368,7 +370,7 @@ function Deck() {
                                 </Grid>
                                 <Grid item>
                                   <Text weight="bold" color="#fe650e">
-                                    12
+                                    {item.isReviewed}
                                   </Text>
                                 </Grid>
                               </Grid>
@@ -577,7 +579,6 @@ function Deck() {
                     type="submit"
                     bgColor="#fe650e"
                     radius="4px"
-                    onClick={() => setModalOpenDeck(true)}
                   >
                     <Text size={1.4} weight="bold">
                       Salvar

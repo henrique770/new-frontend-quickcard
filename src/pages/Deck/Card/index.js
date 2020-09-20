@@ -25,6 +25,30 @@ function FlashCard() {
   const { token } = useContext(AuthContext);
 
   const [deck, setDeck] = useState({});
+  const [cards, setCards] = useState({});
+
+  const [isShow, setIsShow] = useState(false);
+  const [cardsVisible, setCardsVisible] = useState(true);
+  const [cardIndex, setCardIndex] = useState(0);
+  //  const [endQuiz, setEndQuiz] = useState(false);
+  const card = cards[cardIndex] === undefined ? '' : cards[cardIndex];
+
+  function showAnswer() {
+    setIsShow(!isShow);
+  }
+
+  function nextCard() {
+    setIsShow(false);
+    if (cardIndex + 1 < deck.card.length) {
+      setCardIndex(cardIndex + 1);
+    }
+
+    if (cardIndex + 1 === deck.card.length) {
+      setCardsVisible(false);
+      setIsShow(false);
+      //  setEndQuiz(true);
+    }
+  }
 
   const fetchData = useCallback(async () => {
     try {
@@ -36,6 +60,7 @@ function FlashCard() {
 
       const { data } = response;
       setDeck(data);
+      setCards(data.card);
     } catch {}
   }, [id, token]);
 
@@ -43,7 +68,6 @@ function FlashCard() {
     fetchData();
   }, [fetchData]);
 
-  console.log(deck);
   const themeContext = useContext(ThemeContext);
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -55,27 +79,6 @@ function FlashCard() {
       setModalOpen(false);
     }
   });
-
-  const [isShow, setIsShow] = useState(false);
-  const [cardsVisible] = useState(true);
-  // const [cardIndex, setCardIndex] = useState(0);
-  // const [endQuiz, setEndQuiz] = useState(false);
-
-  function showAnswer() {
-    setIsShow(!isShow);
-  }
-
-  // function nextCard() {
-  //   if (cardIndex + 1 < card.length) {
-  //     setCardIndex(cardIndex + 1);
-  //   }
-
-  //   if (cardIndex + 1 === card.length) {
-  //     setCardsVisible(false);
-  //     setIsShow(false);
-  //     setEndQuiz(true);
-  //   }
-  // }
 
   return (
     <>
@@ -220,7 +223,7 @@ function FlashCard() {
                         </S.TitleCard>
 
                         <Text size={3} weight="bold">
-                          Oque é TCC?
+                          {card.front}
                         </Text>
                       </S.FlashCard>
 
@@ -236,7 +239,7 @@ function FlashCard() {
                           Verso
                         </S.TitleCard>
                         <Text size={3} weight="bold">
-                          Trabalho de conclusão de curso
+                          {card.verse}
                         </Text>
                       </S.FlashCard>
                     </ReactCardFlip>
@@ -247,6 +250,7 @@ function FlashCard() {
                         <Grid item>
                           <U.ButtonResponsive
                             radius="8px"
+                            onClick={() => nextCard()}
                             bgColor={themeContext.backgroundSecondary}
                             shadow="0px 1px 8px rgba(20, 46, 110, 0.1)"
                             padding="1rem"
@@ -267,6 +271,7 @@ function FlashCard() {
                         <Grid item>
                           <U.ButtonResponsive
                             radius="8px"
+                            onClick={() => nextCard()}
                             bgColor={themeContext.backgroundSecondary}
                             shadow="0px 1px 8px rgba(20, 46, 110, 0.1)"
                             padding="1rem"
@@ -288,6 +293,7 @@ function FlashCard() {
                         <Grid item>
                           <U.ButtonResponsive
                             radius="8px"
+                            onClick={() => nextCard()}
                             bgColor={themeContext.backgroundSecondary}
                             shadow="0px 1px 8px rgba(20, 46, 110, 0.1)"
                             padding="1rem"
