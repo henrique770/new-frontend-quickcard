@@ -189,12 +189,13 @@ function FlashCard() {
                 </Grid>
               </Grid>
             </Spacing>
-
-            <Grid container justify="center" xs={12}>
-              <Grid item>
-                <U.Title component="h1">{deck.name}</U.Title>
+            <Spacing breakpoint="600px" responsiveM="2rem 0 0 0">
+              <Grid container justify="center" xs={12}>
+                <Grid item>
+                  <U.Title component="h1">{deck.name}</U.Title>
+                </Grid>
               </Grid>
-            </Grid>
+            </Spacing>
 
             <Spacing mb={5} />
 

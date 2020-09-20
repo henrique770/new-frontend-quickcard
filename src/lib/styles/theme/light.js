@@ -23,4 +23,5 @@ export default {
   tableBorder: '#f0f0f0',
   tableDescMobileBackground: '#fff',
   backgroundAuth: '#F2F2F2',
+  backgroundButtonPomodoro: '#fff',
 };

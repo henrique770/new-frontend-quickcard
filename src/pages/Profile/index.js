@@ -15,6 +15,7 @@ import api from '~/services/api';
 import * as U from '~/styles/utilities';
 import * as S from './styled';
 import { AuthContext } from '~/context/AuthContext';
+import SkeletonLoad from './Skeleton';
 import 'react-toastify/dist/ReactToastify.css';
 
 const url = 'http://quickcard-io.herokuapp.com/api/v1';
@@ -54,8 +55,12 @@ function Profile() {
 
   const fetchImage = useCallback(async () => {
     try {
+      setLoading(true);
       await api.get(`student/imgProfile/${_id}`);
       setFileUpload(`${url}/student/imgProfile/${_id}`);
+      setTimeout(() => {
+        setLoading(false);
+      }, 700);
     } catch {
       setHasImage(false);
       setFileUpload(null);
@@ -295,78 +300,82 @@ function Profile() {
                     </U.FormCard>
                   </Grid>
                   <Grid item xs={12} md={4}>
-                    <U.FormCard>
-                      <Spacing mt={1.5} />
-                      <Grid
-                        xs={12}
-                        container
-                        justify="center"
-                        direction="column"
-                        alignItems="center"
-                      >
-                        <input
-                          type="file"
-                          id="upload-button"
-                          style={{ display: 'none' }}
-                          onChange={PutImage}
-                        />
-                        <label htmlFor="upload-button">
-                          <S.ImageContainer
-                            onMouseEnter={() => setIsShown(true)}
-                            onMouseLeave={() => setIsShown(false)}
-                            width={14}
-                            height={14}
-                            radius="50%"
-                            cover
-                          >
-                            <img
-                              src={
-                                fileUpload == null
-                                  ? DefaultProfileImage()
-                                  : fileUpload
-                              }
-                              // src={
-                              //   hasImage
-                              //     ? `${url}/student/imgProfile/${_id}`
-                              //     : DefaultProfileImage()
-                              // }
-                              alt="profileImage"
-                            />
-                            {isShown && (
-                              <S.IconChangeImage>
-                                <AddAPhoto
-                                  color={themeContext.textColorPrimary}
-                                />
-                              </S.IconChangeImage>
-                            )}
-                          </S.ImageContainer>
-                        </label>
-
-                        <Spacing mr={2} mb={2} />
+                    {loading ? (
+                      <SkeletonLoad />
+                    ) : (
+                      <U.FormCard>
+                        <Spacing mt={1.5} />
                         <Grid
-                          container
                           xs={12}
+                          container
                           justify="center"
-                          item
-                          style={{ textAlign: 'center' }}
+                          direction="column"
+                          alignItems="center"
                         >
-                          <div>
-                            <Text component="h1" size={1.8}>
-                              {initialValues.name}
-                            </Text>
-                            <Text
-                              size={1.3}
-                              component="a"
-                              style={{ textDecoration: 'none' }}
-                              href="mailto:"
-                              color="#636D73"
+                          <input
+                            type="file"
+                            id="upload-button"
+                            style={{ display: 'none' }}
+                            onChange={PutImage}
+                          />
+                          <label htmlFor="upload-button">
+                            <S.ImageContainer
+                              onMouseEnter={() => setIsShown(true)}
+                              onMouseLeave={() => setIsShown(false)}
+                              width={14}
+                              height={14}
+                              radius="50%"
+                              cover
                             >
-                              {initialValues.email}
-                            </Text>
-                          </div>
+                              <img
+                                src={
+                                  fileUpload == null
+                                    ? DefaultProfileImage()
+                                    : fileUpload
+                                }
+                                // src={
+                                //   hasImage
+                                //     ? `${url}/student/imgProfile/${_id}`
+                                //     : DefaultProfileImage()
+                                // }
+                                alt="profileImage"
+                              />
+                              {isShown && (
+                                <S.IconChangeImage>
+                                  <AddAPhoto
+                                    color={themeContext.textColorPrimary}
+                                  />
+                                </S.IconChangeImage>
+                              )}
+                            </S.ImageContainer>
+                          </label>
+
+                          <Spacing mr={2} mb={2} />
+                          <Grid
+                            container
+                            xs={12}
+                            justify="center"
+                            item
+                            style={{ textAlign: 'center' }}
+                          >
+                            <div>
+                              <Text component="h1" size={1.8}>
+                                {initialValues.name}
+                              </Text>
+                              <Text
+                                size={1.3}
+                                component="a"
+                                style={{ textDecoration: 'none' }}
+                                href="mailto:"
+                                color="#636D73"
+                              >
+                                {initialValues.email}
+                              </Text>
+                            </div>
+                          </Grid>
                         </Grid>
-                      </Grid>
-                    </U.FormCard>
+                      </U.FormCard>
+                    )}
                   </Grid>
                 </Grid>
               </form>
