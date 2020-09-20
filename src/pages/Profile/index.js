@@ -34,9 +34,9 @@ function Profile() {
   const [initialValues, setInitialValues] = useState({
     name: '',
     email: '',
-    oldPassword: '',
-    password: '',
-    confirmPassword: '',
+    oldPassword: '' || undefined,
+    password: '' || undefined,
+    confirmPassword: '' || undefined,
     imgPerfil: null,
   });
 
