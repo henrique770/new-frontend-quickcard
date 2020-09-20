@@ -19,15 +19,32 @@ import { useInterval } from '~/hooks/useInterval';
 import * as U from '~/styles/utilities';
 
 function Pomodoro() {
+  const local = JSON.parse(localStorage.getItem('@QuickCard:pomodoro'));
   const themeContext = useContext(ThemeContext);
 
-  const [active, setActive] = useState(false);
+  const [active, setActive] = useState(local === null ? false : local.active);
   const [breakVal, setBreakVal] = useState(5);
-  const [sessionVal, setSessionVal] = useState(25);
+  const [sessionVal, setSessionVal] = useState(() => {
+    const storageTime = local === null ? 25 : local.time / 60 / 1000;
+    if (storageTime < 25) {
+      return storageTime;
+    }
+    return 25;
+  });
+
   const [mode, setMode] = useState('session');
   const [time, setTime] = useState(null);
 
   useInterval(() => setTime(time - 1000), active ? 1000 : null);
+
+  useEffect(() => {
+    if (active) {
+      localStorage.setItem(
+        '@QuickCard:pomodoro',
+        JSON.stringify({ active, time })
+      );
+    }
+  }, [active, time]);
 
   useEffect(() => {
     setTime(sessionVal * 60 * 1000);
@@ -51,6 +68,10 @@ function Pomodoro() {
     setBreakVal(5);
     setSessionVal(25);
     setTime(25 * 60 * 1000);
+    localStorage.setItem(
+      '@QuickCard:pomodoro',
+      JSON.stringify({ active: false, time: 1500000 })
+    );
   };
 
   const [isShow, setIsShow] = useState(false);
@@ -79,7 +100,7 @@ function Pomodoro() {
             justifyContent="center"
           >
             <Text size={1.4} weight="bold" color="#fe650e">
-              {mode === 'session' && sessionVal === 25 ? 'Sessão' : 'Pausa'}
+              {mode === 'session' ? 'Sessão' : 'Pausa'}
             </Text>
             <Spacing mt={1} />
             <U.ProgressContainer>
@@ -123,7 +144,7 @@ function Pomodoro() {
                 <U.ButtonResponsive
                   radius="8px"
                   style={{ width: 60 }}
-                  bgColor={themeContext.backgroundSecondary}
+                  bgColor={themeContext.backgroundButtonPomodoro}
                   shadow="0px 1px 8px rgba(20, 46, 110, 0.1)"
                   padding="1rem"
                   onClick={() => setActive(!active)}
@@ -139,7 +160,7 @@ function Pomodoro() {
                 <U.ButtonResponsive
                   radius="8px"
                   style={{ width: 60 }}
-                  bgColor={themeContext.backgroundSecondary}
+                  bgColor={themeContext.backgroundButtonPomodoro}
                   shadow="0px 1px 8px rgba(20, 46, 110, 0.1)"
                   padding="1rem"
                   onClick={() => handleReset()}

@@ -2,7 +2,17 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import * as S from './styled';
 
-export default function Spacing({ mt, mr, mb, ml, ds, width, ...props }) {
+export default function Spacing({
+  mt,
+  mr,
+  mb,
+  ml,
+  ds,
+  breakpoint,
+  responsiveM,
+  width,
+  ...props
+}) {
   return (
     <S.Spacing
       mt={mt}
@@ -10,6 +20,8 @@ export default function Spacing({ mt, mr, mb, ml, ds, width, ...props }) {
       mb={mb}
       ml={ml}
       ds={ds}
+      breakpoint={breakpoint}
+      responsiveM={responsiveM}
       width={width}
       {...props}
     />
