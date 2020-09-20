@@ -68,6 +68,10 @@ function Pomodoro() {
     setBreakVal(5);
     setSessionVal(25);
     setTime(25 * 60 * 1000);
+    localStorage.setItem(
+      '@QuickCard:pomodoro',
+      JSON.stringify({ active: false, time: 1500000 })
+    );
   };
 
   const [isShow, setIsShow] = useState(false);
