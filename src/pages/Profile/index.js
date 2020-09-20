@@ -27,6 +27,7 @@ function Profile() {
   const [isShown, setIsShown] = useState(false);
 
   const [loading, setLoading] = useState(false);
+  const [loadingImage, setLoadingImage] = useState(false);
 
   const { _id } = user;
 
@@ -55,15 +56,16 @@ function Profile() {
 
   const fetchImage = useCallback(async () => {
     try {
-      setLoading(true);
+      setLoadingImage(true);
       await api.get(`student/imgProfile/${_id}`);
       setFileUpload(`${url}/student/imgProfile/${_id}`);
       setTimeout(() => {
-        setLoading(false);
+        setLoadingImage(false);
       }, 700);
     } catch {
       setHasImage(false);
       setFileUpload(null);
+      setLoadingImage(false);
     }
   }, [_id]);
 
@@ -300,7 +302,7 @@ function Profile() {
                     </U.FormCard>
                   </Grid>
                   <Grid item xs={12} md={4}>
-                    {loading ? (
+                    {loadingImage ? (
                       <SkeletonLoad />
                     ) : (
                       <U.FormCard>
