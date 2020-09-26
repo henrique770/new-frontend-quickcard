@@ -8,7 +8,7 @@ import React, {
 
 import { ThemeContext } from 'styled-components';
 import { ArrowBack } from '@styled-icons/material-outlined';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 
 import ReactCardFlip from 'react-card-flip';
 import history from '~/services/history';
@@ -17,6 +17,7 @@ import api from '~/services/api';
 import Modal from '~/components/Modal';
 import TextField from '~/components/TextField';
 import { AuthContext } from '~/context/AuthContext';
+import Empty from '~/components/Empty';
 import * as U from '~/styles/utilities';
 import * as S from './styled';
 
@@ -30,7 +31,7 @@ function FlashCard() {
   const [isShow, setIsShow] = useState(false);
   const [cardsVisible, setCardsVisible] = useState(true);
   const [cardIndex, setCardIndex] = useState(0);
-  //  const [endQuiz, setEndQuiz] = useState(false);
+  const [endQuiz, setEndQuiz] = useState(false);
   const card = cards[cardIndex] === undefined ? '' : cards[cardIndex];
 
   function showAnswer() {
@@ -46,7 +47,7 @@ function FlashCard() {
     if (cardIndex + 1 === deck.card.length) {
       setCardsVisible(false);
       setIsShow(false);
-      //  setEndQuiz(true);
+      setEndQuiz(true);
     }
   }
 
@@ -180,22 +181,30 @@ function FlashCard() {
                   <Spacing mb={2} />
                 </Grid>
                 <Grid xs={12} sm={4} style={{ textAlign: 'end' }}>
-                  <U.ButtonResponsive
-                    bgColor="#fe650e"
-                    radius="4px"
-                    onClick={() => setModalOpen(true)}
-                  >
-                    <Text size={1.4} weight="bold">
-                      Editar cartão
-                    </Text>
-                  </U.ButtonResponsive>
+                  {card === '' ? (
+                    <></>
+                  ) : (
+                    <U.ButtonResponsive
+                      bgColor="#fe650e"
+                      radius="4px"
+                      onClick={() => setModalOpen(true)}
+                    >
+                      <Text size={1.4} weight="bold">
+                        Editar cartão
+                      </Text>
+                    </U.ButtonResponsive>
+                  )}
                 </Grid>
               </Grid>
             </Spacing>
             <Spacing breakpoint="600px" responsiveM="2rem 0 0 0">
               <Grid container justify="center" xs={12}>
                 <Grid item>
-                  <U.Title component="h1">{deck.name}</U.Title>
+                  {card !== '' ? (
+                    <U.Title component="h1">{deck.name}</U.Title>
+                  ) : (
+                    <></>
+                  )}
                 </Grid>
               </Grid>
             </Spacing>
@@ -203,118 +212,187 @@ function FlashCard() {
             <Spacing mb={5} />
 
             <S.CardContainer>
-              {cardsVisible && (
+              {card === '' ? (
                 <Grid container xs={12} justify="center" alignItems="center">
-                  <Grid xs={12} sm={6} lg={4}>
-                    <ReactCardFlip
-                      isFlipped={isShow}
-                      flipDirection="horizontal"
+                  <Empty />
+                </Grid>
+              ) : (
+                <>
+                  {cardsVisible && (
+                    <Grid
+                      container
+                      xs={12}
+                      justify="center"
+                      alignItems="center"
                     >
-                      <S.FlashCard
-                        noFlex
-                        textCenter
-                        paddingBody="3rem"
-                        radius="10"
-                        justifyContent="center"
-                        onClick={showAnswer}
+                      <Grid xs={12} sm={6} lg={4}>
+                        <ReactCardFlip
+                          isFlipped={isShow}
+                          flipDirection="horizontal"
+                        >
+                          <S.FlashCard
+                            noFlex
+                            textCenter
+                            paddingBody="3rem"
+                            radius="10"
+                            justifyContent="center"
+                            onClick={showAnswer}
+                          >
+                            <S.TitleCard color="#fe650e" weight="bold">
+                              Frente
+                            </S.TitleCard>
+
+                            <Text size={3} weight="bold">
+                              {card.front}
+                            </Text>
+                          </S.FlashCard>
+
+                          <S.FlashCard
+                            noFlex
+                            textCenter
+                            paddingBody="3rem"
+                            radius="10"
+                            justifyContent="center"
+                            onClick={showAnswer}
+                          >
+                            <S.TitleCard color="#fe650e" weight="bold">
+                              Verso
+                            </S.TitleCard>
+                            <Text size={3} weight="bold">
+                              {card.verse}
+                            </Text>
+                          </S.FlashCard>
+                        </ReactCardFlip>
+
+                        <Spacing mb={3} />
+                        {isShow && (
+                          <Grid container xs={12} justify="center" spacing={2}>
+                            <Grid item>
+                              <U.ButtonResponsive
+                                radius="8px"
+                                onClick={() => nextCard()}
+                                bgColor={themeContext.backgroundSecondary}
+                                shadow="0px 1px 8px rgba(20, 46, 110, 0.1)"
+                                padding="1rem"
+                                style={{ height: 60, width: 80 }}
+                              >
+                                <Text color="#fe650e" weight="bold">
+                                  Difícil
+                                </Text>
+                                <Text
+                                  size={1.2}
+                                  weight="bold"
+                                  color={themeContext.textColorSecondary}
+                                >
+                                  10min
+                                </Text>
+                              </U.ButtonResponsive>
+                            </Grid>
+                            <Grid item>
+                              <U.ButtonResponsive
+                                radius="8px"
+                                onClick={() => nextCard()}
+                                bgColor={themeContext.backgroundSecondary}
+                                shadow="0px 1px 8px rgba(20, 46, 110, 0.1)"
+                                padding="1rem"
+                                style={{ height: 60, width: 80 }}
+                              >
+                                <Text color="#fe650e" weight="bold">
+                                  Bom
+                                </Text>
+
+                                <Text
+                                  size={1.2}
+                                  weight="bold"
+                                  color={themeContext.textColorSecondary}
+                                >
+                                  1d
+                                </Text>
+                              </U.ButtonResponsive>
+                            </Grid>
+                            <Grid item>
+                              <U.ButtonResponsive
+                                radius="8px"
+                                onClick={() => nextCard()}
+                                bgColor={themeContext.backgroundSecondary}
+                                shadow="0px 1px 8px rgba(20, 46, 110, 0.1)"
+                                padding="1rem"
+                                style={{ height: 60, width: 80 }}
+                              >
+                                <Text color="#fe650e" weight="bold">
+                                  Fácil
+                                </Text>
+                                <Text
+                                  size={1.2}
+                                  weight="bold"
+                                  color={themeContext.textColorSecondary}
+                                >
+                                  2d
+                                </Text>
+                              </U.ButtonResponsive>
+                            </Grid>
+                          </Grid>
+                        )}
+                      </Grid>
+                    </Grid>
+                  )}
+
+                  {endQuiz && (
+                    <div style={{ height: '100vh' }}>
+                      <Grid
+                        container
+                        xs={12}
+                        justify="center"
+                        direction="column"
+                        alignItems="center"
                       >
-                        <S.TitleCard color="#fe650e" weight="bold">
-                          Frente
-                        </S.TitleCard>
+                        <Grid
+                          xs={12}
+                          sm={6}
+                          lg={3}
+                          container
+                          direction="column"
+                          justify="center"
+                          alignItems="center"
+                        >
+                          <Text size="4" weight="bold">
+                            Parabéns!! você terminou de responder o baralho
+                          </Text>
+                          <Grid xs={12} sm={8}>
+                            <Spacing mt={1} />
 
-                        <Text size={3} weight="bold">
-                          {card.front}
-                        </Text>
-                      </S.FlashCard>
+                            <Link to="/deck">
+                              <Button
+                                type="button"
+                                radius="25px"
+                                style={{ width: '100%' }}
+                                padding="1rem 2rem"
+                                bgColor="#fe650e"
+                              >
+                                <Text size={1.4} weight="bold">
+                                  Voltar para página inicial
+                                </Text>
+                              </Button>
+                            </Link>
 
-                      <S.FlashCard
-                        noFlex
-                        textCenter
-                        paddingBody="3rem"
-                        radius="10"
-                        justifyContent="center"
-                        onClick={showAnswer}
-                      >
-                        <S.TitleCard color="#fe650e" weight="bold">
-                          Verso
-                        </S.TitleCard>
-                        <Text size={3} weight="bold">
-                          {card.verse}
-                        </Text>
-                      </S.FlashCard>
-                    </ReactCardFlip>
-
-                    <Spacing mb={3} />
-                    {isShow && (
-                      <Grid container xs={12} justify="center" spacing={2}>
-                        <Grid item>
-                          <U.ButtonResponsive
-                            radius="8px"
-                            onClick={() => nextCard()}
-                            bgColor={themeContext.backgroundSecondary}
-                            shadow="0px 1px 8px rgba(20, 46, 110, 0.1)"
-                            padding="1rem"
-                            style={{ height: 60, width: 80 }}
-                          >
-                            <Text color="#fe650e" weight="bold">
-                              Difícil
-                            </Text>
-                            <Text
-                              size={1.2}
-                              weight="bold"
-                              color={themeContext.textColorSecondary}
+                            <Spacing mt={1} />
+                            <Button
+                              type="button"
+                              radius="25px"
+                              style={{ width: '100%' }}
+                              padding="1rem 2rem"
+                              bgColor="#fe650e"
                             >
-                              10min
-                            </Text>
-                          </U.ButtonResponsive>
-                        </Grid>
-                        <Grid item>
-                          <U.ButtonResponsive
-                            radius="8px"
-                            onClick={() => nextCard()}
-                            bgColor={themeContext.backgroundSecondary}
-                            shadow="0px 1px 8px rgba(20, 46, 110, 0.1)"
-                            padding="1rem"
-                            style={{ height: 60, width: 80 }}
-                          >
-                            <Text color="#fe650e" weight="bold">
-                              Bom
-                            </Text>
-
-                            <Text
-                              size={1.2}
-                              weight="bold"
-                              color={themeContext.textColorSecondary}
-                            >
-                              1d
-                            </Text>
-                          </U.ButtonResponsive>
-                        </Grid>
-                        <Grid item>
-                          <U.ButtonResponsive
-                            radius="8px"
-                            onClick={() => nextCard()}
-                            bgColor={themeContext.backgroundSecondary}
-                            shadow="0px 1px 8px rgba(20, 46, 110, 0.1)"
-                            padding="1rem"
-                            style={{ height: 60, width: 80 }}
-                          >
-                            <Text color="#fe650e" weight="bold">
-                              Fácil
-                            </Text>
-                            <Text
-                              size={1.2}
-                              weight="bold"
-                              color={themeContext.textColorSecondary}
-                            >
-                              2d
-                            </Text>
-                          </U.ButtonResponsive>
+                              <Text size={1.4} weight="bold">
+                                Revisar novamente o baralho
+                              </Text>
+                            </Button>
+                          </Grid>
                         </Grid>
                       </Grid>
-                    )}
-                  </Grid>
-                </Grid>
+                    </div>
+                  )}
+                </>
               )}
             </S.CardContainer>
             <Grid />
