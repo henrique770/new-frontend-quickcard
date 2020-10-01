@@ -139,7 +139,7 @@ function Deck() {
       setModalOpenDeck(false);
       fetchData();
     } catch {
-      swal('Falha na criação', 'error');
+      swal('Falhou', 'Falha na criação', 'error');
     }
   }
 
@@ -163,11 +163,11 @@ function Deck() {
         }
       );
 
-      swal('Alterado com sucesso!', 'success');
+      swal('Atualizou', 'Alterado com sucesso!', 'success');
       fetchData();
       setModalEditDeck(false);
     } catch {
-      swal('Falha na atualização', 'error');
+      swal('Falhou', 'Falha na atualização', 'error');
     }
   }
 
@@ -200,7 +200,7 @@ function Deck() {
             }
           })
           .catch(() => {
-            swal('Falha na remoção!', 'warning');
+            swal('Falhou', 'Falha na remoção!', 'warning');
           });
       }
     });
@@ -239,7 +239,7 @@ function Deck() {
       fetchData();
     } catch {
       setModalOpenCard(false);
-      swal('Falha na criação', 'error');
+      swal('Falhou', 'Falha na criação', 'error');
     }
   }
 

@@ -128,7 +128,7 @@ function NotePad() {
       setModalOpenCreate(false);
       fetchData();
     } catch {
-      swal('Falha na criação', 'error');
+      swal('Falhou', 'Falha na criação', 'error');
     }
   }
 
@@ -150,11 +150,11 @@ function NotePad() {
         }
       );
 
-      swal('Alterado com sucesso!', 'success');
+      swal('Atualizou', 'Alterado com sucesso!', 'success');
       fetchData();
       setModalEdit(false);
     } catch {
-      swal('Falha na atualização', 'error');
+      swal('Falhou', 'Falha na atualização', 'error');
     }
   }
 
@@ -187,7 +187,7 @@ function NotePad() {
             }
           })
           .catch(() => {
-            swal('Falha na remoção!', 'warning');
+            swal('Falhou', 'Falha na remoção!', 'warning');
           });
       }
     });

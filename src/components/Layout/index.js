@@ -10,10 +10,10 @@ import React, {
 
 import PropTypes from 'prop-types';
 import {
-  Notifications,
+  // Notifications,
   Dashboard,
   AccountCircle,
-  Delete,
+  // Delete,
   CalendarToday,
   PeopleOutline,
   DoneAll,
@@ -23,14 +23,20 @@ import {
 import { MenuOutline } from '@styled-icons/evaicons-outline/MenuOutline';
 import { createBrowserHistory } from 'history';
 import { ThemeContext } from 'styled-components';
-import { useOutsideClick, Menu, Grid, Spacing, Text } from '~/lib';
+import {
+  useOutsideClick,
+  Menu,
+  Grid,
+  Spacing,
+  // Text
+} from '~/lib';
 import { useTheme } from '~/components/ThemeContext';
 
 import DefaultProfileImage from '~/utils/ProfileImage';
 import whiteLogo from '~/assets/img/white_main_logo.png';
 import darkLogo from '~/assets/img/logo_quickcard.png';
 import api from '~/services/api';
-import { notifications } from '~/data/fake';
+// import { notifications } from '~/data/fake';
 
 import history from '~/services/history';
 import { AuthContext } from '~/context/AuthContext';

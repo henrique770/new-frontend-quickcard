@@ -61,7 +61,7 @@ function Dash() {
       //     }
       //   );
       //   fetchData().catch(() => {
-      //     swal('Falha na remoção!', 'warning');
+      //     swal('Falhou','Falha na remoção!', 'warning');
       //   });
       // }
     });
