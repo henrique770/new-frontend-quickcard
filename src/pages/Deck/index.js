@@ -26,7 +26,22 @@ import history from '~/services/history';
 import api from '~/services/api';
 import { AuthContext } from '~/context/AuthContext';
 
+import Reposioty , { typeRepository } from 'context/Repository'
+import DeckInfo from '~/objectValues/deckInfo'
 import * as U from '~/styles/utilities';
+
+let repositoryDeckInfo = new Reposioty({
+    type : 'deck/info'
+    , mapper : data => data
+    , context : DeckInfo
+  })
+  , repositoryDeck = new Reposioty(typeRepository.DECK)
+  , repositoryCard = new Reposioty(typeRepository.CARD)
+
+
+/*
+*/
+
 
 function Deck() {
   const { user, token } = useContext(AuthContext);
@@ -89,7 +104,33 @@ function Deck() {
 
   const [decks, setDecks] = useState([]);
 
-  const fetchData = useCallback(async () => {
+  const fetchData = useCallback(() => {
+
+    setLoading(true);
+    setEmpty(false);
+
+    repositoryDeckInfo
+      .all()
+      .then( data => {
+
+        setDecks(data)
+        const hasActive = data.some((item) => item.IsActive === true);
+      
+        if (hasActive === false) {
+          setEmpty(true)
+        }
+
+        setLoading(false);
+      })
+      .catch( err => {
+
+        setLoading(false)
+        setEmpty(true)
+      })
+
+
+   /*
+
     try {
       setLoading(true);
       setEmpty(false);
@@ -115,14 +156,49 @@ function Deck() {
       }, 700);
       setEmpty(true);
     }
+    */
   }, [token]);
 
   useEffect(() => {
+    
+    repositoryDeckInfo.provaider({
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+
+    repositoryDeck.provaider({
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+
+    repositoryCard.provaider({
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+  
     fetchData();
   }, [fetchData]);
 
   // create
   async function createDeck(values) {
+   
+    repositoryDeck
+      .add({ Name: values.name })
+      .then(() => {
+       
+        swal('Criado!', 'O baralho foi criado com sucesso!', 'success');
+        setModalOpenDeck(false);
+        fetchData();
+      })
+      .catch(() => {
+        
+        swal('Falhou!', 'Falha na criação', 'error');
+      })
+
+    /*
     try {
       await api.post(
         'deck',
@@ -140,12 +216,32 @@ function Deck() {
     } catch {
       swal('Falhou!', 'Falha na criação', 'error');
     }
+    */
   }
 
   // console.log(decks);
 
   // update
   async function editDeck(values) {
+
+    repositoryDeck
+      .update({
+        Name: values.Name,
+        Id: values.Id,
+        IsActive: values.IsActive,
+      })
+      .then(() => {
+
+        swal('Atualizado!', 'O baralho foi atualizado com sucesso!', 'success');
+        fetchData();
+        setModalEditDeck(false);
+      })
+      .catch(() => {
+
+        swal('Falhou!', 'Falha na atualização', 'error');
+      })
+
+    /*
     try {
       await api.put(
         `deck/${modalEditDeck.id}`,
@@ -168,9 +264,35 @@ function Deck() {
     } catch {
       swal('Falhou!', 'Falha na atualização', 'error');
     }
+    */
   }
 
   function deleteDeck(id) {
+
+    swal({
+      title: 'Tem certeza que quer deletar?',
+      text: 'Uma vez excluído, você não poderá recuperar esse baralho!',
+      icon: 'warning',
+      buttons: ['Não', 'Sim'],
+      dangerMode: true,
+    })
+    .then((willDelete) => {
+      if (willDelete) {
+        return repositoryDeck
+                .delete({ Id: id })
+                .then(() => {
+
+                  swal('O baralho foi excluído com sucesso!', { icon: 'success' });
+                  fetchData();
+                })
+      }
+    })
+    .catch(() => {
+
+      swal('Falhou', 'Há algo errado', 'warning');
+    })
+
+    /*
     swal({
       title: 'Tem certeza que quer deletar?',
       text: 'Uma vez excluído, você não poderá recuperar esse baralho!',
@@ -207,12 +329,31 @@ function Deck() {
           });
       }
     });
+    */
   }
 
   // REQUESTS CARD
 
   // create
   async function createCard(values) {
+
+    repositoryCard
+      .add({ 
+        IdDeck: values.deck,
+        Front: values.front,
+        Verse: values.verse,
+      })
+      .then(() => {
+
+        swal('Criado!', 'O cartão foi criado com sucesso!', 'success');
+        setModalOpenCard(false);
+        fetchData();
+      })
+      .catch(() => {
+
+        swal('Falhou!', 'Falha na criação', 'error');
+      })
+
     // try {
     //   await api.post(
     //     'card',
@@ -328,15 +469,15 @@ function Deck() {
               ) : (
                 <U.NoteGridContainer list={listState}>
                   {decks.map((item) => {
-                    if (item.isActive === true) {
+                    if (item.IsActive === true) {
                       return (
                         <FlatList
-                          link={`/deck/card/${item._id}`}
+                          link={`/deck/${item.Id}`}
                           edit
                           editFunc={() =>
                             setModalEditDeck({
                               state: true,
-                              id: item._id,
+                              id: item.Id,
                               values: item,
                             })
                           }
@@ -348,7 +489,7 @@ function Deck() {
                                 </Grid>
                                 <Grid item>
                                   <Text weight="bold" color="#fe650e">
-                                    32
+                                    {item.Count}
                                   </Text>
                                 </Grid>
                               </Grid>
@@ -358,7 +499,7 @@ function Deck() {
                                 </Grid>
                                 <Grid item>
                                   <Text weight="bold" color="#fe650e">
-                                    12
+                                  {item.CountNotReviewed}
                                   </Text>
                                 </Grid>
                               </Grid>
@@ -368,13 +509,13 @@ function Deck() {
                                 </Grid>
                                 <Grid item>
                                   <Text weight="bold" color="#fe650e">
-                                    12
+                                  {item.CountReviewed}
                                   </Text>
                                 </Grid>
                               </Grid>
                             </Grid>
                           }
-                          title={item.name}
+                          title={item.Name}
                         />
                       );
                     }
@@ -451,10 +592,10 @@ function Deck() {
                       label="Nome do baralho"
                       type="text"
                       placeholder="Digite o nome do baralho"
-                      name="name"
+                      name="Name"
                       onChange={handleChange}
                       onBlur={handleBlur}
-                      value={values.name}
+                      value={values.Name}
                     />
                   </Grid>
                 </Grid>
@@ -537,8 +678,8 @@ function Deck() {
                         Selecione
                       </option>
                       {decks.map((item) => {
-                        if (item.isActive === true) {
-                          return <option value={item._id}>{item.name}</option>;
+                        if (item.IsActive === true) {
+                          return <option value={item.Id}>{item.Name}</option>;
                         }
                         return '';
                       })}

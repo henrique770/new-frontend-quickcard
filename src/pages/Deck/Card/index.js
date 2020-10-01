@@ -20,13 +20,54 @@ import { AuthContext } from '~/context/AuthContext';
 import * as U from '~/styles/utilities';
 import * as S from './styled';
 
+import Reposioty , { typeRepository } from 'context/Repository'
+
+let repositoryDeck = new Reposioty(typeRepository.DECK)
+  , repositoryCard = new Reposioty(typeRepository.CARD)
+
 function FlashCard() {
-  const { id } = useParams();
+  const { id , idCard} = useParams();
   const { token } = useContext(AuthContext);
 
-  const [deck, setDeck] = useState({});
+  const [deck, setDeck] = useState({})
+    , [card , setCard] = useState({})
+    , [isCardView , setIsCardView] = useState(false)
+    , [isDeckEmpty , setIsDeckEmpty] = useState(false)
+    , [isRevisedDeck , setIsRevisedDeck] = useState(false)
+    
+
+  const themeContext = useContext(ThemeContext);
+  const [modalOpen, setModalOpen] = useState(false);
+  const modal = useRef();
+  const [isShow, setIsShow] = useState(false);
+
+
 
   const fetchData = useCallback(async () => {
+
+    repositoryDeck
+      .getById(id)
+      .then(data => {
+
+        console.log(data)
+        console.log(data.isEmpty())
+
+        setIsRevisedDeck(data.checkRevisedDeck())
+        setIsDeckEmpty(data.isEmpty())
+        setDeck(data)
+
+        let card = data.getDeckRandom()
+
+        if(card != null) {
+          setIsCardView(true)
+          setCard(card)
+        }
+
+        console.log(card)
+      })
+
+
+    /*
     try {
       const response = await api.get(`deck/${id}`, {
         headers: {
@@ -37,18 +78,29 @@ function FlashCard() {
       const { data } = response;
       setDeck(data);
     } catch {}
+    */
   }, [id, token]);
 
+
   useEffect(() => {
+
+    repositoryDeck.provaider({
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+
+    repositoryCard.provaider({
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+
     fetchData();
-  }, [fetchData]);
 
-  console.log(deck);
-  const themeContext = useContext(ThemeContext);
+  }, []);
 
-  const [modalOpen, setModalOpen] = useState(false);
-
-  const modal = useRef();
+ 
 
   useOutsideClick(modal, () => {
     if (modalOpen) {
@@ -56,8 +108,7 @@ function FlashCard() {
     }
   });
 
-  const [isShow, setIsShow] = useState(false);
-  const [cardsVisible] = useState(true);
+
   // const [cardIndex, setCardIndex] = useState(0);
   // const [endQuiz, setEndQuiz] = useState(false);
 
@@ -180,6 +231,7 @@ function FlashCard() {
                   <U.ButtonResponsive
                     bgColor="#fe650e"
                     radius="4px"
+                    disabled={!isCardView}
                     onClick={() => setModalOpen(true)}
                   >
                     <Text size={1.4} weight="bold">
@@ -200,7 +252,15 @@ function FlashCard() {
             <Spacing mb={5} />
 
             <S.CardContainer>
-              {cardsVisible && (
+              { isDeckEmpty && (
+                <text> Vazio</text>
+              )}
+
+              { isRevisedDeck && (
+                <text> completo </text>
+              )}
+
+              {isCardView && (
                 <Grid container xs={12} justify="center" alignItems="center">
                   <Grid xs={12} sm={6} lg={4}>
                     <ReactCardFlip
@@ -220,7 +280,7 @@ function FlashCard() {
                         </S.TitleCard>
 
                         <Text size={3} weight="bold">
-                          Oque é TCC?
+                          {card.Front}
                         </Text>
                       </S.FlashCard>
 
@@ -236,7 +296,7 @@ function FlashCard() {
                           Verso
                         </S.TitleCard>
                         <Text size={3} weight="bold">
-                          Trabalho de conclusão de curso
+                          {card.Verse}
                         </Text>
                       </S.FlashCard>
                     </ReactCardFlip>
