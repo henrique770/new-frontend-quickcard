@@ -135,11 +135,11 @@ function Deck() {
         }
       );
 
-      swal('Criado!', 'O baralho foi criado com sucesso!', 'success');
+      swal('Criado!', 'Baralho adicionado com sucesso!', 'success');
       setModalOpenDeck(false);
       fetchData();
     } catch {
-      swal('Falhou!', 'Falha na criação', 'error');
+      swal('Falha na criação', 'error');
     }
   }
 
@@ -163,18 +163,17 @@ function Deck() {
         }
       );
 
-      swal('Atualizado!', 'O baralho foi atualizado com sucesso!', 'success');
+      swal('Alterado com sucesso!', 'success');
       fetchData();
       setModalEditDeck(false);
     } catch {
-      swal('Falhou!', 'Falha na atualização', 'error');
+      swal('Falha na atualização', 'error');
     }
   }
 
   function deleteDeck(id) {
     swal({
-      title: 'Tem certeza que quer deletar?',
-      text: 'Uma vez excluído, você não poderá recuperar esse baralho!',
+      title: 'Você tem certeza que quer excluir?',
       icon: 'warning',
       buttons: ['Não', 'Sim'],
       dangerMode: true,
@@ -197,14 +196,11 @@ function Deck() {
           )
           .then(() => {
             if (willDelete) {
-              swal('O baralho foi excluído com sucesso!', {
-                icon: 'success',
-              });
               fetchData();
             }
           })
           .catch(() => {
-            swal('Falhou', 'Há algo errado', 'warning');
+            swal('Falha na remoção!', 'warning');
           });
       }
     });
@@ -238,12 +234,12 @@ function Deck() {
           },
         }
       );
-      swal('Criado!', 'O cartão foi criado com sucesso!', 'success');
+      swal('Criado!', 'Cartão adicionado com sucesso!', 'success');
       setModalOpenCard(false);
       fetchData();
     } catch {
       setModalOpenCard(false);
-      swal('Falhou!', 'Falha na criação', 'error');
+      swal('Falha na criação', 'error');
     }
   }
 
@@ -536,7 +532,7 @@ function Deck() {
                       value={values.deck}
                     >
                       <option selected disabled>
-                        Selecione
+                        Selecione um baralho
                       </option>
                       {decks.map((item) => {
                         if (item.isActive === true) {

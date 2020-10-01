@@ -113,54 +113,57 @@ export default function Header({
                   </div>
                 )}
               </S.ContainerNotification>
+              <div style={{ position: 'relative' }}>
+                <Spacing
+                  style={{ cursor: 'pointer' }}
+                  ds="flex"
+                  onClick={showDropdown}
+                >
+                  {image && <S.ImageProfile src={image} alt="" />}
+                  <S.ArrowDown>
+                    <KeyboardArrowDown size={25} />
+                  </S.ArrowDown>
+                </Spacing>
 
-              <Spacing
-                style={{ cursor: 'pointer' }}
-                ds="flex"
-                onClick={showDropdown}
-              >
-                {image && <S.ImageProfile src={image} alt="" />}
-                <S.ArrowDown>
-                  <KeyboardArrowDown size={25} />
-                </S.ArrowDown>
-              </Spacing>
+                <div ref={node}>
+                  {isShow && (
+                    <S.DropDownContainer>
+                      <S.DropDownItem onClick={showDropdown}>
+                        <Spacing mr={2}>
+                          <S.TextCard>{name}</S.TextCard>
+                        </Spacing>
+                        <Spacing ds="flex" style={{ alignItems: 'center' }}>
+                          {image && <S.ImageProfile src={image} alt="" />}
+                          <S.ArrowDown>
+                            <KeyboardArrowUp size={25} />
+                          </S.ArrowDown>
+                        </Spacing>
+                      </S.DropDownItem>
 
-              <div ref={node}>
-                {isShow && (
-                  <S.DropDownContainer>
-                    <S.DropDownItem onClick={showDropdown}>
-                      <Spacing mr={2}>
-                        <S.TextCard>{name}</S.TextCard>
-                      </Spacing>
-                      <Spacing ds="flex" style={{ alignItems: 'center' }}>
-                        {image && <S.ImageProfile src={image} alt="" />}
-                        <S.ArrowDown>
-                          <KeyboardArrowUp size={25} />
-                        </S.ArrowDown>
-                      </Spacing>
-                    </S.DropDownItem>
+                      {dropDownOptions.map((opt) => (
+                        <S.DropDownItem key={opt.id} onClick={opt.func}>
+                          <S.TextCard>
+                            {opt.icon && (
+                              <S.IconDropdownItem>
+                                {opt.icon}
+                              </S.IconDropdownItem>
+                            )}
+                            {opt.name}
+                          </S.TextCard>
+                        </S.DropDownItem>
+                      ))}
 
-                    {dropDownOptions.map((opt) => (
-                      <S.DropDownItem key={opt.id} onClick={opt.func}>
+                      <S.DropDownItem onClick={logoutFunc}>
                         <S.TextCard>
-                          {opt.icon && (
-                            <S.IconDropdownItem>{opt.icon}</S.IconDropdownItem>
-                          )}
-                          {opt.name}
+                          <S.IconDropdownItem>
+                            <ExitToApp size={25} />
+                          </S.IconDropdownItem>
+                          Logout
                         </S.TextCard>
                       </S.DropDownItem>
-                    ))}
-
-                    <S.DropDownItem onClick={logoutFunc}>
-                      <S.TextCard>
-                        <S.IconDropdownItem>
-                          <ExitToApp size={25} />
-                        </S.IconDropdownItem>
-                        Logout
-                      </S.TextCard>
-                    </S.DropDownItem>
-                  </S.DropDownContainer>
-                )}
+                    </S.DropDownContainer>
+                  )}
+                </div>
               </div>
             </S.SessionUserContainer>
           </S.ContainerApart>

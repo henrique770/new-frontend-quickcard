@@ -19,7 +19,7 @@ function ListNotePad() {
 
   function deleteNote() {
     swal({
-      title: 'Tem certeza que quer deletar?',
+      title: 'Você tem certeza que quer excluir?',
       text: 'Uma vez excluído, você não poderá recuperar essa anotação!',
       icon: 'warning',
       buttons: ['Não', 'Sim'],

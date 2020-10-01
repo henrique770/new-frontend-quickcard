@@ -40,17 +40,30 @@ function Dash() {
 
   function deleteNote() {
     swal({
-      title: 'Tem certeza que quer deletar?',
-      text: 'Uma vez excluído, você não poderá recuperar essa anotação!',
+      title: 'Você tem certeza que quer excluir?',
       icon: 'warning',
       buttons: ['Não', 'Sim'],
       dangerMode: true,
     }).then((willDelete) => {
-      if (willDelete) {
-        swal('A anotação foi excluída com sucesso!', {
-          icon: 'success',
-        });
-      }
+      // if (willDelete) {
+      //   api.put(
+      //     `deck/${id}`,
+      //     {
+      //       Name: modalEditDeck.values.name,
+      //       Id: id,
+      //       idStudent: _id,
+      //       IsActive: false,
+      //     },
+      //     {
+      //       headers: {
+      //         Authorization: `Bearer ${token}`,
+      //       },
+      //     }
+      //   );
+      //   fetchData().catch(() => {
+      //     swal('Falha na remoção!', 'warning');
+      //   });
+      // }
     });
   }
 

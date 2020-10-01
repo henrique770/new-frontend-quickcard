@@ -96,7 +96,7 @@ function Profile() {
         ImgPerfil: fileUpload,
       });
 
-      toast.success('O perfil foi atualizado!', {
+      toast.success('Alterado com sucesso!', {
         position: 'top-right',
         autoClose: 3000,
         hideProgressBar: false,

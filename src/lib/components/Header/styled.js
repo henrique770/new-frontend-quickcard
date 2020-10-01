@@ -41,15 +41,15 @@ export const DropDownContainer = styled.div`
   z-index: 999 !important;
   top: -21px;
   width: 277px;
-  left: -122px;
+  left: -197px;
 
   ${media.lessThan('885px')`
     top: -19px;
-    left: -138px;
+    left: -203px;
   `}
 
   ${media.lessThan('medium')`
-    left: -138px;
+    left: -203px;
   `}
 `;
 
