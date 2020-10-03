@@ -1,7 +1,5 @@
 import BaseEntity from "./BaseEntity";
-//import ConstantsBusiness from "~/constants/ConstantsBusiness"
-
-let ConstantsBusiness = {}
+import * as ConstantsBusiness from "~/constants/constantsBusiness"
 
 /**
  * @type Card

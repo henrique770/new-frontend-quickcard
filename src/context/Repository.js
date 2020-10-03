@@ -149,6 +149,17 @@ export default class Repository {
      */
     _processResponseFailData(data) {
 
+        let status = data.response.status
+
+        switch(status) {
+            case 401:
+
+                localStorage.removeItem('@QuickCard:token')
+                localStorage.removeItem('@QuickCard:student')
+                window.location.pathname = '/'
+
+                break;
+        }
     }
 
     /**
@@ -197,13 +208,31 @@ export default class Repository {
     }
 
     async update(model) {
+
+        if(Array.isArray(model)) {
+
+            return this._operCascade(model, 'update')
+        }
+
         let data = new this.context(model)
         return api.put(`${this.type}/${data.Id}`, data.clone(), this._provaider)
     }
 
-    async delete(model) {
-        let data = new this.context(model)
-        return api.delete(`${this.type}/${data.Id}`, this._provaider)
+    async delete(id) {
+        
+        return api.delete(`${this.type}/${id}`, this._provaider)
+    }
+
+    async _operCascade(models, key) {
+        let opers = []
+            , self = this
+            
+        for(let i = 0; i < models.length; i += 1){
+            let item = models[i]
+            opers.push(self[key](item))
+        }
+
+        return Promise.all(opers)
     }
 
     //#endregion

@@ -44,8 +44,11 @@ let repositoryDeckInfo = new Reposioty({
 
 
 function Deck() {
+
   const { user, token } = useContext(AuthContext);
   const { _id } = user;
+
+  const [decks, setDecks] = useState([]);
 
   const query = useQuery();
   const [status] = useState({
@@ -86,6 +89,21 @@ function Deck() {
   });
 
   const OnChangeSearch = (e) => {
+
+    var re = new RegExp(e.target.value, 'g');
+
+    decks.map( item => {
+
+      item.IsActive = item.Name.match(re) != null
+
+      return item
+    })
+
+    if(decks.filter( e => e.IsActive).length < 1) {
+      // coloar regra para exibir imagem de dados
+      alert('Nenhum dado para o filtro do baralho')
+    }
+
     setSearchValue(e.target.value);
   };
 
@@ -102,7 +120,6 @@ function Deck() {
 
   // REQUESTS DECK
 
-  const [decks, setDecks] = useState([]);
 
   const fetchData = useCallback(() => {
 
@@ -127,36 +144,6 @@ function Deck() {
         setLoading(false)
         setEmpty(true)
       })
-
-
-   /*
-
-    try {
-      setLoading(true);
-      setEmpty(false);
-      const response = await api.get(`deck`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      const { data } = response;
-      setDecks(data);
-      setTimeout(() => {
-        setLoading(false);
-      }, 700);
-
-      const hasActive = data.some((item) => item.isActive === true);
-      if (hasActive === false) {
-        setEmpty(true);
-      }
-    } catch {
-      setTimeout(() => {
-        setLoading(false);
-      }, 700);
-      setEmpty(true);
-    }
-    */
   }, [token]);
 
   useEffect(() => {
@@ -279,7 +266,7 @@ function Deck() {
     .then((willDelete) => {
       if (willDelete) {
         return repositoryDeck
-                .delete({ Id: id })
+                .delete(id)
                 .then(() => {
 
                   swal('O baralho foi excluído com sucesso!', { icon: 'success' });
@@ -291,45 +278,6 @@ function Deck() {
 
       swal('Falhou', 'Há algo errado', 'warning');
     })
-
-    /*
-    swal({
-      title: 'Tem certeza que quer deletar?',
-      text: 'Uma vez excluído, você não poderá recuperar esse baralho!',
-      icon: 'warning',
-      buttons: ['Não', 'Sim'],
-      dangerMode: true,
-    }).then((willDelete) => {
-      if (willDelete) {
-        api
-          .put(
-            `deck/${id}`,
-            {
-              Name: modalEditDeck.values.name,
-              Id: id,
-              idStudent: _id,
-              IsActive: false,
-            },
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          )
-          .then(() => {
-            if (willDelete) {
-              swal('O baralho foi excluído com sucesso!', {
-                icon: 'success',
-              });
-              fetchData();
-            }
-          })
-          .catch(() => {
-            swal('Falhou', 'Há algo errado', 'warning');
-          });
-      }
-    });
-    */
   }
 
   // REQUESTS CARD
@@ -353,37 +301,6 @@ function Deck() {
 
         swal('Falhou!', 'Falha na criação', 'error');
       })
-
-    // try {
-    //   await api.post(
-    //     'card',
-    //     {
-    //       Id: uniqid(),
-    //       IdDeck: values.deck,
-    //       Front: values.front,
-    //       Verse: values.verse,
-    //       IsReviewed: undefined,
-    //       BaseHours: undefined,
-    //       NumGoodCount: undefined,
-    //       NumEasyCount: undefined,
-    //       NumDifficultCount: undefined,
-    //       DateNextView: undefined,
-    //       DateLastView: undefined,
-    //       DisplayDeadline: undefined,
-    //       CodEnumHit: undefined,
-    //     },
-    //     {
-    //       headers: {
-    //         Authorization: `Bearer ${token}`,
-    //       },
-    //     }
-    //   );
-    //   swal('Criado!', 'O cartão foi criado com sucesso!', 'success');
-    //   setModalOpenCard(false);
-    //   fetchData();
-    // } catch {
-    //   swal('Falhou!', 'Falha na criação', 'error');
-    // }
   }
 
   return (

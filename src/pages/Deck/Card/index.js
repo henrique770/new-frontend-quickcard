@@ -41,46 +41,34 @@ function FlashCard() {
   const modal = useRef();
   const [isShow, setIsShow] = useState(false);
 
-
-
   const fetchData = useCallback(async () => {
 
     repositoryDeck
       .getById(id)
       .then(data => {
 
-        console.log(data)
-        console.log(data.isEmpty())
-
-        setIsRevisedDeck(data.checkRevisedDeck())
-        setIsDeckEmpty(data.isEmpty())
-        setDeck(data)
-
-        let card = data.getDeckRandom()
-
-        if(card != null) {
-          setIsCardView(true)
-          setCard(card)
-        }
-
-        console.log(card)
+        validatedDeck(data)
       })
-
-
-    /*
-    try {
-      const response = await api.get(`deck/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      const { data } = response;
-      setDeck(data);
-    } catch {}
-    */
   }, [id, token]);
 
+
+  function validatedDeck(data) {
+    console.log(data)
+    console.log(data.isEmpty())
+
+    setIsRevisedDeck(data.checkRevisedDeck())
+    setIsDeckEmpty(data.isEmpty())
+    setDeck(data)
+
+    let card = data.getDeckRandom()
+
+    setIsCardView(card != null)
+    if(card != null) {
+      setCard(card)
+    } 
+
+    console.log(card)
+  }
 
   useEffect(() => {
 
@@ -99,7 +87,6 @@ function FlashCard() {
     fetchData();
 
   }, []);
-
  
 
   useOutsideClick(modal, () => {
@@ -108,25 +95,53 @@ function FlashCard() {
     }
   });
 
-
-  // const [cardIndex, setCardIndex] = useState(0);
-  // const [endQuiz, setEndQuiz] = useState(false);
-
   function showAnswer() {
     setIsShow(!isShow);
   }
 
-  // function nextCard() {
-  //   if (cardIndex + 1 < card.length) {
-  //     setCardIndex(cardIndex + 1);
-  //   }
+  function hitCardGood() {
+    card.hitGood()
+    updateCard()
+  }
 
-  //   if (cardIndex + 1 === card.length) {
-  //     setCardsVisible(false);
-  //     setIsShow(false);
-  //     setEndQuiz(true);
-  //   }
-  // }
+  function hitCardDifficult() {
+    card.hitDifficult()
+    updateCard()
+  }
+
+  function hitCardEasy() {
+    card.hitEasy()
+    updateCard()
+  }
+
+  function updateCard() {
+
+    showAnswer(true)
+
+    repositoryCard
+      .update(card)
+      .then(() => {
+
+        validatedDeck(deck)
+      })
+      .catch((err) => {
+
+        console.log(err)
+      })
+  }
+
+  function reviewCards() {
+   
+    deck.reviewCards()
+    repositoryCard
+      .update(deck.Cards)
+      .then(() => {
+
+        fetchData()
+      })
+      .catch( err => console.log(err))
+
+  }
 
   return (
     <>
@@ -256,9 +271,10 @@ function FlashCard() {
                 <text> Vazio</text>
               )}
 
-              { isRevisedDeck && (
+              { isRevisedDeck && (<>
                 <text> completo </text>
-              )}
+                <button onClick={() => { reviewCards() }} >Revisar barralho</button>
+              </>)}
 
               {isCardView && (
                 <Grid container xs={12} justify="center" alignItems="center">
@@ -311,6 +327,7 @@ function FlashCard() {
                             shadow="0px 1px 8px rgba(20, 46, 110, 0.1)"
                             padding="1rem"
                             style={{ height: 60, width: 80 }}
+                            onClick={hitCardDifficult}
                           >
                             <Text color="#fe650e" weight="bold">
                               Difícil
@@ -320,7 +337,7 @@ function FlashCard() {
                               weight="bold"
                               color={themeContext.textColorSecondary}
                             >
-                              10min
+                              {card.getTimeHitDifficult()}
                             </Text>
                           </U.ButtonResponsive>
                         </Grid>
@@ -331,6 +348,7 @@ function FlashCard() {
                             shadow="0px 1px 8px rgba(20, 46, 110, 0.1)"
                             padding="1rem"
                             style={{ height: 60, width: 80 }}
+                            onClick={hitCardGood}
                           >
                             <Text color="#fe650e" weight="bold">
                               Bom
@@ -341,7 +359,7 @@ function FlashCard() {
                               weight="bold"
                               color={themeContext.textColorSecondary}
                             >
-                              1d
+                              {card.getTimeHitGood()}
                             </Text>
                           </U.ButtonResponsive>
                         </Grid>
@@ -352,6 +370,7 @@ function FlashCard() {
                             shadow="0px 1px 8px rgba(20, 46, 110, 0.1)"
                             padding="1rem"
                             style={{ height: 60, width: 80 }}
+                            onClick={hitCardEasy}
                           >
                             <Text color="#fe650e" weight="bold">
                               Fácil
@@ -361,7 +380,7 @@ function FlashCard() {
                               weight="bold"
                               color={themeContext.textColorSecondary}
                             >
-                              2d
+                              {card.getTimeHitEasy()}
                             </Text>
                           </U.ButtonResponsive>
                         </Grid>
