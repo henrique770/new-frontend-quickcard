@@ -9,7 +9,8 @@ import React, {
 import swal from 'sweetalert';
 
 import { Formik } from 'formik';
-import uniqid from 'uniqid';
+
+import Reposioty, { typeRepository } from 'context/Repository';
 import FlatList from '~/components/FlatList';
 import { Grid, Spacing, Text, useOutsideClick, Button } from '~/lib';
 
@@ -23,30 +24,25 @@ import SkeletonLoad from '~/components/Skeleton';
 import Empty from '~/components/Empty';
 import useQuery from '~/utils/queryParams';
 import history from '~/services/history';
-import api from '~/services/api';
+
 import { AuthContext } from '~/context/AuthContext';
 
-import Reposioty , { typeRepository } from 'context/Repository'
-import DeckInfo from '~/objectValues/deckInfo'
+import DeckInfo from '~/objectValues/deckInfo';
 import * as U from '~/styles/utilities';
 
-let repositoryDeckInfo = new Reposioty({
-    type : 'deck/info'
-    , mapper : data => data
-    , context : DeckInfo
-  })
-  , repositoryDeck = new Reposioty(typeRepository.DECK)
-  , repositoryCard = new Reposioty(typeRepository.CARD)
-
+const repositoryDeckInfo = new Reposioty({
+  type: 'deck/info',
+  mapper: (data) => data,
+  context: DeckInfo,
+});
+const repositoryDeck = new Reposioty(typeRepository.DECK);
+const repositoryCard = new Reposioty(typeRepository.CARD);
 
 /*
-*/
-
+ */
 
 function Deck() {
-
-  const { user, token } = useContext(AuthContext);
-  const { _id } = user;
+  const { token } = useContext(AuthContext);
 
   const [decks, setDecks] = useState([]);
 
@@ -89,19 +85,17 @@ function Deck() {
   });
 
   const OnChangeSearch = (e) => {
+    const re = new RegExp(e.target.value, 'g');
 
-    var re = new RegExp(e.target.value, 'g');
+    decks.map((item) => {
+      item.IsActive = item.Name.match(re) != null;
 
-    decks.map( item => {
+      return item;
+    });
 
-      item.IsActive = item.Name.match(re) != null
-
-      return item
-    })
-
-    if(decks.filter( e => e.IsActive).length < 1) {
+    if (decks.filter((e) => e.IsActive).length < 1) {
       // coloar regra para exibir imagem de dados
-      alert('Nenhum dado para o filtro do baralho')
+      alert('Nenhum dado para o filtro do baralho');
     }
 
     setSearchValue(e.target.value);
@@ -120,70 +114,62 @@ function Deck() {
 
   // REQUESTS DECK
 
-
   const fetchData = useCallback(() => {
-
     setLoading(true);
     setEmpty(false);
 
     repositoryDeckInfo
       .all()
-      .then( data => {
-
-        setDecks(data)
+      .then((data) => {
+        setDecks(data);
         const hasActive = data.some((item) => item.IsActive === true);
-      
+
         if (hasActive === false) {
-          setEmpty(true)
+          setEmpty(true);
         }
 
         setLoading(false);
       })
-      .catch( err => {
-
-        setLoading(false)
-        setEmpty(true)
-      })
-  }, [token]);
+      .catch((err) => {
+        setLoading(false);
+        setEmpty(true);
+      });
+  }, []);
 
   useEffect(() => {
-    
     repositoryDeckInfo.provaider({
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    })
+    });
 
     repositoryDeck.provaider({
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    })
+    });
 
     repositoryCard.provaider({
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    })
-  
+    });
+
     fetchData();
-  }, [fetchData]);
+  }, [fetchData, token]);
 
   // create
   async function createDeck(values) {
-   
     repositoryDeck
       .add({ Name: values.name })
       .then(() => {
-       
         swal('Criado!', 'O baralho foi criado com sucesso!', 'success');
         setModalOpenDeck(false);
         fetchData();
       })
       .catch(() => {
-        
         swal('Falhou!', 'Falha na criação', 'error');
-      })
+      });
 
     /*
     try {
@@ -197,11 +183,11 @@ function Deck() {
         }
       );
 
-      swal('Criado!', 'O baralho foi criado com sucesso!', 'success');
+      swal('Criado!', 'Baralho adicionado com sucesso!', 'success');
       setModalOpenDeck(false);
       fetchData();
     } catch {
-      swal('Falhou!', 'Falha na criação', 'error');
+      swal('Falhou', 'Falha na criação', 'error');
     }
     */
   }
@@ -210,7 +196,6 @@ function Deck() {
 
   // update
   async function editDeck(values) {
-
     repositoryDeck
       .update({
         Name: values.Name,
@@ -218,15 +203,13 @@ function Deck() {
         IsActive: values.IsActive,
       })
       .then(() => {
-
         swal('Atualizado!', 'O baralho foi atualizado com sucesso!', 'success');
         fetchData();
         setModalEditDeck(false);
       })
       .catch(() => {
-
         swal('Falhou!', 'Falha na atualização', 'error');
-      })
+      });
 
     /*
     try {
@@ -245,62 +228,53 @@ function Deck() {
         }
       );
 
-      swal('Atualizado!', 'O baralho foi atualizado com sucesso!', 'success');
+      swal('Atualizou', 'Alterado com sucesso!', 'success');
       fetchData();
       setModalEditDeck(false);
     } catch {
-      swal('Falhou!', 'Falha na atualização', 'error');
+      swal('Falhou', 'Falha na atualização', 'error');
     }
     */
   }
 
   function deleteDeck(id) {
-
     swal({
-      title: 'Tem certeza que quer deletar?',
-      text: 'Uma vez excluído, você não poderá recuperar esse baralho!',
+      title: 'Você tem certeza que quer excluir?',
       icon: 'warning',
       buttons: ['Não', 'Sim'],
       dangerMode: true,
     })
-    .then((willDelete) => {
-      if (willDelete) {
-        return repositoryDeck
-                .delete(id)
-                .then(() => {
-
-                  swal('O baralho foi excluído com sucesso!', { icon: 'success' });
-                  fetchData();
-                })
-      }
-    })
-    .catch(() => {
-
-      swal('Falhou', 'Há algo errado', 'warning');
-    })
+      .then((willDelete) => {
+        if (willDelete) {
+          return repositoryDeck.delete(id).then(() => {
+            swal('O baralho foi excluído com sucesso!', { icon: 'success' });
+            fetchData();
+          });
+        }
+      })
+      .catch(() => {
+        swal('Falhou', 'Há algo errado', 'warning');
+      });
   }
 
   // REQUESTS CARD
 
   // create
   async function createCard(values) {
-
     repositoryCard
-      .add({ 
+      .add({
         IdDeck: values.deck,
         Front: values.front,
         Verse: values.verse,
       })
       .then(() => {
-
         swal('Criado!', 'O cartão foi criado com sucesso!', 'success');
         setModalOpenCard(false);
         fetchData();
       })
       .catch(() => {
-
         swal('Falhou!', 'Falha na criação', 'error');
-      })
+      });
   }
 
   return (
@@ -416,7 +390,7 @@ function Deck() {
                                 </Grid>
                                 <Grid item>
                                   <Text weight="bold" color="#fe650e">
-                                  {item.CountNotReviewed}
+                                    {item.CountNotReviewed}
                                   </Text>
                                 </Grid>
                               </Grid>
@@ -426,7 +400,7 @@ function Deck() {
                                 </Grid>
                                 <Grid item>
                                   <Text weight="bold" color="#fe650e">
-                                  {item.CountReviewed}
+                                    {item.CountReviewed}
                                   </Text>
                                 </Grid>
                               </Grid>
@@ -592,7 +566,7 @@ function Deck() {
                       value={values.deck}
                     >
                       <option selected disabled>
-                        Selecione
+                        Selecione um baralho
                       </option>
                       {decks.map((item) => {
                         if (item.IsActive === true) {
@@ -635,7 +609,6 @@ function Deck() {
                     type="submit"
                     bgColor="#fe650e"
                     radius="4px"
-                    onClick={() => setModalOpenDeck(true)}
                   >
                     <Text size={1.4} weight="bold">
                       Salvar

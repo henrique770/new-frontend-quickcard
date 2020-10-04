@@ -124,11 +124,11 @@ function NotePad() {
         }
       );
 
-      swal('Criado!', 'O Bloco de nota foi criado com sucesso!', 'success');
+      swal('Criado!', 'Bloco de notas adicionado com sucesso!', 'success');
       setModalOpenCreate(false);
       fetchData();
     } catch {
-      swal('Falhou!', 'Falha na criação', 'error');
+      swal('Falhou', 'Falha na criação', 'error');
     }
   }
 
@@ -150,22 +150,17 @@ function NotePad() {
         }
       );
 
-      swal(
-        'Atualizado!',
-        'O bloco de nota foi atualizado com sucesso!',
-        'success'
-      );
+      swal('Atualizou', 'Alterado com sucesso!', 'success');
       fetchData();
       setModalEdit(false);
     } catch {
-      swal('Falhou!', 'Falha na atualização', 'error');
+      swal('Falhou', 'Falha na atualização', 'error');
     }
   }
 
   function deleteNotePad(id) {
     swal({
-      title: 'Tem certeza que quer deletar?',
-      text: 'Uma vez excluído, você não poderá recuperar esse bloco de notas!',
+      title: 'Você tem certeza que quer excluir?',
       icon: 'warning',
       buttons: ['Não', 'Sim'],
       dangerMode: true,
@@ -188,20 +183,16 @@ function NotePad() {
           )
           .then(() => {
             if (willDelete) {
-              swal('O bloco de notas foi excluído com sucesso!', {
-                icon: 'success',
-              });
               fetchData();
             }
           })
           .catch(() => {
-            swal('Falhou', 'Há algo errado', 'warning');
+            swal('Falhou', 'Falha na remoção!', 'warning');
           });
       }
     });
   }
 
-  console.log(notepads);
   return (
     <>
       <Layout

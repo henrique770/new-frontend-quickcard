@@ -20,3 +20,10 @@ export const CardContainer = styled.div`
   flex-direction: column;
   justify-content: center;
 `;
+
+export const ContainerEndDeck = styled.div`
+  height: 50vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;

@@ -1,3 +1,4 @@
+/* eslint-disable import/no-unresolved */
 import React, {
   useContext,
   useState,
@@ -5,36 +6,33 @@ import React, {
   useCallback,
   useEffect,
 } from 'react';
-
+import { Link, useParams } from 'react-router-dom';
 import { ThemeContext } from 'styled-components';
 import { ArrowBack } from '@styled-icons/material-outlined';
-import { useParams } from 'react-router-dom';
 
 import ReactCardFlip from 'react-card-flip';
+import Reposioty, { typeRepository } from 'context/Repository';
 import history from '~/services/history';
 import { Grid, Spacing, Text, Card, useOutsideClick, Button } from '~/lib';
-import api from '~/services/api';
 import Modal from '~/components/Modal';
 import TextField from '~/components/TextField';
 import { AuthContext } from '~/context/AuthContext';
 import * as U from '~/styles/utilities';
 import * as S from './styled';
+import Empty from '~/components/Empty';
 
-import Reposioty , { typeRepository } from 'context/Repository'
-
-let repositoryDeck = new Reposioty(typeRepository.DECK)
-  , repositoryCard = new Reposioty(typeRepository.CARD)
+const repositoryDeck = new Reposioty(typeRepository.DECK);
+const repositoryCard = new Reposioty(typeRepository.CARD);
 
 function FlashCard() {
-  const { id , idCard} = useParams();
+  const { id } = useParams();
   const { token } = useContext(AuthContext);
 
-  const [deck, setDeck] = useState({})
-    , [card , setCard] = useState({})
-    , [isCardView , setIsCardView] = useState(false)
-    , [isDeckEmpty , setIsDeckEmpty] = useState(false)
-    , [isRevisedDeck , setIsRevisedDeck] = useState(false)
-    
+  const [deck, setDeck] = useState({});
+  const [card, setCard] = useState({});
+  const [isCardView, setIsCardView] = useState(false);
+  const [isDeckEmpty, setIsDeckEmpty] = useState(false);
+  const [isRevisedDeck, setIsRevisedDeck] = useState(false);
 
   const themeContext = useContext(ThemeContext);
   const [modalOpen, setModalOpen] = useState(false);
@@ -42,52 +40,44 @@ function FlashCard() {
   const [isShow, setIsShow] = useState(false);
 
   const fetchData = useCallback(async () => {
-
-    repositoryDeck
-      .getById(id)
-      .then(data => {
-
-        validatedDeck(data)
-      })
-  }, [id, token]);
-
+    repositoryDeck.getById(id).then((data) => {
+      validatedDeck(data);
+    });
+  }, [id]);
 
   function validatedDeck(data) {
-    console.log(data)
-    console.log(data.isEmpty())
+    console.log(data);
+    console.log(data.isEmpty());
 
-    setIsRevisedDeck(data.checkRevisedDeck())
-    setIsDeckEmpty(data.isEmpty())
-    setDeck(data)
+    setIsRevisedDeck(data.checkRevisedDeck());
+    setIsDeckEmpty(data.isEmpty());
+    setDeck(data);
 
-    let card = data.getDeckRandom()
+    const card = data.getDeckRandom();
 
-    setIsCardView(card != null)
-    if(card != null) {
-      setCard(card)
-    } 
+    setIsCardView(card != null);
+    if (card != null) {
+      setCard(card);
+    }
 
-    console.log(card)
+    console.log(card);
   }
 
   useEffect(() => {
-
     repositoryDeck.provaider({
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    })
+    });
 
     repositoryCard.provaider({
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    })
+    });
 
     fetchData();
-
-  }, []);
- 
+  }, [fetchData, token]);
 
   useOutsideClick(modal, () => {
     if (modalOpen) {
@@ -99,48 +89,42 @@ function FlashCard() {
     setIsShow(!isShow);
   }
 
-  function hitCardGood() {
-    card.hitGood()
-    updateCard()
-  }
-
-  function hitCardDifficult() {
-    card.hitDifficult()
-    updateCard()
-  }
-
-  function hitCardEasy() {
-    card.hitEasy()
-    updateCard()
-  }
-
   function updateCard() {
-
-    showAnswer(true)
+    showAnswer(true);
 
     repositoryCard
       .update(card)
       .then(() => {
-
-        validatedDeck(deck)
+        validatedDeck(deck);
       })
       .catch((err) => {
-
-        console.log(err)
-      })
+        console.log(err);
+      });
   }
 
   function reviewCards() {
-   
-    deck.reviewCards()
+    deck.reviewCards();
     repositoryCard
       .update(deck.Cards)
       .then(() => {
-
-        fetchData()
+        fetchData();
       })
-      .catch( err => console.log(err))
+      .catch((err) => console.log(err));
+  }
 
+  function hitCardGood() {
+    card.hitGood();
+    updateCard();
+  }
+
+  function hitCardDifficult() {
+    card.hitDifficult();
+    updateCard();
+  }
+
+  function hitCardEasy() {
+    card.hitEasy();
+    updateCard();
   }
 
   return (
@@ -267,14 +251,66 @@ function FlashCard() {
             <Spacing mb={5} />
 
             <S.CardContainer>
-              { isDeckEmpty && (
-                <text> Vazio</text>
-              )}
+              {isDeckEmpty && <Empty />}
 
-              { isRevisedDeck && (<>
-                <text> completo </text>
-                <button onClick={() => { reviewCards() }} >Revisar barralho</button>
-              </>)}
+              {isRevisedDeck && (
+                <S.ContainerEndDeck>
+                  <Grid
+                    container
+                    xs={12}
+                    justify="center"
+                    direction="column"
+                    alignItems="center"
+                  >
+                    <Grid
+                      xs={12}
+                      sm={6}
+                      lg={3}
+                      container
+                      direction="column"
+                      justify="center"
+                      alignItems="center"
+                    >
+                      <Text size="4" weight="bold">
+                        Parabéns!! você terminou de responder o baralho
+                      </Text>
+                      <Grid xs={12} sm={8}>
+                        <Spacing mt={1} />
+
+                        <Link to="/deck">
+                          <Button
+                            type="button"
+                            radius="25px"
+                            style={{ width: '100%' }}
+                            padding="1rem 2rem"
+                            bgColor="#fe650e"
+                          >
+                            <Text size={1.4} weight="bold">
+                              Voltar para página inicial
+                            </Text>
+                          </Button>
+                        </Link>
+
+                        <Spacing mt={1} />
+                        <Button
+                          type="button"
+                          radius="25px"
+                          style={{ width: '100%' }}
+                          padding="1rem 2rem"
+                          bgColor="#fe650e"
+                          onClick={() => {
+                            reviewCards();
+                          }}
+                        >
+                          <Text size={1.4} weight="bold">
+                            Revisar novamente o baralho
+                          </Text>
+                        </Button>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </S.ContainerEndDeck>
+              )}
 
               {isCardView && (
                 <Grid container xs={12} justify="center" alignItems="center">

@@ -33,21 +33,11 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem('@QuickCard:student', JSON.stringify(student));
 
       setData({ token, student });
-
-      toast.success('login feito com sucesso', {
-        position: 'top-right',
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
     } catch (err) {
       toast.error(
         err.response.status === 400
           ? 'Login ou senha incorretos'
-          : 'falha no login, por favor verificar os dados',
+          : 'Falha no login, por favor verificar os dados',
         {
           position: 'top-right',
           autoClose: 5000,
