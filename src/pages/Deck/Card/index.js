@@ -45,9 +45,11 @@ function FlashCard() {
     });
   }, [id]);
 
+  // console.log(deck);
+
   function validatedDeck(data) {
-    console.log(data);
-    console.log(data.isEmpty());
+    // console.log(data);
+    // console.log(data.isEmpty());
 
     setIsRevisedDeck(data.checkRevisedDeck());
     setIsDeckEmpty(data.isEmpty());
@@ -60,7 +62,7 @@ function FlashCard() {
       setCard(card);
     }
 
-    console.log(card);
+    // console.log(card);
   }
 
   useEffect(() => {
@@ -244,6 +246,14 @@ function FlashCard() {
               <Grid container justify="center" xs={12}>
                 <Grid item>
                   <U.Title component="h1">{deck.name}</U.Title>
+                </Grid>
+              </Grid>
+            </Spacing>
+
+            <Spacing breakpoint="600px" responsiveM="2rem 0 0 0">
+              <Grid container justify="center" xs={12}>
+                <Grid item>
+                  {isCardView && <U.Title component="h1">{deck._name}</U.Title>}
                 </Grid>
               </Grid>
             </Spacing>
