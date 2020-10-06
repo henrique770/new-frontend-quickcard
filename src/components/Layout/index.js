@@ -10,10 +10,10 @@ import React, {
 
 import PropTypes from 'prop-types';
 import {
-  Notifications,
+  // Notifications,
   Dashboard,
   AccountCircle,
-  Delete,
+  // Delete,
   CalendarToday,
   PeopleOutline,
   DoneAll,
@@ -23,14 +23,20 @@ import {
 import { MenuOutline } from '@styled-icons/evaicons-outline/MenuOutline';
 import { createBrowserHistory } from 'history';
 import { ThemeContext } from 'styled-components';
-import { useOutsideClick, Menu, Grid, Spacing, Text } from '~/lib';
+import {
+  useOutsideClick,
+  Menu,
+  Grid,
+  Spacing,
+  // Text
+} from '~/lib';
 import { useTheme } from '~/components/ThemeContext';
 
 import DefaultProfileImage from '~/utils/ProfileImage';
 import whiteLogo from '~/assets/img/white_main_logo.png';
 import darkLogo from '~/assets/img/logo_quickcard.png';
 import api from '~/services/api';
-import { notifications } from '~/data/fake';
+// import { notifications } from '~/data/fake';
 
 import history from '~/services/history';
 import { AuthContext } from '~/context/AuthContext';
@@ -158,65 +164,65 @@ function Layout({ children, childrenHeader, childrenTitle, noHeader }) {
                     image={
                       fileUpload == null ? DefaultProfileImage() : fileUpload
                     }
-                    iconNotification={
-                      <Notifications size={30} color="#fe650e" />
-                    }
-                    notificationActive
-                    childrenNotification={
-                      <>
-                        <Spacing mt={2} mr={2} mb={2} ml={2}>
-                          <Grid
-                            container
-                            justify="space-between"
-                            alignItems="baseline"
-                          >
-                            <Text size={1.8} weight="bold">
-                              Notificações
-                            </Text>
-                            {notifications.length === 0 ? (
-                              <></>
-                            ) : (
-                              <S.CleanAllNotifications onClick={() => {}}>
-                                <Text size={1.2}>Limpar tudo</Text>
-                                <Spacing mr={1} />
-                                <Delete size={20} />
-                              </S.CleanAllNotifications>
-                            )}
+                    // iconNotification={
+                    //   <Notifications size={30} color="#fe650e" />
+                    // }
+                    // notificationActive
+                    // childrenNotification={
+                    //   <>
+                    //     <Spacing mt={2} mr={2} mb={2} ml={2}>
+                    //       <Grid
+                    //         container
+                    //         justify="space-between"
+                    //         alignItems="baseline"
+                    //       >
+                    //         <Text size={1.8} weight="bold">
+                    //           Notificações
+                    //         </Text>
+                    //         {notifications.length === 0 ? (
+                    //           <></>
+                    //         ) : (
+                    //           <S.CleanAllNotifications onClick={() => {}}>
+                    //             <Text size={1.2}>Limpar tudo</Text>
+                    //             <Spacing mr={1} />
+                    //             <Delete size={20} />
+                    //           </S.CleanAllNotifications>
+                    //         )}
 
-                            {notifications.length === 0 && (
-                              <Grid container>
-                                <Spacing mt={2}>
-                                  <Text size={1.6}>Não há notificações</Text>
-                                </Spacing>
-                              </Grid>
-                            )}
-                          </Grid>
-                        </Spacing>
+                    //         {notifications.length === 0 && (
+                    //           <Grid container>
+                    //             <Spacing mt={2}>
+                    //               <Text size={1.6}>Não há notificações</Text>
+                    //             </Spacing>
+                    //           </Grid>
+                    //         )}
+                    //       </Grid>
+                    //     </Spacing>
 
-                        <S.Scroll>
-                          {notifications.map((opt) => (
-                            <S.Notification
-                              key={opt.id}
-                              newNotification={opt.newNotification}
-                              ReadNotification={opt.read}
-                            >
-                              <S.TitleNotification
-                                newNotification={opt.newNotification}
-                              >
-                                <span>{opt.title}</span>
-                              </S.TitleNotification>
-                              <Text size={1.2}>{opt.content}</Text>
-                              <Spacing mb={0.4} />
-                              <Text size={1}>{opt.date}</Text>
+                    //     <S.Scroll>
+                    //       {notifications.map((opt) => (
+                    //         <S.Notification
+                    //           key={opt.id}
+                    //           newNotification={opt.newNotification}
+                    //           ReadNotification={opt.read}
+                    //         >
+                    //           <S.TitleNotification
+                    //             newNotification={opt.newNotification}
+                    //           >
+                    //             <span>{opt.title}</span>
+                    //           </S.TitleNotification>
+                    //           <Text size={1.2}>{opt.content}</Text>
+                    //           <Spacing mb={0.4} />
+                    //           <Text size={1}>{opt.date}</Text>
 
-                              <S.ContainerIconDelete>
-                                <Delete size={20} />
-                              </S.ContainerIconDelete>
-                            </S.Notification>
-                          ))}
-                        </S.Scroll>
-                      </>
-                    }
+                    //           <S.ContainerIconDelete>
+                    //             <Delete size={20} />
+                    //           </S.ContainerIconDelete>
+                    //         </S.Notification>
+                    //       ))}
+                    //     </S.Scroll>
+                    //   </>
+                    // }
                     icon={<MenuOutline size={30} color="#fe650e" />}
                     name={userData ? userData.name : ``}
                     logoutFunc={signOut}

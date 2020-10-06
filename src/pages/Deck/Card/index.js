@@ -1,3 +1,4 @@
+/* eslint-disable import/no-unresolved */
 import React, {
   useContext,
   useState,
@@ -5,50 +6,80 @@ import React, {
   useCallback,
   useEffect,
 } from 'react';
-
+import { Link, useParams } from 'react-router-dom';
 import { ThemeContext } from 'styled-components';
 import { ArrowBack } from '@styled-icons/material-outlined';
-import { useParams } from 'react-router-dom';
 
 import ReactCardFlip from 'react-card-flip';
+import Reposioty, { typeRepository } from 'context/Repository';
 import history from '~/services/history';
 import { Grid, Spacing, Text, Card, useOutsideClick, Button } from '~/lib';
-import api from '~/services/api';
 import Modal from '~/components/Modal';
 import TextField from '~/components/TextField';
 import { AuthContext } from '~/context/AuthContext';
 import * as U from '~/styles/utilities';
 import * as S from './styled';
+import Empty from '~/components/Empty';
+
+const repositoryDeck = new Reposioty(typeRepository.DECK);
+const repositoryCard = new Reposioty(typeRepository.CARD);
 
 function FlashCard() {
   const { id } = useParams();
   const { token } = useContext(AuthContext);
 
   const [deck, setDeck] = useState({});
+  const [card, setCard] = useState({});
+  const [isCardView, setIsCardView] = useState(false);
+  const [isDeckEmpty, setIsDeckEmpty] = useState(false);
+  const [isRevisedDeck, setIsRevisedDeck] = useState(false);
+
+  const themeContext = useContext(ThemeContext);
+  const [modalOpen, setModalOpen] = useState(false);
+  const modal = useRef();
+  const [isShow, setIsShow] = useState(false);
 
   const fetchData = useCallback(async () => {
-    try {
-      const response = await api.get(`deck/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+    repositoryDeck.getById(id).then((data) => {
+      validatedDeck(data);
+    });
+  }, [id]);
 
-      const { data } = response;
-      setDeck(data);
-    } catch {}
-  }, [id, token]);
+  // console.log(deck);
+
+  function validatedDeck(data) {
+    // console.log(data);
+    // console.log(data.isEmpty());
+
+    setIsRevisedDeck(data.checkRevisedDeck());
+    setIsDeckEmpty(data.isEmpty());
+    setDeck(data);
+
+    const card = data.getDeckRandom();
+
+    setIsCardView(card != null);
+    if (card != null) {
+      setCard(card);
+    }
+
+    // console.log(card);
+  }
 
   useEffect(() => {
+    repositoryDeck.provaider({
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    repositoryCard.provaider({
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
     fetchData();
-  }, [fetchData]);
-
-  console.log(deck);
-  const themeContext = useContext(ThemeContext);
-
-  const [modalOpen, setModalOpen] = useState(false);
-
-  const modal = useRef();
+  }, [fetchData, token]);
 
   useOutsideClick(modal, () => {
     if (modalOpen) {
@@ -56,26 +87,47 @@ function FlashCard() {
     }
   });
 
-  const [isShow, setIsShow] = useState(false);
-  const [cardsVisible] = useState(true);
-  // const [cardIndex, setCardIndex] = useState(0);
-  // const [endQuiz, setEndQuiz] = useState(false);
-
   function showAnswer() {
     setIsShow(!isShow);
   }
 
-  // function nextCard() {
-  //   if (cardIndex + 1 < card.length) {
-  //     setCardIndex(cardIndex + 1);
-  //   }
+  function updateCard() {
+    showAnswer(true);
 
-  //   if (cardIndex + 1 === card.length) {
-  //     setCardsVisible(false);
-  //     setIsShow(false);
-  //     setEndQuiz(true);
-  //   }
-  // }
+    repositoryCard
+      .update(card)
+      .then(() => {
+        validatedDeck(deck);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  function reviewCards() {
+    deck.reviewCards();
+    repositoryCard
+      .update(deck.Cards)
+      .then(() => {
+        fetchData();
+      })
+      .catch((err) => console.log(err));
+  }
+
+  function hitCardGood() {
+    card.hitGood();
+    updateCard();
+  }
+
+  function hitCardDifficult() {
+    card.hitDifficult();
+    updateCard();
+  }
+
+  function hitCardEasy() {
+    card.hitEasy();
+    updateCard();
+  }
 
   return (
     <>
@@ -180,6 +232,7 @@ function FlashCard() {
                   <U.ButtonResponsive
                     bgColor="#fe650e"
                     radius="4px"
+                    disabled={!isCardView}
                     onClick={() => setModalOpen(true)}
                   >
                     <Text size={1.4} weight="bold">
@@ -197,10 +250,79 @@ function FlashCard() {
               </Grid>
             </Spacing>
 
+            <Spacing breakpoint="600px" responsiveM="2rem 0 0 0">
+              <Grid container justify="center" xs={12}>
+                <Grid item>
+                  {isCardView && <U.Title component="h1">{deck._name}</U.Title>}
+                </Grid>
+              </Grid>
+            </Spacing>
+
             <Spacing mb={5} />
 
             <S.CardContainer>
-              {cardsVisible && (
+              {isDeckEmpty && <Empty />}
+
+              {isRevisedDeck && (
+                <S.ContainerEndDeck>
+                  <Grid
+                    container
+                    xs={12}
+                    justify="center"
+                    direction="column"
+                    alignItems="center"
+                  >
+                    <Grid
+                      xs={12}
+                      sm={6}
+                      lg={3}
+                      container
+                      direction="column"
+                      justify="center"
+                      alignItems="center"
+                    >
+                      <Text size="4" weight="bold">
+                        Parabéns!! você terminou de responder o baralho
+                      </Text>
+                      <Grid xs={12} sm={8}>
+                        <Spacing mt={1} />
+
+                        <Link to="/deck">
+                          <Button
+                            type="button"
+                            radius="25px"
+                            style={{ width: '100%' }}
+                            padding="1rem 2rem"
+                            bgColor="#fe650e"
+                          >
+                            <Text size={1.4} weight="bold">
+                              Voltar para página inicial
+                            </Text>
+                          </Button>
+                        </Link>
+
+                        <Spacing mt={1} />
+                        <Button
+                          type="button"
+                          radius="25px"
+                          style={{ width: '100%' }}
+                          padding="1rem 2rem"
+                          bgColor="#fe650e"
+                          onClick={() => {
+                            reviewCards();
+                          }}
+                        >
+                          <Text size={1.4} weight="bold">
+                            Revisar novamente o baralho
+                          </Text>
+                        </Button>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </S.ContainerEndDeck>
+              )}
+
+              {isCardView && (
                 <Grid container xs={12} justify="center" alignItems="center">
                   <Grid xs={12} sm={6} lg={4}>
                     <ReactCardFlip
@@ -220,7 +342,7 @@ function FlashCard() {
                         </S.TitleCard>
 
                         <Text size={3} weight="bold">
-                          Oque é TCC?
+                          {card.Front}
                         </Text>
                       </S.FlashCard>
 
@@ -236,7 +358,7 @@ function FlashCard() {
                           Verso
                         </S.TitleCard>
                         <Text size={3} weight="bold">
-                          Trabalho de conclusão de curso
+                          {card.Verse}
                         </Text>
                       </S.FlashCard>
                     </ReactCardFlip>
@@ -251,6 +373,7 @@ function FlashCard() {
                             shadow="0px 1px 8px rgba(20, 46, 110, 0.1)"
                             padding="1rem"
                             style={{ height: 60, width: 80 }}
+                            onClick={hitCardDifficult}
                           >
                             <Text color="#fe650e" weight="bold">
                               Difícil
@@ -260,7 +383,7 @@ function FlashCard() {
                               weight="bold"
                               color={themeContext.textColorSecondary}
                             >
-                              10min
+                              {card.getTimeHitDifficult()}
                             </Text>
                           </U.ButtonResponsive>
                         </Grid>
@@ -271,6 +394,7 @@ function FlashCard() {
                             shadow="0px 1px 8px rgba(20, 46, 110, 0.1)"
                             padding="1rem"
                             style={{ height: 60, width: 80 }}
+                            onClick={hitCardGood}
                           >
                             <Text color="#fe650e" weight="bold">
                               Bom
@@ -281,7 +405,7 @@ function FlashCard() {
                               weight="bold"
                               color={themeContext.textColorSecondary}
                             >
-                              1d
+                              {card.getTimeHitGood()}
                             </Text>
                           </U.ButtonResponsive>
                         </Grid>
@@ -292,6 +416,7 @@ function FlashCard() {
                             shadow="0px 1px 8px rgba(20, 46, 110, 0.1)"
                             padding="1rem"
                             style={{ height: 60, width: 80 }}
+                            onClick={hitCardEasy}
                           >
                             <Text color="#fe650e" weight="bold">
                               Fácil
@@ -301,7 +426,7 @@ function FlashCard() {
                               weight="bold"
                               color={themeContext.textColorSecondary}
                             >
-                              2d
+                              {card.getTimeHitEasy()}
                             </Text>
                           </U.ButtonResponsive>
                         </Grid>

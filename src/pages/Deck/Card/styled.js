@@ -19,4 +19,13 @@ export const CardContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+
+  min-height: calc(100vh - 280px);
+`;
+
+export const ContainerEndDeck = styled.div`
+  height: 50vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;

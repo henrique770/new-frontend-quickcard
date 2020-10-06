@@ -21,7 +21,8 @@ export default function Routes() {
       <Route path="/login" exact component={Login} />
       <Route path="/signup" exact component={SignUp} />
       <Route path="/" exact component={Deck} isPrivate />
-      <Route path="/deck/card/:id" exact component={Card} isPrivate />
+      <Route path="/deck/:id" exact component={Card} isPrivate />
+      <Route path="/deck/:id/card/:idCard" exact component={Card} isPrivate />
       <Route path="/dash" exact component={Dash} isPrivate />
       <Route path="/note" exact component={Note} isPrivate />
       <Route path="/notepad" exact component={NotePad} isPrivate />

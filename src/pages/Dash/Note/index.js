@@ -106,7 +106,7 @@ function Note() {
                       name="status"
                     >
                       <option selected disabled>
-                        Selecione
+                        Selecione um baralho
                       </option>
                       <option value="active">Javascript</option>
                       <option value="inactive">
