@@ -151,6 +151,7 @@ export default class Repository {
   /**
    * @param {any} data
    */
+
   _processResponseFailData(data) {
     const { status } = data.response;
 
@@ -161,6 +162,9 @@ export default class Repository {
         window.location.pathname = '/';
 
         break;
+
+      default:
+        throw Error('Fail data response', data);
     }
   }
 

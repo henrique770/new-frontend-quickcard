@@ -141,7 +141,7 @@ class CardEntity extends BaseEntity {
 
   set IsReviewed(value) {
     if (typeof value !== 'boolean')
-      throw `IsReviewed not boolean: value -> ${value}`;
+      throw Error(`IsReviewed not boolean: value -> ${value}`);
 
     this._isReviewed = value;
   }
@@ -150,7 +150,7 @@ class CardEntity extends BaseEntity {
    * @returns {Date}
    */
   get DateNextView() {
-    if (this._dateNextView == undefined) {
+    if (this._dateNextView === undefined) {
       this._dateNextView = new Date().toISOString();
     }
 
@@ -299,7 +299,7 @@ class CardEntity extends BaseEntity {
    */
   _checkThisReviewed() {
     if (
-      this.DisplayDeadline != undefined &&
+      this.DisplayDeadline !== undefined &&
       new Date(this.DateNextView) > new Date(this.DisplayDeadline)
     ) {
       this.IsReviewed = true;
