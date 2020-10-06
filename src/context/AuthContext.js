@@ -34,10 +34,11 @@ export const AuthProvider = ({ children }) => {
 
       setData({ token, student });
     } catch (err) {
+      console.log(err);
       toast.error(
-        err.response.status === 400
-          ? 'Login ou senha incorretos'
-          : 'Falha no login, por favor verificar os dados',
+        (err.response.status === 400 && 'E-mail inválido') ||
+          (err.response.status === 401 && 'Senha inválida') ||
+          'Erro no servidor',
         {
           position: 'top-right',
           autoClose: 5000,
