@@ -124,7 +124,6 @@ function NotePad() {
         }
       );
 
-      swal('Criado!', 'Bloco de notas adicionado com sucesso!', 'success');
       setModalOpenCreate(false);
       fetchData();
     } catch {

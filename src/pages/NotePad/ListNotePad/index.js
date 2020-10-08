@@ -20,17 +20,17 @@ function ListNotePad() {
   function deleteNote() {
     swal({
       title: 'Você tem certeza que quer excluir?',
-      text: 'Uma vez excluído, você não poderá recuperar essa anotação!',
       icon: 'warning',
       buttons: ['Não', 'Sim'],
       dangerMode: true,
-    }).then((willDelete) => {
-      if (willDelete) {
-        swal('A anotação foi excluída com sucesso!', {
-          icon: 'success',
-        });
-      }
-    });
+    })
+      .then((willDelete) => {
+        if (willDelete) {
+        }
+      })
+      .catch(() => {
+        swal('Falhou', 'Falha na remoção.', 'warning');
+      });
   }
 
   return (
