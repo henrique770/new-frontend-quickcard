@@ -3,7 +3,9 @@ import { ArrowBack, AddAPhoto } from '@styled-icons/material-outlined';
 import { ThemeContext } from 'styled-components';
 import { Formik } from 'formik';
 import { toast } from 'react-toastify';
-import { Grid, Text, Card, Spacing, Button } from '~/lib';
+import { Grid, Text, Card, Spacing } from '~/lib';
+
+import swal from 'sweetalert';
 
 import Layout from '~/components/Layout';
 import TextField from '~/components/TextField';
@@ -119,6 +121,19 @@ function Profile() {
       });
     }
     setLoading(false);
+  }
+
+  function deleteProfile() {
+    swal({
+      title: 'Você tem certeza que quer excluir?',
+      icon: 'warning',
+      buttons: ['Não', 'Sim'],
+      dangerMode: true,
+    })
+      .then(() => {})
+      .catch(() => {
+        swal('Falhou', 'Falha na remoção!', 'warning');
+      });
   }
 
   return (
@@ -280,7 +295,20 @@ function Profile() {
                         </Grid>
 
                         <Grid item xs={12} container justify="flex-end">
-                          <Button
+                          <U.ButtonResponsive
+                            type="button"
+                            bgColor="#f00"
+                            onClick={deleteProfile}
+                            radius="4px"
+                            padding="1rem 3rem"
+                          >
+                            <Text size={1.4} weight="bold">
+                              Deletar
+                            </Text>
+                          </U.ButtonResponsive>
+
+                          <Spacing mr={2} mb={1} />
+                          <U.ButtonResponsive
                             bgColor="#ff6400"
                             radius="4px"
                             padding="1rem 2rem"
@@ -296,7 +324,7 @@ function Profile() {
                                 <>Confirmar</>
                               )}
                             </Text>
-                          </Button>
+                          </U.ButtonResponsive>
                         </Grid>
                       </Grid>
                     </U.FormCard>
