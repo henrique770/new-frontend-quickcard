@@ -163,7 +163,7 @@ function Deck() {
     repositoryDeck
       .add({ Name: values.name })
       .then(() => {
-        swal('Criado!', 'O baralho foi criado com sucesso!', 'success');
+        swal('Criado!', 'Criado com sucesso.', 'success');
         setModalOpenDeck(false);
         fetchData();
       })
@@ -203,12 +203,12 @@ function Deck() {
         IsActive: values.IsActive,
       })
       .then(() => {
-        swal('Atualizado!', 'O baralho foi atualizado com sucesso!', 'success');
+        swal('Alterado!', 'Alterado com sucesso.', 'success');
         fetchData();
         setModalEditDeck(false);
       })
       .catch(() => {
-        swal('Falhou!', 'Falha na atualização', 'error');
+        swal('Falhou!', 'Falha na atualização.', 'error');
       });
 
     /*
@@ -247,13 +247,12 @@ function Deck() {
       .then((willDelete) => {
         if (willDelete) {
           return repositoryDeck.delete(id).then(() => {
-            swal('O baralho foi excluído com sucesso!', { icon: 'success' });
             fetchData();
           });
         }
       })
       .catch(() => {
-        swal('Falhou', 'Há algo errado', 'warning');
+        swal('Falhou', 'Falha na remoção.', 'warning');
       });
   }
 
@@ -268,12 +267,12 @@ function Deck() {
         Verse: values.verse,
       })
       .then(() => {
-        swal('Criado!', 'O cartão foi criado com sucesso!', 'success');
+        swal('Criado!', 'Criado com sucesso.', 'success');
         setModalOpenCard(false);
         fetchData();
       })
       .catch(() => {
-        swal('Falhou!', 'Falha na criação', 'error');
+        swal('Falhou!', 'Falha na criação.', 'error');
       });
   }
 
