@@ -11,17 +11,26 @@ class NoteEntity extends BaseEntity {
     this.Content = args.Content;
     this.IdNotePad = args.IdNotePad;
     this.Title = args.Title;
+    this.ColumnsMapper = ['Title', 'Content', 'IdNotePad'];
   }
 
-  get Title() { return this._title; }
-  set Title(value) { this._title = value; }
+  get Title() {
+    return this._title;
+  }
+  set Title(value) {
+    this._title = value;
+  }
 
-  get Content() { return this._content; }
+  get Content() {
+    return this._content;
+  }
   set Content(value) {
     this._content = value;
   }
 
-  get IdNotePad() { return this._idNotePad; }
+  get IdNotePad() {
+    return this._idNotePad;
+  }
   set IdNotePad(value) {
     this._idNotePad = value;
   }

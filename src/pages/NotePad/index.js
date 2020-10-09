@@ -8,7 +8,7 @@ import React, {
 
 import swal from 'sweetalert';
 import { Formik } from 'formik';
-import uniqid from 'uniqid';
+
 import Repository, { typeRepository } from 'context/Repository';
 import FlatList from '~/components/FlatList';
 import { Grid, Spacing, Text, useOutsideClick, Button } from '~/lib';
@@ -23,9 +23,8 @@ import TextField from '~/components/TextField';
 import Search from '~/components/Search';
 import VariationList from '~/components/VariationList';
 
-import api from '~/services/api';
 import { AuthContext } from '~/context/AuthContext';
-import NotePadObj from '~/objectValues/notepad';
+import NotePadObj from '~/objectValues/notepadInfo';
 import * as U from '~/styles/utilities';
 
 const repositoryNotePad = new Repository({
@@ -37,12 +36,11 @@ const NotePadRepository = new Repository(typeRepository.NOTEPAD);
 const NoteRepository = new Repository(typeRepository.NOTE);
 
 function NotePad() {
-  const { user, token } = useContext(AuthContext);
-  const { _id } = user;
+  const { token } = useContext(AuthContext);
 
   const [notepads, setNotePads] = useState([]);
 
-  console.log(notepads);
+  // console.log(notepads);
 
   const query = useQuery();
   const [status] = useState({
@@ -166,62 +164,59 @@ function NotePad() {
     fetchData();
   }, [fetchData, token]);
 
-  // create
   async function createNotePad(values) {
-    try {
-      await api.post(
-        'notePad',
-        { Name: values.name, Id: uniqid(), idStudent: _id },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      setModalOpenCreate(false);
-      fetchData();
-    } catch {
-      swal('Falhou', 'Falha na criação', 'error');
-    }
+    NotePadRepository.add({ Name: values.name })
+      .then(() => {
+        swal('Criado!', 'Criado com sucesso.', 'success');
+        setModalOpenCreate(false);
+        fetchData();
+      })
+      .catch(() => {
+        swal('Falhou!', 'Falha na criação', 'error');
+      });
   }
 
-  // async function createNotePad(values) {
-  //   NotePadRepository.add({ Name: values.name, Id: uniqid(), idStudent: _id })
-  //     .then(() => {
-  //       swal('Criado!', 'Criado com sucesso.', 'success');
-  //       setModalOpenCreate(false);
-  //       fetchData();
-  //     })
-  //     .catch(() => {
-  //       swal('Falhou!', 'Falha na criação', 'error');
-  //     });
+  // update
+  // async function editNotePad(values) {
+  //   try {
+  //     await api.put(
+  //       `notePad/${modalEdit.id}`,
+  //       {
+  //         Name: values.name,
+  //         Id: modalEdit.id,
+  //         idStudent: _id,
+  //         IsActive: modalEdit.values.isActive,
+  //       },
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       }
+  //     );
+
+  //     swal('Atualizou', 'Alterado com sucesso!', 'success');
+  //     fetchData();
+  //     setModalEdit(false);
+  //   } catch {
+  //     swal('Falhou', 'Falha na atualização', 'error');
+  //   }
   // }
 
-  // update
   async function editNotePad(values) {
-    try {
-      await api.put(
-        `notePad/${modalEdit.id}`,
-        {
-          Name: values.name,
-          Id: modalEdit.id,
-          idStudent: _id,
-          IsActive: modalEdit.values.isActive,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      swal('Atualizou', 'Alterado com sucesso!', 'success');
-      fetchData();
-      setModalEdit(false);
-    } catch {
-      swal('Falhou', 'Falha na atualização', 'error');
-    }
+    console.log(values);
+    NotePadRepository.update({
+      Name: values.Name,
+      Id: values.Id,
+      IsActive: values.IsActive,
+    })
+      .then(() => {
+        swal('Alterado!', 'Alterado com sucesso.', 'success');
+        fetchData();
+        setModalEdit(false);
+      })
+      .catch(() => {
+        swal('Falhou!', 'Falha na atualização.', 'error');
+      });
   }
 
   function deleteNotePad(id) {
@@ -412,10 +407,10 @@ function NotePad() {
                       label="Nome do bloco de notas"
                       type="text"
                       placeholder="Digite o nome do bloco de notas"
-                      name="name"
+                      name="Name"
                       onChange={handleChange}
                       onBlur={handleBlur}
-                      value={values.name}
+                      value={values.Name}
                     />
                   </Grid>
                 </Grid>

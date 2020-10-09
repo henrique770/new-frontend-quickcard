@@ -10,6 +10,8 @@ class NotePadEntity extends BaseEntity {
 
     this._name = args.Name;
     this._notes = args.Notes;
+
+    this.ColumnsMapper = ['Name'];
   }
 
   get Name() {
