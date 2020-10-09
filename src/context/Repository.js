@@ -4,6 +4,8 @@ import * as mapper from '~/services/mapper';
 
 import DeckEntity from '~/entities/DeckEntity';
 import CardEntity from '~/entities/CardEntity';
+import NotePadEntity from '~/entities/NotePadEntity';
+import NoteEntity from '~/entities/NoteEntity';
 
 import api from '~/services/api';
 
@@ -98,6 +100,14 @@ export default class Repository {
         this._context = CardEntity;
         break;
 
+      case `NOTEPADENTITY`:
+        this._context = NotePadEntity;
+        break;
+
+      case `NOTEENTITY`:
+        this._context = NoteEntity;
+        break;
+
       default:
         throw Error(`${type} not mapped for context`);
     }
@@ -119,6 +129,14 @@ export default class Repository {
         break;
 
       case typeRepository.CARD:
+        this._mapper = mapper.mapperCard;
+        break;
+
+      case typeRepository.NOTEPAD:
+        this._mapper = mapper.mapperDeck;
+        break;
+
+      case typeRepository.NOTE:
         this._mapper = mapper.mapperCard;
         break;
 

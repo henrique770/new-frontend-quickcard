@@ -9,6 +9,7 @@ import React, {
 import swal from 'sweetalert';
 import { Formik } from 'formik';
 import uniqid from 'uniqid';
+import Repository, { typeRepository } from 'context/Repository';
 import FlatList from '~/components/FlatList';
 import { Grid, Spacing, Text, useOutsideClick, Button } from '~/lib';
 import history from '~/services/history';
@@ -24,12 +25,24 @@ import VariationList from '~/components/VariationList';
 
 import api from '~/services/api';
 import { AuthContext } from '~/context/AuthContext';
-
+import NotePadObj from '~/objectValues/notepad';
 import * as U from '~/styles/utilities';
+
+const repositoryNotePad = new Repository({
+  type: 'notepad',
+  mapper: (data) => data,
+  context: NotePadObj,
+});
+const NotePadRepository = new Repository(typeRepository.NOTEPAD);
+const NoteRepository = new Repository(typeRepository.NOTE);
 
 function NotePad() {
   const { user, token } = useContext(AuthContext);
   const { _id } = user;
+
+  const [notepads, setNotePads] = useState([]);
+
+  console.log(notepads);
 
   const query = useQuery();
   const [status] = useState({
@@ -77,39 +90,81 @@ function NotePad() {
     window.location.reload(false);
   };
 
-  const [notepads, setNotePads] = useState([]);
+  // const fetchData = useCallback(async () => {
+  //   try {
+  //     setLoading(true);
+  //     setEmpty(false);
+  //     const response = await api.get(`notePad`, {
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //     });
 
-  const fetchData = useCallback(async () => {
-    try {
-      setLoading(true);
-      setEmpty(false);
-      const response = await api.get(`notePad`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+  //     const { data } = response;
+  //     setNotePads(data);
+  //     setTimeout(() => {
+  //       setLoading(false);
+  //     }, 700);
 
-      const { data } = response;
-      setNotePads(data);
-      setTimeout(() => {
+  //     const hasActive = data.some((item) => item.isActive === true);
+  //     if (hasActive === false) {
+  //       setEmpty(true);
+  //     }
+  //   } catch {
+  //     setTimeout(() => {
+  //       setLoading(false);
+  //     }, 700);
+  //     setEmpty(true);
+  //   }
+  // }, [token]);
+
+  const fetchData = useCallback(() => {
+    setLoading(true);
+    setEmpty(false);
+
+    repositoryNotePad
+      .all()
+      .then((data) => {
+        setNotePads(data);
+        const hasActive = data.some((item) => item.IsActive === true);
+
+        if (hasActive === false) {
+          setEmpty(true);
+        }
+
         setLoading(false);
-      }, 700);
-
-      const hasActive = data.some((item) => item.isActive === true);
-      if (hasActive === false) {
+      })
+      .catch((err) => {
+        setLoading(false);
         setEmpty(true);
-      }
-    } catch {
-      setTimeout(() => {
-        setLoading(false);
-      }, 700);
-      setEmpty(true);
-    }
-  }, [token]);
+      });
+  }, []);
+
+  // useEffect(() => {
+  //   fetchData();
+  // }, [fetchData]);
 
   useEffect(() => {
+    repositoryNotePad.provaider({
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    NotePadRepository.provaider({
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    NoteRepository.provaider({
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
     fetchData();
-  }, [fetchData]);
+  }, [fetchData, token]);
 
   // create
   async function createNotePad(values) {
@@ -130,6 +185,18 @@ function NotePad() {
       swal('Falhou', 'Falha na criação', 'error');
     }
   }
+
+  // async function createNotePad(values) {
+  //   NotePadRepository.add({ Name: values.name, Id: uniqid(), idStudent: _id })
+  //     .then(() => {
+  //       swal('Criado!', 'Criado com sucesso.', 'success');
+  //       setModalOpenCreate(false);
+  //       fetchData();
+  //     })
+  //     .catch(() => {
+  //       swal('Falhou!', 'Falha na criação', 'error');
+  //     });
+  // }
 
   // update
   async function editNotePad(values) {
@@ -163,33 +230,17 @@ function NotePad() {
       icon: 'warning',
       buttons: ['Não', 'Sim'],
       dangerMode: true,
-    }).then((willDelete) => {
-      if (willDelete) {
-        api
-          .put(
-            `notePad/${id}`,
-            {
-              Name: modalEdit.values.name,
-              Id: id,
-              idStudent: _id,
-              IsActive: false,
-            },
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          )
-          .then(() => {
-            if (willDelete) {
-              fetchData();
-            }
-          })
-          .catch(() => {
-            swal('Falhou', 'Falha na remoção!', 'warning');
+    })
+      .then((willDelete) => {
+        if (willDelete) {
+          return NotePadRepository.delete(id).then(() => {
+            fetchData();
           });
-      }
-    });
+        }
+      })
+      .catch(() => {
+        swal('Falhou', 'Falha na remoção.', 'warning');
+      });
   }
 
   return (
@@ -260,19 +311,19 @@ function NotePad() {
               ) : (
                 <U.NoteGridContainer list={listState}>
                   {notepads.map((item) => {
-                    if (item.isActive === true) {
+                    if (item.IsActive === true) {
                       return (
                         <FlatList
                           edit
                           editFunc={() =>
                             setModalEdit({
                               state: true,
-                              id: item._id,
+                              id: item.Id,
                               values: item,
                             })
                           }
                           link="/notepad/notes"
-                          title={item.name}
+                          title={item.Name}
                           notepad={
                             <Grid>
                               <Grid container spacing={1}>

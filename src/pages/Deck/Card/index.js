@@ -11,7 +11,7 @@ import { ThemeContext } from 'styled-components';
 import { ArrowBack } from '@styled-icons/material-outlined';
 
 import ReactCardFlip from 'react-card-flip';
-import Reposioty, { typeRepository } from 'context/Repository';
+import Repository, { typeRepository } from 'context/Repository';
 import history from '~/services/history';
 import { Grid, Spacing, Text, Card, useOutsideClick, Button } from '~/lib';
 import Modal from '~/components/Modal';
@@ -21,8 +21,8 @@ import * as U from '~/styles/utilities';
 import * as S from './styled';
 import Empty from '~/components/Empty';
 
-const repositoryDeck = new Reposioty(typeRepository.DECK);
-const repositoryCard = new Reposioty(typeRepository.CARD);
+const repositoryDeck = new Repository(typeRepository.DECK);
+const repositoryCard = new Repository(typeRepository.CARD);
 
 function FlashCard() {
   const { id } = useParams();

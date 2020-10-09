@@ -10,7 +10,7 @@ import swal from 'sweetalert';
 
 import { Formik } from 'formik';
 
-import Reposioty, { typeRepository } from 'context/Repository';
+import Repository, { typeRepository } from 'context/Repository';
 import FlatList from '~/components/FlatList';
 import { Grid, Spacing, Text, useOutsideClick, Button } from '~/lib';
 
@@ -30,13 +30,13 @@ import { AuthContext } from '~/context/AuthContext';
 import DeckInfo from '~/objectValues/deckInfo';
 import * as U from '~/styles/utilities';
 
-const repositoryDeckInfo = new Reposioty({
+const repositoryDeckInfo = new Repository({
   type: 'deck/info',
   mapper: (data) => data,
   context: DeckInfo,
 });
-const repositoryDeck = new Reposioty(typeRepository.DECK);
-const repositoryCard = new Reposioty(typeRepository.CARD);
+const repositoryDeck = new Repository(typeRepository.DECK);
+const repositoryCard = new Repository(typeRepository.CARD);
 
 /*
  */
