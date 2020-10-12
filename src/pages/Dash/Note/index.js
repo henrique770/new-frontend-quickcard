@@ -93,7 +93,12 @@ function Note() {
     <>
       <Layout noHeader>
         <Spacing mt={4} mb={4}>
-          <Grid container xs={12} justify="space-between" alignItems="center">
+          <Grid
+            spacing={3}
+            container
+            justify="space-between"
+            alignItems="center"
+          >
             <Grid item>
               <Card
                 style={{ cursor: 'pointer' }}

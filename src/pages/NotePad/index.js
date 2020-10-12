@@ -35,8 +35,6 @@ function NotePad() {
 
   const [notepads, setNotePads] = useState([]);
 
-  // console.log(notepads);
-
   const query = useQuery();
   const [status] = useState({
     text: query.get('text'),
@@ -69,6 +67,19 @@ function NotePad() {
   });
 
   const OnChangeSearch = (e) => {
+    const re = new RegExp(e.target.value, 'g');
+
+    notepads.map((item) => {
+      item.IsActive = item.Name.match(re) != null;
+      setEmpty(false);
+      return item;
+    });
+
+    if (notepads.filter((e) => e.IsActive).length < 1) {
+      // coloar regra para exibir imagem de dados
+      setEmpty(true);
+    }
+
     setSearchValue(e.target.value);
   };
 
@@ -191,7 +202,6 @@ function NotePad() {
   // }
 
   async function editNotePad(values) {
-    console.log(values);
     NotePadRepository.update({
       Name: values.Name,
       Id: values.Id,

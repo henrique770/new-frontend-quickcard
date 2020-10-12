@@ -10,7 +10,7 @@ import swal from 'sweetalert';
 
 import { Formik } from 'formik';
 
-import Repository, { typeRepository } from 'context/Repository';
+import Repository, { typeRepository } from '~/context/Repository';
 import FlatList from '~/components/FlatList';
 import { Grid, Spacing, Text, useOutsideClick, Button } from '~/lib';
 import AddCard from './Modals/AddCard';
@@ -89,13 +89,13 @@ function Deck() {
 
     decks.map((item) => {
       item.IsActive = item.Name.match(re) != null;
-
+      setEmpty(false);
       return item;
     });
 
     if (decks.filter((e) => e.IsActive).length < 1) {
       // coloar regra para exibir imagem de dados
-      alert('Nenhum dado para o filtro do baralho');
+      setEmpty(true);
     }
 
     setSearchValue(e.target.value);
