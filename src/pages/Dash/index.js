@@ -1,24 +1,45 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
 
 import swal from 'sweetalert';
 import { Link } from 'react-router-dom';
 
+import Repository, { typeRepository } from 'context/Repository';
 import FlatList from '~/components/FlatList';
 import { Grid, Spacing, Text } from '~/lib';
 import history from '~/services/history';
 import Layout from '~/components/Layout';
 import Search from '~/components/Search';
 import VariationList from '~/components/VariationList';
-import { notes } from '~/data/fake';
+import Empty from '~/components/Empty';
+
 import useQuery from '~/utils/queryParams';
 
+import { AuthContext } from '~/context/AuthContext';
+import NotePadInfo from '~/objectValues/notepadInfo';
 import * as U from '~/styles/utilities';
+import SkeletonLoad from '~/components/Skeleton';
+
+const repositoryNoteInfo = new Repository({
+  type: 'notepad/info',
+  mapper: (data) => data,
+  context: NotePadInfo,
+});
+
+const repositoryNote = new Repository(typeRepository.NOTE);
 
 function Dash() {
+  const { token } = useContext(AuthContext);
   const query = useQuery();
   const [status] = useState({
     text: query.get('text'),
   });
+
+  const [notes, setNotes] = useState([]);
+
+  console.log(notes);
+
+  const [empty, setEmpty] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [searchValue, setSearchValue] = useState('');
   const [listState, setListState] = useState(false);
@@ -38,33 +59,62 @@ function Dash() {
     window.location.reload(false);
   };
 
-  function deleteNote() {
+  // REQUEST NOTEPAD
+
+  const fetchData = useCallback(() => {
+    setLoading(true);
+    setEmpty(false);
+    repositoryNoteInfo
+      .all()
+      .then((data) => {
+        setNotes(data);
+        const hasActive = data.some((item) => item.IsActive === true);
+
+        if (hasActive === false) {
+          setEmpty(true);
+        }
+
+        setLoading(false);
+      })
+      .catch((err) => {
+        setLoading(false);
+        setEmpty(true);
+      });
+  }, []);
+
+  useEffect(() => {
+    repositoryNoteInfo.provaider({
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    repositoryNote.provaider({
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    fetchData();
+  }, [fetchData, token]);
+
+  function deleteNote(id) {
     swal({
       title: 'Você tem certeza que quer excluir?',
       icon: 'warning',
       buttons: ['Não', 'Sim'],
       dangerMode: true,
-    }).then((willDelete) => {
-      // if (willDelete) {
-      //   api.put(
-      //     `deck/${id}`,
-      //     {
-      //       Name: modalEditDeck.values.name,
-      //       Id: id,
-      //       idStudent: _id,
-      //       IsActive: false,
-      //     },
-      //     {
-      //       headers: {
-      //         Authorization: `Bearer ${token}`,
-      //       },
-      //     }
-      //   );
-      //   fetchData().catch(() => {
-      //     swal('Falhou','Falha na remoção!', 'warning');
-      //   });
-      // }
-    });
+    })
+      .then((willDelete) => {
+        if (willDelete) {
+          return repositoryNote.delete(id).then(() => {
+            fetchData();
+          });
+        }
+      })
+      .catch(() => {
+        swal('Falhou', 'Falha na remoção.', 'warning');
+      });
   }
 
   return (
@@ -122,19 +172,29 @@ function Dash() {
         </Grid>
         <Spacing mb={2.2} />
         <Grid>
-          <U.NoteGridContainer list={listState}>
-            {notes.map((item) => {
-              return (
-                <FlatList
-                  link="/note"
-                  remove={() => deleteNote(item.id)}
-                  title={item.title}
-                  previewText={item.text}
-                  textFooter={item.block_name}
-                />
-              );
-            })}
-          </U.NoteGridContainer>
+          {loading ? (
+            <SkeletonLoad />
+          ) : (
+            <>
+              {empty || notes.length === 0 ? (
+                <Empty />
+              ) : (
+                <U.NoteGridContainer list={listState}>
+                  {notes.map((item) => {
+                    return (
+                      <FlatList
+                        link="/note"
+                        remove={() => deleteNote(item.id)}
+                        title={item.title}
+                        previewText={item.text}
+                        textFooter={item.block_name}
+                      />
+                    );
+                  })}
+                </U.NoteGridContainer>
+              )}
+            </>
+          )}
         </Grid>
       </Layout>
     </>

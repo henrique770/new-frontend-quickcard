@@ -24,14 +24,9 @@ import Search from '~/components/Search';
 import VariationList from '~/components/VariationList';
 
 import { AuthContext } from '~/context/AuthContext';
-import NotePadObj from '~/objectValues/notepadInfo';
+
 import * as U from '~/styles/utilities';
 
-const repositoryNotePad = new Repository({
-  type: 'notepad',
-  mapper: (data) => data,
-  context: NotePadObj,
-});
 const NotePadRepository = new Repository(typeRepository.NOTEPAD);
 const NoteRepository = new Repository(typeRepository.NOTE);
 
@@ -120,8 +115,7 @@ function NotePad() {
     setLoading(true);
     setEmpty(false);
 
-    repositoryNotePad
-      .all()
+    NotePadRepository.all()
       .then((data) => {
         setNotePads(data);
         const hasActive = data.some((item) => item.IsActive === true);
@@ -143,12 +137,6 @@ function NotePad() {
   // }, [fetchData]);
 
   useEffect(() => {
-    repositoryNotePad.provaider({
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
     NotePadRepository.provaider({
       headers: {
         Authorization: `Bearer ${token}`,
@@ -306,6 +294,7 @@ function NotePad() {
               ) : (
                 <U.NoteGridContainer list={listState}>
                   {notepads.map((item) => {
+                    console.log(item);
                     if (item.IsActive === true) {
                       return (
                         <FlatList
@@ -327,7 +316,7 @@ function NotePad() {
                                 </Grid>
                                 <Grid item>
                                   <Text weight="bold" color="#fe650e">
-                                    0
+                                    {item.totalNotes}
                                   </Text>
                                 </Grid>
                               </Grid>
