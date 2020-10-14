@@ -25,8 +25,14 @@ export default function Routes() {
       <Route path="/deck/:id/card/:idCard" exact component={Card} isPrivate />
       <Route path="/dash" exact component={Dash} isPrivate />
       <Route path="/note" exact component={Note} isPrivate />
+      <Route path="/note/:id" exact component={Note} isPrivate />
       <Route path="/notepad" exact component={NotePad} isPrivate />
-      <Route path="/notepad/notes" exact component={ListNotePad} isPrivate />
+      <Route
+        path="/notepad/notes/:id"
+        exact
+        component={ListNotePad}
+        isPrivate
+      />
 
       <Route path="/pomodoro" exact component={Pomodoro} isPrivate />
       <Route path="/statistics" exact component={Statistics} isPrivate />

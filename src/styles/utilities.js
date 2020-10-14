@@ -196,3 +196,7 @@ export const Select = styled.select`
     color: ${(props) => props.theme.textColorPrimary};
   }
 `;
+
+export const ButtonNoBorder = styled.button`
+  border: none;
+`;

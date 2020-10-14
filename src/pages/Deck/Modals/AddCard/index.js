@@ -1,14 +1,72 @@
-import React from 'react';
+import React, { useCallback, useState, useEffect, useContext } from 'react';
 import { Formik } from 'formik';
+import swal from 'sweetalert';
 import { Text, Spacing, Grid } from '~/lib';
 import TextField from '~/components/TextField';
-
 import * as U from '~/styles/utilities';
+import Repository, { typeRepository } from '~/context/Repository';
+import DeckInfo from '~/objectValues/deckInfo';
+import { AuthContext } from '~/context/AuthContext';
 
-const AddCard = ({ createCard, modalCard, decks }) => {
+const repositoryDeckInfo = new Repository({
+  type: 'deck/info',
+  mapper: (data) => data,
+  context: DeckInfo,
+});
+const repositoryCard = new Repository(typeRepository.CARD);
+
+const AddCard = ({ modalCard }) => {
+  const { token } = useContext(AuthContext);
   // REQUESTS CARD
 
   // create
+
+  const [decks, setDecks] = useState([]);
+
+  const fetchData = useCallback(() => {
+    repositoryDeckInfo
+      .all()
+      .then((data) => {
+        setDecks(data);
+      })
+      .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    repositoryDeckInfo.provaider({
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    repositoryCard.provaider({
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    fetchData();
+  }, [fetchData, token]);
+
+  // REQUESTS CARD
+
+  // create
+  async function createCard(values) {
+    repositoryCard
+      .add({
+        IdDeck: values.deck,
+        Front: values.front,
+        Verse: values.verse,
+      })
+      .then(() => {
+        swal('Criado!', 'Criado com sucesso.', 'success');
+
+        fetchData();
+      })
+      .catch(() => {
+        swal('Falhou!', 'Falha na criação.', 'error');
+      });
+  }
 
   return (
     <Formik
@@ -16,6 +74,7 @@ const AddCard = ({ createCard, modalCard, decks }) => {
         front: '',
         verse: '',
       }}
+      enableReinitialize
       onSubmit={createCard}
     >
       {({ handleSubmit, handleBlur, handleChange, values }) => (

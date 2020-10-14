@@ -1,21 +1,58 @@
-import React, { useContext, useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useContext, useState, useCallback, useEffect } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import { ThemeContext } from 'styled-components';
 import { ArrowBack } from '@styled-icons/material-outlined';
 import swal from 'sweetalert';
 import history from '~/services/history';
 import { Grid, Spacing, Text, Card } from '~/lib';
+import Repository, { typeRepository } from '~context/Repository';
 
+import { AuthContext } from '~/context/AuthContext';
 import Layout from '~/components/Layout';
 import FlatList from '~/components/FlatList';
 import VariationList from '~/components/VariationList';
-import { notesblock } from '~/data/fake';
 
 import * as U from '~/styles/utilities';
 
+const NotePadRepository = new Repository(typeRepository.NOTEPAD);
+
 function ListNotePad() {
+  const { id } = useParams();
+  const { token } = useContext(AuthContext);
+  const [notes, setNotes] = useState([]);
   const themeContext = useContext(ThemeContext);
   const [listState, setListState] = useState(false);
+
+  const fetchData = useCallback(() => {
+    // setLoading(true);
+    // setEmpty(false);
+
+    NotePadRepository.getById(id)
+      .then((data) => {
+        setNotes(data.Notes);
+        // const hasActive = data.some((item) => item.IsActive === true);
+
+        // if (hasActive === false) {
+        //   setEmpty(true);
+        // }
+
+        // setLoading(false);
+      })
+      .catch((err) => {
+        // setLoading(false);
+        // setEmpty(true);
+      });
+  }, [id]);
+
+  useEffect(() => {
+    NotePadRepository.provaider({
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    fetchData();
+  }, [fetchData, token]);
 
   function deleteNote() {
     swal({
@@ -83,14 +120,14 @@ function ListNotePad() {
         <Spacing mb={2.2} />
         <Grid>
           <U.NoteGridContainer list={listState}>
-            {notesblock.map((item) => {
+            {notes.map((item) => {
               return (
                 <FlatList
-                  link="/note"
-                  remove={() => deleteNote(item.id)}
-                  title={item.title}
-                  previewText={item.text}
-                  textFooter={item.block_name}
+                  link={`/note/${item.Id}`}
+                  remove={() => deleteNote(item.Id)}
+                  title={item.Title}
+                  previewText={item.Content}
+                  textFooter={item.NotePadName}
                 />
               );
             })}

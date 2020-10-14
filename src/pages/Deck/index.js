@@ -8,15 +8,15 @@ import React, {
 
 import swal from 'sweetalert';
 
-import { Formik } from 'formik';
-
 import Repository, { typeRepository } from '~/context/Repository';
 import FlatList from '~/components/FlatList';
-import { Grid, Spacing, Text, useOutsideClick, Button } from '~/lib';
+import { Grid, Spacing, Text, useOutsideClick } from '~/lib';
 import AddCard from './Modals/AddCard';
+import AddDeck from './Modals/AddDeck';
+import EditDeck from './Modals/EditDeck';
 import Layout from '~/components/Layout';
 import Search from '~/components/Search';
-import TextField from '~/components/TextField';
+
 import Modal from '~/components/Modal';
 import VariationList from '~/components/VariationList';
 
@@ -170,29 +170,7 @@ function Deck() {
       .catch(() => {
         swal('Falhou!', 'Falha na criação', 'error');
       });
-
-    /*
-    try {
-      await api.post(
-        'deck',
-        { Name: values.name, Id: uniqid(), idStudent: _id },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      swal('Criado!', 'Baralho adicionado com sucesso!', 'success');
-      setModalOpenDeck(false);
-      fetchData();
-    } catch {
-      swal('Falhou', 'Falha na criação', 'error');
-    }
-    */
   }
-
-  // console.log(decks);
 
   // update
   async function editDeck(values) {
@@ -210,31 +188,6 @@ function Deck() {
       .catch(() => {
         swal('Falhou!', 'Falha na atualização.', 'error');
       });
-
-    /*
-    try {
-      await api.put(
-        `deck/${modalEditDeck.id}`,
-        {
-          Name: values.name,
-          Id: modalEditDeck.id,
-          idStudent: _id,
-          IsActive: modalEditDeck.values.isActive,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      swal('Atualizou', 'Alterado com sucesso!', 'success');
-      fetchData();
-      setModalEditDeck(false);
-    } catch {
-      swal('Falhou', 'Falha na atualização', 'error');
-    }
-    */
   }
 
   function deleteDeck(id) {
@@ -253,26 +206,6 @@ function Deck() {
       })
       .catch(() => {
         swal('Falhou', 'Falha na remoção.', 'warning');
-      });
-  }
-
-  // REQUESTS CARD
-
-  // create
-  async function createCard(values) {
-    repositoryCard
-      .add({
-        IdDeck: values.deck,
-        Front: values.front,
-        Verse: values.verse,
-      })
-      .then(() => {
-        swal('Criado!', 'Criado com sucesso.', 'success');
-        setModalOpenCard(false);
-        fetchData();
-      })
-      .catch(() => {
-        swal('Falhou!', 'Falha na criação.', 'error');
       });
   }
 
@@ -418,130 +351,37 @@ function Deck() {
           )}
         </Grid>
       </Layout>
+
       {/* modal adicionar baralho */}
       {modalOpenDeck && (
         <Modal size={50} onClose={() => setModalOpenDeck(false)}>
-          <Formik
-            initialValues={{
-              name: '',
-            }}
-            onSubmit={createDeck}
-          >
-            {({ handleSubmit, handleBlur, handleChange, values }) => (
-              <U.FormCard ref={modalDeck} onSubmit={handleSubmit}>
-                <Text component="h1" size={1.8}>
-                  Adicionar baralho
-                </Text>
-                <Spacing mb={3} />
-                <Grid container spacing={3}>
-                  <Grid item xs={12}>
-                    <TextField
-                      id="outlined-basic"
-                      label="Nome do baralho"
-                      type="text"
-                      placeholder="Digite o nome do baralho"
-                      name="name"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      value={values.name}
-                    />
-                  </Grid>
-                </Grid>
-                <Spacing mb={3} />
-                <Grid container justify="flex-end" alignItems="flex-end">
-                  <U.ButtonResponsive
-                    bgColor="#fe650e"
-                    radius="4px"
-                    onClick={() => setModalOpenDeck(true)}
-                  >
-                    <Text size={1.4} weight="bold">
-                      Salvar
-                    </Text>
-                  </U.ButtonResponsive>
-                </Grid>
-              </U.FormCard>
-            )}
-          </Formik>
+          <AddDeck
+            createDeck={createDeck}
+            modalDeck={modalDeck}
+            setModalDeck={() => setModalOpenDeck(true)}
+          />
         </Modal>
       )}
 
       {/* modal editar adicionar baralho */}
       {modalEditDeck.state && (
         <Modal size={50} onClose={() => setModalOpenDeck(false)}>
-          <Formik initialValues={modalEditDeck.values} onSubmit={editDeck}>
-            {({ handleSubmit, handleBlur, handleChange, values }) => (
-              <U.FormCard ref={modalEditionDeck} onSubmit={handleSubmit}>
-                <Text component="h1" size={1.8}>
-                  Editar baralho
-                </Text>
-                <Spacing mb={3} />
-                <Grid container spacing={3}>
-                  <Grid item xs={12}>
-                    <TextField
-                      id="outlined-basic"
-                      label="Nome do baralho"
-                      type="text"
-                      placeholder="Digite o nome do baralho"
-                      name="Name"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      value={values.Name}
-                    />
-                  </Grid>
-                </Grid>
-                <Spacing mb={3} />
-                <Grid
-                  xs={12}
-                  container
-                  direction="row"
-                  justify="flex-start"
-                  spacing={1}
-                >
-                  <Grid item xs={12}>
-                    <Button
-                      type="submit"
-                      style={{ width: '100%' }}
-                      radius="4px"
-                      bgColor="#fe650e"
-                      padding="1rem"
-                    >
-                      <Text size={1.4} weight="bold">
-                        Salvar
-                      </Text>
-                    </Button>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Button
-                      type="button"
-                      style={{ width: '100%' }}
-                      radius="4px"
-                      padding="1rem"
-                      bgColor="#fe650e"
-                      onClick={() => {
-                        deleteDeck(modalEditDeck.id);
-                        setModalEditDeck(false);
-                      }}
-                    >
-                      <Text size={1.4} weight="bold">
-                        Excluir
-                      </Text>
-                    </Button>
-                  </Grid>
-                </Grid>
-              </U.FormCard>
-            )}
-          </Formik>
+          <EditDeck
+            editDeck={editDeck}
+            modalEditionDeck={modalEditionDeck}
+            modalEditDeck={modalEditDeck}
+            deleteFunc={() => {
+              deleteDeck(modalEditDeck.id);
+              setModalEditDeck(false);
+            }}
+          />
         </Modal>
       )}
 
       {/* modal adicionar cartão */}
       {modalOpenCard && (
         <Modal size={50} onClose={() => setModalOpenDeck(false)}>
-          <AddCard
-            createCard={createCard}
-            modalCard={modalCard}
-            decks={decks}
-          />
+          <AddCard modalCard={modalCard} />
         </Modal>
       )}
     </>

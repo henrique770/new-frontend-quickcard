@@ -183,11 +183,11 @@ function Dash() {
                   {notes.map((item) => {
                     return (
                       <FlatList
-                        link="/note"
-                        remove={() => deleteNote(item.id)}
-                        title={item.title}
-                        previewText={item.text}
-                        textFooter={item.block_name}
+                        link={`/note/${item.Id}`}
+                        remove={() => deleteNote(item.Id)}
+                        title={item.Title}
+                        previewText={item.Content}
+                        textFooter={item.NotePadName}
                       />
                     );
                   })}

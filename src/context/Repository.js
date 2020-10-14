@@ -133,11 +133,11 @@ export default class Repository {
         break;
 
       case typeRepository.NOTEPAD:
-        this._mapper = mapper.mapperDeck;
+        this._mapper = mapper.mapperNotPad;
         break;
 
       case typeRepository.NOTE:
-        this._mapper = mapper.mapperCard;
+        this._mapper = mapper.mapperNote;
         break;
 
       default:

@@ -9,7 +9,7 @@ import React, {
 import swal from 'sweetalert';
 import { Formik } from 'formik';
 
-import Repository, { typeRepository } from 'context/Repository';
+import Repository, { typeRepository } from '~context/Repository';
 import FlatList from '~/components/FlatList';
 import { Grid, Spacing, Text, useOutsideClick, Button } from '~/lib';
 import history from '~/services/history';
@@ -316,7 +316,7 @@ function NotePad() {
                               values: item,
                             })
                           }
-                          link="/notepad/notes"
+                          link={`/notepad/notes/${item.Id}`}
                           title={item.Name}
                           notepad={
                             <Grid>

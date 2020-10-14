@@ -3,10 +3,8 @@ import { ArrowBack, AddAPhoto } from '@styled-icons/material-outlined';
 import { ThemeContext } from 'styled-components';
 import { Formik } from 'formik';
 import { toast } from 'react-toastify';
-import { Grid, Text, Card, Spacing } from '~/lib';
-
 import swal from 'sweetalert';
-
+import { Grid, Text, Card, Spacing } from '~/lib';
 import Layout from '~/components/Layout';
 import TextField from '~/components/TextField';
 import history from '~/services/history';
