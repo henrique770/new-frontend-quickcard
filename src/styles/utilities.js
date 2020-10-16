@@ -21,6 +21,21 @@ export const Title = styled(Text)`
   }
 `;
 
+export const TitleInput = styled.input`
+  font-family: Rubik, sans-serif;
+  font-weight: bold;
+  width: 100%;
+  color: ${(props) => props.theme.textColorPrimary};
+  font-size: 3rem !important;
+  border-width: 0px;
+  border: none;
+  background: transparent;
+
+  @media (max-width: 1280px) {
+    font-size: 2.4rem !important;
+  }
+`;
+
 export const FormCard = styled.form`
   background: ${(props) => props.theme.backgroundSecondary};
   border-radius: 0.8rem;
@@ -161,4 +176,27 @@ export const ProgressContainer = styled.div`
   .CircularProgressbar-background {
     fill: green;
   }
+`;
+
+export const Select = styled.select`
+  height: 4rem;
+  width: 100%;
+  padding: 0 10px;
+  border: none;
+  outline: none;
+  background: ${(props) => props.theme.selectProfileBackground} 0% 0% no-repeat
+    padding-box;
+  border-radius: 4px;
+  color: ${(props) => props.theme.textColorPrimary};
+  font-size: 1.4rem;
+  font-weight: 600;
+  opacity: 1;
+
+  &::placeholder {
+    color: ${(props) => props.theme.textColorPrimary};
+  }
+`;
+
+export const ButtonNoBorder = styled.button`
+  border: none;
 `;

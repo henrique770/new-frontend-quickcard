@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import CKEditor from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
-function TextEditor({ onChange }) {
+function TextEditor({ onChange, data }) {
   const editorConfig = {
     removePlugins: [
       'Image',
@@ -46,6 +46,7 @@ function TextEditor({ onChange }) {
     <CKEditor
       config={editorConfig}
       editor={ClassicEditor}
+      data={data}
       onChange={onChange}
     />
   );

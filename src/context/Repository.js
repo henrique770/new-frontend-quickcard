@@ -4,6 +4,8 @@ import * as mapper from '~/services/mapper';
 
 import DeckEntity from '~/entities/DeckEntity';
 import CardEntity from '~/entities/CardEntity';
+import NotePadEntity from '~/entities/NotePadEntity';
+import NoteEntity from '~/entities/NoteEntity';
 
 import api from '~/services/api';
 
@@ -98,6 +100,14 @@ export default class Repository {
         this._context = CardEntity;
         break;
 
+      case `NOTEPADENTITY`:
+        this._context = NotePadEntity;
+        break;
+
+      case `NOTEENTITY`:
+        this._context = NoteEntity;
+        break;
+
       default:
         throw Error(`${type} not mapped for context`);
     }
@@ -120,6 +130,14 @@ export default class Repository {
 
       case typeRepository.CARD:
         this._mapper = mapper.mapperCard;
+        break;
+
+      case typeRepository.NOTEPAD:
+        this._mapper = mapper.mapperNotPad;
+        break;
+
+      case typeRepository.NOTE:
+        this._mapper = mapper.mapperNote;
         break;
 
       default:
@@ -153,19 +171,16 @@ export default class Repository {
    */
 
   _processResponseFailData(data) {
-    const { status } = data.response;
-
-    switch (status) {
-      case 401:
-        localStorage.removeItem('@QuickCard:token');
-        localStorage.removeItem('@QuickCard:student');
-        window.location.pathname = '/';
-
-        break;
-
-      default:
-        throw Error('Fail data response', data);
-    }
+    // const { status } = data.response;
+    // switch (status) {
+    //   case 401:
+    //     localStorage.removeItem('@QuickCard:token');
+    //     localStorage.removeItem('@QuickCard:student');
+    //     window.location.pathname = '/';
+    //     break;
+    //   default:
+    //     throw Error('Fail data response', data);
+    // }
   }
 
   /**

@@ -1,23 +1,72 @@
-import React, { useContext, useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useContext, useState, useCallback, useEffect } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import { ThemeContext } from 'styled-components';
 import { ArrowBack } from '@styled-icons/material-outlined';
 import swal from 'sweetalert';
 import history from '~/services/history';
 import { Grid, Spacing, Text, Card } from '~/lib';
+import Repository, { typeRepository } from '~context/Repository';
 
+import { AuthContext } from '~/context/AuthContext';
 import Layout from '~/components/Layout';
 import FlatList from '~/components/FlatList';
 import VariationList from '~/components/VariationList';
-import { notesblock } from '~/data/fake';
+import SkeletonLoad from '~/components/Skeleton';
+import Empty from '~/components/Empty';
 
 import * as U from '~/styles/utilities';
 
+const NotePadRepository = new Repository(typeRepository.NOTEPAD);
+const repositoryNote = new Repository(typeRepository.NOTE);
+
 function ListNotePad() {
+  const { id } = useParams();
+  const { token } = useContext(AuthContext);
+
+  const [empty, setEmpty] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [notes, setNotes] = useState([]);
   const themeContext = useContext(ThemeContext);
   const [listState, setListState] = useState(false);
 
-  function deleteNote() {
+  const fetchData = useCallback(() => {
+    setLoading(true);
+    setEmpty(false);
+
+    NotePadRepository.getById(id)
+      .then((data) => {
+        setNotes(data.Notes);
+        const hasActive = data.Notes.some((item) => item.IsActive === true);
+
+        if (hasActive === false) {
+          setEmpty(true);
+        }
+
+        setLoading(false);
+      })
+      .catch((err) => {
+        setLoading(false);
+        setEmpty(true);
+      });
+  }, [id]);
+
+  useEffect(() => {
+    NotePadRepository.provaider({
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    repositoryNote.provaider({
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    fetchData();
+  }, [fetchData, token]);
+
+  function deleteNote(idNote) {
     swal({
       title: 'Você tem certeza que quer excluir?',
       icon: 'warning',
@@ -26,6 +75,9 @@ function ListNotePad() {
     })
       .then((willDelete) => {
         if (willDelete) {
+          return repositoryNote.delete(idNote).then(() => {
+            fetchData();
+          });
         }
       })
       .catch(() => {
@@ -82,19 +134,29 @@ function ListNotePad() {
         </Grid>
         <Spacing mb={2.2} />
         <Grid>
-          <U.NoteGridContainer list={listState}>
-            {notesblock.map((item) => {
-              return (
-                <FlatList
-                  link="/note"
-                  remove={() => deleteNote(item.id)}
-                  title={item.title}
-                  previewText={item.text}
-                  textFooter={item.block_name}
-                />
-              );
-            })}
-          </U.NoteGridContainer>
+          {loading ? (
+            <SkeletonLoad />
+          ) : (
+            <>
+              {empty ? (
+                <Empty />
+              ) : (
+                <U.NoteGridContainer list={listState}>
+                  {notes.map((item) => {
+                    return (
+                      <FlatList
+                        link={`/note/${item.Id}`}
+                        remove={() => deleteNote(item.Id)}
+                        title={item.Title}
+                        previewText={item.Content}
+                        textFooter={item.NotePadName}
+                      />
+                    );
+                  })}
+                </U.NoteGridContainer>
+              )}
+            </>
+          )}
         </Grid>
       </Layout>
     </>

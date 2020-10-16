@@ -11,7 +11,8 @@ import { ThemeContext } from 'styled-components';
 import { ArrowBack } from '@styled-icons/material-outlined';
 
 import ReactCardFlip from 'react-card-flip';
-import Reposioty, { typeRepository } from 'context/Repository';
+import Repository, { typeRepository } from 'context/Repository';
+import { Formik } from 'formik';
 import history from '~/services/history';
 import { Grid, Spacing, Text, Card, useOutsideClick, Button } from '~/lib';
 import Modal from '~/components/Modal';
@@ -21,8 +22,8 @@ import * as U from '~/styles/utilities';
 import * as S from './styled';
 import Empty from '~/components/Empty';
 
-const repositoryDeck = new Reposioty(typeRepository.DECK);
-const repositoryCard = new Reposioty(typeRepository.CARD);
+const repositoryDeck = new Repository(typeRepository.DECK);
+const repositoryCard = new Repository(typeRepository.CARD);
 
 function FlashCard() {
   const { id } = useParams();
@@ -129,75 +130,26 @@ function FlashCard() {
     updateCard();
   }
 
+  async function editCard(values) {
+    repositoryCard
+      .update({
+        Front: values.front,
+        Verse: values.verse,
+        IdDeck: deck.Id,
+        IsActive: true,
+        Id: card.Id,
+      })
+      .then(() => {
+        alert('Alterado!', 'Alterado com sucesso.', 'success');
+        fetchData();
+      })
+      .catch(() => {
+        alert('Falhou!', 'Falha na atualização.', 'error');
+      });
+  }
+
   return (
     <>
-      {modalOpen && (
-        <Modal size={50} onClose={() => setModalOpen(false)}>
-          <U.FormCard ref={modal}>
-            <Text component="h1" size={1.8}>
-              Editar cartão
-            </Text>
-            <Spacing mb={3} />
-            <Grid container spacing={3}>
-              <Grid item xs={12}>
-                <TextField
-                  id="outlined-basic"
-                  label="Frente"
-                  type="text"
-                  placeholder="Digite a frente do cartão"
-                />
-              </Grid>
-
-              <Grid item xs={12}>
-                <TextField
-                  id="outlined-basic"
-                  multiline
-                  label="Verso"
-                  type="text"
-                  placeholder="Digite o verso do cartão"
-                />
-              </Grid>
-            </Grid>
-            <Spacing mb={3} />
-            <Grid
-              xs={12}
-              container
-              direction="row"
-              justify="flex-start"
-              spacing={1}
-            >
-              <Grid item xs={12}>
-                <Button
-                  type="submit"
-                  style={{ width: '100%' }}
-                  radius="4px"
-                  bgColor="#fe650e"
-                  padding="1rem"
-                >
-                  <Text size={1.4} weight="bold">
-                    Salvar
-                  </Text>
-                </Button>
-              </Grid>
-              <Grid item xs={12}>
-                <Button
-                  type="button"
-                  style={{ width: '100%' }}
-                  radius="4px"
-                  padding="1rem"
-                  bgColor="#fe650e"
-                  onClick={() => setModalOpen(true)}
-                >
-                  <Text size={1.4} weight="bold">
-                    Excluir
-                  </Text>
-                </Button>
-              </Grid>
-            </Grid>
-          </U.FormCard>
-        </Modal>
-      )}
-
       <U.Wrapper>
         <U.MainContent>
           <U.ContainerLimit>
@@ -242,18 +194,11 @@ function FlashCard() {
                 </Grid>
               </Grid>
             </Spacing>
-            <Spacing breakpoint="600px" responsiveM="2rem 0 0 0">
-              <Grid container justify="center" xs={12}>
-                <Grid item>
-                  <U.Title component="h1">{deck.name}</U.Title>
-                </Grid>
-              </Grid>
-            </Spacing>
 
             <Spacing breakpoint="600px" responsiveM="2rem 0 0 0">
               <Grid container justify="center" xs={12}>
                 <Grid item>
-                  {isCardView && <U.Title component="h1">{deck._name}</U.Title>}
+                  {isCardView && <U.Title component="h1">{deck.Name}</U.Title>}
                 </Grid>
               </Grid>
             </Spacing>
@@ -440,6 +385,89 @@ function FlashCard() {
           </U.ContainerLimit>
         </U.MainContent>
       </U.Wrapper>
+
+      {modalOpen && (
+        <Modal size={50} onClose={() => setModalOpen(false)}>
+          <Formik
+            initialValues={{ front: card.Front, verse: card.Verse }}
+            onSubmit={editCard}
+          >
+            {({ handleSubmit, handleBlur, handleChange, values }) => (
+              <U.FormCard ref={modal} onSubmit={handleSubmit}>
+                <Text component="h1" size={1.8}>
+                  Editar cartão
+                </Text>
+                <Spacing mb={3} />
+                <Grid container spacing={3}>
+                  <Grid item xs={12}>
+                    <TextField
+                      id="outlined-basic"
+                      label="Frente"
+                      type="text"
+                      placeholder="Digite a frente do cartão"
+                      name="front"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.front}
+                    />
+                  </Grid>
+
+                  <Grid item xs={12}>
+                    <TextField
+                      id="outlined-basic"
+                      multiline
+                      label="Verso"
+                      type="text"
+                      placeholder="Digite o verso do cartão"
+                      name="verse"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.verse}
+                    />
+                  </Grid>
+                </Grid>
+                <Spacing mb={3} />
+                <Grid
+                  xs={12}
+                  container
+                  direction="row"
+                  justify="flex-start"
+                  spacing={1}
+                >
+                  <Grid item xs={12}>
+                    <Button
+                      type="submit"
+                      style={{ width: '100%' }}
+                      radius="4px"
+                      bgColor="#fe650e"
+                      padding="1rem"
+                    >
+                      <Text size={1.4} weight="bold">
+                        Salvar
+                      </Text>
+                    </Button>
+                  </Grid>
+
+                  <Grid item xs={12}>
+                    <Button
+                      type="button"
+                      style={{ width: '100%' }}
+                      radius="4px"
+                      padding="1rem"
+                      bgColor="#fe650e"
+                      onClick={() => setModalOpen(true)}
+                    >
+                      <Text size={1.4} weight="bold">
+                        Excluir
+                      </Text>
+                    </Button>
+                  </Grid>
+                </Grid>
+              </U.FormCard>
+            )}
+          </Formik>
+        </Modal>
+      )}
     </>
   );
 }

@@ -7,7 +7,6 @@ import { GlobalStyles } from '~/lib';
 import GlobalLocalStyles from '~/styles/global';
 import { MyThemeProvider } from '~/components/ThemeContext';
 import { AuthProvider } from '~/context/AuthContext';
-
 import Routes from './routes';
 import history from '~/services/history';
 

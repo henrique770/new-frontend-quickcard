@@ -28,7 +28,6 @@ module.exports = {
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': 'warn',
     'import/no-extraneous-dependencies': 'off',
-    'eslint-disable-next-line': ['no-underscore-dangle'],
   },
   settings: {
     'import/resolver': {

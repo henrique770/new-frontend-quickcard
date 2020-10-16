@@ -8,7 +8,8 @@ import React, {
 
 import swal from 'sweetalert';
 import { Formik } from 'formik';
-import uniqid from 'uniqid';
+
+import Repository, { typeRepository } from '~context/Repository';
 import FlatList from '~/components/FlatList';
 import { Grid, Spacing, Text, useOutsideClick, Button } from '~/lib';
 import history from '~/services/history';
@@ -22,14 +23,17 @@ import TextField from '~/components/TextField';
 import Search from '~/components/Search';
 import VariationList from '~/components/VariationList';
 
-import api from '~/services/api';
 import { AuthContext } from '~/context/AuthContext';
 
 import * as U from '~/styles/utilities';
 
+const NotePadRepository = new Repository(typeRepository.NOTEPAD);
+const NoteRepository = new Repository(typeRepository.NOTE);
+
 function NotePad() {
-  const { user, token } = useContext(AuthContext);
-  const { _id } = user;
+  const { token } = useContext(AuthContext);
+
+  const [notepads, setNotePads] = useState([]);
 
   const query = useQuery();
   const [status] = useState({
@@ -63,6 +67,19 @@ function NotePad() {
   });
 
   const OnChangeSearch = (e) => {
+    const re = new RegExp(e.target.value, 'g');
+
+    notepads.map((item) => {
+      item.IsActive = item.Name.match(re) != null;
+      setEmpty(false);
+      return item;
+    });
+
+    if (notepads.filter((e) => e.IsActive).length < 1) {
+      // coloar regra para exibir imagem de dados
+      setEmpty(true);
+    }
+
     setSearchValue(e.target.value);
   };
 
@@ -77,84 +94,69 @@ function NotePad() {
     window.location.reload(false);
   };
 
-  const [notepads, setNotePads] = useState([]);
+  const fetchData = useCallback(() => {
+    setLoading(true);
+    setEmpty(false);
 
-  const fetchData = useCallback(async () => {
-    try {
-      setLoading(true);
-      setEmpty(false);
-      const response = await api.get(`notePad`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+    NotePadRepository.all()
+      .then((data) => {
+        setNotePads(data);
+        const hasActive = data.some((item) => item.IsActive === true);
 
-      const { data } = response;
-      setNotePads(data);
-      setTimeout(() => {
+        if (hasActive === false) {
+          setEmpty(true);
+        }
+
         setLoading(false);
-      }, 700);
-
-      const hasActive = data.some((item) => item.isActive === true);
-      if (hasActive === false) {
+      })
+      .catch((err) => {
+        setLoading(false);
         setEmpty(true);
-      }
-    } catch {
-      setTimeout(() => {
-        setLoading(false);
-      }, 700);
-      setEmpty(true);
-    }
-  }, [token]);
+      });
+  }, []);
 
   useEffect(() => {
+    NotePadRepository.provaider({
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    NoteRepository.provaider({
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
     fetchData();
-  }, [fetchData]);
+  }, [fetchData, token]);
 
-  // create
   async function createNotePad(values) {
-    try {
-      await api.post(
-        'notePad',
-        { Name: values.name, Id: uniqid(), idStudent: _id },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      setModalOpenCreate(false);
-      fetchData();
-    } catch {
-      swal('Falhou', 'Falha na criação', 'error');
-    }
+    NotePadRepository.add({ Name: values.name })
+      .then(() => {
+        swal('Criado!', 'Criado com sucesso.', 'success');
+        setModalOpenCreate(false);
+        fetchData();
+      })
+      .catch(() => {
+        swal('Falhou!', 'Falha na criação', 'error');
+      });
   }
 
-  // update
   async function editNotePad(values) {
-    try {
-      await api.put(
-        `notePad/${modalEdit.id}`,
-        {
-          Name: values.name,
-          Id: modalEdit.id,
-          idStudent: _id,
-          IsActive: modalEdit.values.isActive,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      swal('Atualizou', 'Alterado com sucesso!', 'success');
-      fetchData();
-      setModalEdit(false);
-    } catch {
-      swal('Falhou', 'Falha na atualização', 'error');
-    }
+    NotePadRepository.update({
+      Name: values.Name,
+      Id: values.Id,
+      IsActive: values.IsActive,
+    })
+      .then(() => {
+        swal('Alterado!', 'Alterado com sucesso.', 'success');
+        fetchData();
+        setModalEdit(false);
+      })
+      .catch(() => {
+        swal('Falhou!', 'Falha na atualização.', 'error');
+      });
   }
 
   function deleteNotePad(id) {
@@ -163,33 +165,17 @@ function NotePad() {
       icon: 'warning',
       buttons: ['Não', 'Sim'],
       dangerMode: true,
-    }).then((willDelete) => {
-      if (willDelete) {
-        api
-          .put(
-            `notePad/${id}`,
-            {
-              Name: modalEdit.values.name,
-              Id: id,
-              idStudent: _id,
-              IsActive: false,
-            },
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          )
-          .then(() => {
-            if (willDelete) {
-              fetchData();
-            }
-          })
-          .catch(() => {
-            swal('Falhou', 'Falha na remoção!', 'warning');
+    })
+      .then((willDelete) => {
+        if (willDelete) {
+          return NotePadRepository.delete(id).then(() => {
+            fetchData();
           });
-      }
-    });
+        }
+      })
+      .catch(() => {
+        swal('Falhou', 'Falha na remoção.', 'warning');
+      });
   }
 
   return (
@@ -260,19 +246,20 @@ function NotePad() {
               ) : (
                 <U.NoteGridContainer list={listState}>
                   {notepads.map((item) => {
-                    if (item.isActive === true) {
+                    if (item.IsActive === true) {
                       return (
                         <FlatList
                           edit
+                          optionsDisabled={item.Id === ''}
                           editFunc={() =>
                             setModalEdit({
                               state: true,
-                              id: item._id,
+                              id: item.Id,
                               values: item,
                             })
                           }
-                          link="/notepad/notes"
-                          title={item.name}
+                          link={`/notepad/notes/${item.Id}`}
+                          title={item.Name}
                           notepad={
                             <Grid>
                               <Grid container spacing={1}>
@@ -281,7 +268,7 @@ function NotePad() {
                                 </Grid>
                                 <Grid item>
                                   <Text weight="bold" color="#fe650e">
-                                    0
+                                    {item.totalNotes}
                                   </Text>
                                 </Grid>
                               </Grid>
@@ -361,10 +348,10 @@ function NotePad() {
                       label="Nome do bloco de notas"
                       type="text"
                       placeholder="Digite o nome do bloco de notas"
-                      name="name"
+                      name="Name"
                       onChange={handleChange}
                       onBlur={handleBlur}
-                      value={values.name}
+                      value={values.Name}
                     />
                   </Grid>
                 </Grid>

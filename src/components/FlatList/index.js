@@ -17,6 +17,7 @@ export default function FlatList({
   editFunc,
   remove,
   notepad,
+  optionsDisabled,
 }) {
   const [isShown, setIsShown] = useState(false);
 
@@ -48,16 +49,20 @@ export default function FlatList({
         {notepad && notepad}
       </Card>
 
-      {isShown && (
-        <S.Options onClick={edit ? editFunc : remove}>
-          <Text>
-            {edit ? (
-              <MoreVert size={25} color="#fe650e" />
-            ) : (
-              <Close size={25} color="#fe650e" />
-            )}
-          </Text>
-        </S.Options>
+      {!optionsDisabled && (
+        <>
+          {isShown && (
+            <S.Options onClick={edit ? editFunc : remove}>
+              <Text>
+                {edit ? (
+                  <MoreVert size={25} color="#fe650e" />
+                ) : (
+                  <Close size={25} color="#fe650e" />
+                )}
+              </Text>
+            </S.Options>
+          )}
+        </>
       )}
     </U.NoteGrid>
   );
@@ -66,6 +71,7 @@ export default function FlatList({
 FlatList.propTypes = {
   title: PropTypes.string,
   previewText: PropTypes.string,
+  optionsDisabled: PropTypes.bool,
   link: PropTypes.string,
   remove: PropTypes.func,
   editFunc: PropTypes.func,
