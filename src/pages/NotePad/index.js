@@ -94,34 +94,6 @@ function NotePad() {
     window.location.reload(false);
   };
 
-  // const fetchData = useCallback(async () => {
-  //   try {
-  //     setLoading(true);
-  //     setEmpty(false);
-  //     const response = await api.get(`notePad`, {
-  //       headers: {
-  //         Authorization: `Bearer ${token}`,
-  //       },
-  //     });
-
-  //     const { data } = response;
-  //     setNotePads(data);
-  //     setTimeout(() => {
-  //       setLoading(false);
-  //     }, 700);
-
-  //     const hasActive = data.some((item) => item.isActive === true);
-  //     if (hasActive === false) {
-  //       setEmpty(true);
-  //     }
-  //   } catch {
-  //     setTimeout(() => {
-  //       setLoading(false);
-  //     }, 700);
-  //     setEmpty(true);
-  //   }
-  // }, [token]);
-
   const fetchData = useCallback(() => {
     setLoading(true);
     setEmpty(false);
@@ -142,10 +114,6 @@ function NotePad() {
         setEmpty(true);
       });
   }, []);
-
-  // useEffect(() => {
-  //   fetchData();
-  // }, [fetchData]);
 
   useEffect(() => {
     NotePadRepository.provaider({
@@ -174,32 +142,6 @@ function NotePad() {
         swal('Falhou!', 'Falha na criação', 'error');
       });
   }
-
-  // update
-  // async function editNotePad(values) {
-  //   try {
-  //     await api.put(
-  //       `notePad/${modalEdit.id}`,
-  //       {
-  //         Name: values.name,
-  //         Id: modalEdit.id,
-  //         idStudent: _id,
-  //         IsActive: modalEdit.values.isActive,
-  //       },
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       }
-  //     );
-
-  //     swal('Atualizou', 'Alterado com sucesso!', 'success');
-  //     fetchData();
-  //     setModalEdit(false);
-  //   } catch {
-  //     swal('Falhou', 'Falha na atualização', 'error');
-  //   }
-  // }
 
   async function editNotePad(values) {
     NotePadRepository.update({

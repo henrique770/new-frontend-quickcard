@@ -11,36 +11,42 @@ import { AuthContext } from '~/context/AuthContext';
 import Layout from '~/components/Layout';
 import FlatList from '~/components/FlatList';
 import VariationList from '~/components/VariationList';
+import SkeletonLoad from '~/components/Skeleton';
+import Empty from '~/components/Empty';
 
 import * as U from '~/styles/utilities';
 
 const NotePadRepository = new Repository(typeRepository.NOTEPAD);
 const repositoryNote = new Repository(typeRepository.NOTE);
+
 function ListNotePad() {
   const { id } = useParams();
   const { token } = useContext(AuthContext);
+
+  const [empty, setEmpty] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [notes, setNotes] = useState([]);
   const themeContext = useContext(ThemeContext);
   const [listState, setListState] = useState(false);
 
   const fetchData = useCallback(() => {
-    // setLoading(true);
-    // setEmpty(false);
+    setLoading(true);
+    setEmpty(false);
 
     NotePadRepository.getById(id)
       .then((data) => {
         setNotes(data.Notes);
-        // const hasActive = data.some((item) => item.IsActive === true);
+        const hasActive = data.Notes.some((item) => item.IsActive === true);
 
-        // if (hasActive === false) {
-        //   setEmpty(true);
-        // }
+        if (hasActive === false) {
+          setEmpty(true);
+        }
 
-        // setLoading(false);
+        setLoading(false);
       })
       .catch((err) => {
-        // setLoading(false);
-        // setEmpty(true);
+        setLoading(false);
+        setEmpty(true);
       });
   }, [id]);
 
@@ -128,19 +134,29 @@ function ListNotePad() {
         </Grid>
         <Spacing mb={2.2} />
         <Grid>
-          <U.NoteGridContainer list={listState}>
-            {notes.map((item) => {
-              return (
-                <FlatList
-                  link={`/note/${item.Id}`}
-                  remove={() => deleteNote(item.Id)}
-                  title={item.Title}
-                  previewText={item.Content}
-                  textFooter={item.NotePadName}
-                />
-              );
-            })}
-          </U.NoteGridContainer>
+          {loading ? (
+            <SkeletonLoad />
+          ) : (
+            <>
+              {empty ? (
+                <Empty />
+              ) : (
+                <U.NoteGridContainer list={listState}>
+                  {notes.map((item) => {
+                    return (
+                      <FlatList
+                        link={`/note/${item.Id}`}
+                        remove={() => deleteNote(item.Id)}
+                        title={item.Title}
+                        previewText={item.Content}
+                        textFooter={item.NotePadName}
+                      />
+                    );
+                  })}
+                </U.NoteGridContainer>
+              )}
+            </>
+          )}
         </Grid>
       </Layout>
     </>

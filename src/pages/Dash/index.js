@@ -3,7 +3,7 @@ import React, { useState, useEffect, useCallback, useContext } from 'react';
 import swal from 'sweetalert';
 import { Link } from 'react-router-dom';
 
-import Repository, { typeRepository } from 'context/Repository';
+import Repository, { typeRepository } from '~/context/Repository';
 import FlatList from '~/components/FlatList';
 import { Grid, Spacing, Text } from '~/lib';
 import history from '~/services/history';
@@ -45,9 +45,21 @@ function Dash() {
   const [listState, setListState] = useState(false);
 
   const OnChangeSearch = (e) => {
+    const re = new RegExp(e.target.value, 'g');
+
+    notes.map((item) => {
+      item.IsActive = item.Title.match(re) != null;
+      setEmpty(false);
+      return item;
+    });
+
+    if (notes.filter((e) => e.IsActive).length < 1) {
+      // coloar regra para exibir imagem de dados
+      setEmpty(true);
+    }
+
     setSearchValue(e.target.value);
   };
-
   const HandleSearch = (e) => {
     e.preventDefault();
 
@@ -181,15 +193,18 @@ function Dash() {
               ) : (
                 <U.NoteGridContainer list={listState}>
                   {notes.map((item) => {
-                    return (
-                      <FlatList
-                        link={`/note/${item.Id}`}
-                        remove={() => deleteNote(item.Id)}
-                        title={item.Title}
-                        previewText={item.Content}
-                        textFooter={item.NotePadName}
-                      />
-                    );
+                    if (item.IsActive === true) {
+                      return (
+                        <FlatList
+                          link={`/note/${item.Id}`}
+                          remove={() => deleteNote(item.Id)}
+                          title={item.Title}
+                          previewText={item.Content}
+                          textFooter={item.NotePadName}
+                        />
+                      );
+                    }
+                    return '';
                   })}
                 </U.NoteGridContainer>
               )}
