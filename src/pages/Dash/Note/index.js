@@ -25,7 +25,7 @@ function Note() {
   // note
   const { id } = useParams();
 
-  console.log(id);
+  // console.log(id);
 
   const { token } = useContext(AuthContext);
 
@@ -41,7 +41,13 @@ function Note() {
     title: '',
     notepad: '' || undefined,
     content: '',
+    id: '',
   });
+
+  // const [isEmpty, setIsEmpty] = useState(false);
+
+  // console.log(notepads);
+  console.log(initialValues.notepad);
 
   // console.log(note);
 
@@ -56,7 +62,12 @@ function Note() {
   const fetchDataNote = useCallback(() => {
     NoteRepository.getById(id)
       .then((data) => {
-        setInitialValues({ title: data.Title, content: data.Content });
+        setInitialValues({
+          title: data.Title,
+          content: data.Content,
+          notepad: data.IdNotePad,
+          id: data.Id,
+        });
         // setNote(data);
       })
       .catch(() => {});
@@ -93,16 +104,25 @@ function Note() {
   }
 
   async function handleSubmitForm(values) {
-    NoteRepository.add({
+    if (initialValues.id === '') {
+      NoteRepository.add({
+        Title: values.title,
+        IdNotePad: values.notepad,
+        Content: noteEditor,
+        IsEmptyTitle: false,
+      });
+
+      return;
+    }
+
+    NoteRepository.update({
       Title: values.title,
       IdNotePad: values.notepad,
       Content: noteEditor,
       IsEmptyTitle: false,
+      Id: initialValues.id,
+      IsActive: true,
     });
-
-    console.log(values);
-
-    // IdNotePad, content, Title;
   }
 
   return (
@@ -156,13 +176,18 @@ function Note() {
                         onBlur={handleBlur}
                         value={values.notepad}
                       >
-                        <option value="" selected>
-                          Selecione um bloco de nota
-                        </option>
+                        <option value="">Selecione um bloco de nota</option>
 
                         {notepads.map((item) => {
                           if (item.IsActive === true) {
-                            return <option value={item.Id}>{item.Name}</option>;
+                            return (
+                              <option
+                                value={item.Id}
+                                selected={item._id === initialValues.notepad}
+                              >
+                                {item.Name}
+                              </option>
+                            );
                           }
                           return '';
                         })}

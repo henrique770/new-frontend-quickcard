@@ -304,11 +304,11 @@ function NotePad() {
               ) : (
                 <U.NoteGridContainer list={listState}>
                   {notepads.map((item) => {
-                    console.log(item);
                     if (item.IsActive === true) {
                       return (
                         <FlatList
                           edit
+                          optionsDisabled={item.Id === ''}
                           editFunc={() =>
                             setModalEdit({
                               state: true,

@@ -171,19 +171,16 @@ export default class Repository {
    */
 
   _processResponseFailData(data) {
-    const { status } = data.response;
-
-    switch (status) {
-      case 401:
-        localStorage.removeItem('@QuickCard:token');
-        localStorage.removeItem('@QuickCard:student');
-        window.location.pathname = '/';
-
-        break;
-
-      default:
-        throw Error('Fail data response', data);
-    }
+    // const { status } = data.response;
+    // switch (status) {
+    //   case 401:
+    //     localStorage.removeItem('@QuickCard:token');
+    //     localStorage.removeItem('@QuickCard:student');
+    //     window.location.pathname = '/';
+    //     break;
+    //   default:
+    //     throw Error('Fail data response', data);
+    // }
   }
 
   /**

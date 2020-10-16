@@ -33,6 +33,7 @@ export default function Routes() {
         component={ListNotePad}
         isPrivate
       />
+      <Route path="/notepad/notes" exact component={ListNotePad} isPrivate />
 
       <Route path="/pomodoro" exact component={Pomodoro} isPrivate />
       <Route path="/statistics" exact component={Statistics} isPrivate />

@@ -15,7 +15,7 @@ import VariationList from '~/components/VariationList';
 import * as U from '~/styles/utilities';
 
 const NotePadRepository = new Repository(typeRepository.NOTEPAD);
-
+const repositoryNote = new Repository(typeRepository.NOTE);
 function ListNotePad() {
   const { id } = useParams();
   const { token } = useContext(AuthContext);
@@ -51,10 +51,16 @@ function ListNotePad() {
       },
     });
 
+    repositoryNote.provaider({
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
     fetchData();
   }, [fetchData, token]);
 
-  function deleteNote() {
+  function deleteNote(idNote) {
     swal({
       title: 'Você tem certeza que quer excluir?',
       icon: 'warning',
@@ -63,6 +69,9 @@ function ListNotePad() {
     })
       .then((willDelete) => {
         if (willDelete) {
+          return repositoryNote.delete(idNote).then(() => {
+            fetchData();
+          });
         }
       })
       .catch(() => {
