@@ -121,7 +121,7 @@ function Deck() {
     repositoryDeckInfo
       .all()
       .then((data) => {
-        setDecks(data);
+        setDecks(data === undefined ? [] : data);
         const hasActive = data.some((item) => item.IsActive === true);
 
         if (hasActive === false) {

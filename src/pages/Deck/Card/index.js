@@ -9,6 +9,7 @@ import React, {
 import { Link, useParams } from 'react-router-dom';
 import { ThemeContext } from 'styled-components';
 import { ArrowBack } from '@styled-icons/material-outlined';
+import swal from 'sweetalert';
 
 import ReactCardFlip from 'react-card-flip';
 import Repository, { typeRepository } from 'context/Repository';
@@ -140,11 +141,11 @@ function FlashCard() {
         Id: card.Id,
       })
       .then(() => {
-        alert('Alterado!', 'Alterado com sucesso.', 'success');
+        swal('Alterado!', 'Alterado com sucesso.', 'success');
         fetchData();
       })
       .catch(() => {
-        alert('Falhou!', 'Falha na atualização.', 'error');
+        swal('Falhou!', 'Falha na atualização.', 'error');
       });
   }
 
