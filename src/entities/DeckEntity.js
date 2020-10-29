@@ -1,5 +1,5 @@
-
 import BaseEntity  from './BaseEntity'
+import moment from 'moment'
 
 /**
  * @type Deck
@@ -7,17 +7,17 @@ import BaseEntity  from './BaseEntity'
  */
 class DeckEntity extends BaseEntity {
 
-   constructor(args = {})
-   {
-    super(args)
+  constructor(args = {})
+  {
+   super(args)
 
-    this.Name = args.Name
-    this.Cards = args.Cards
+   this.Name = args.Name
+   this.Cards = args.Cards
 
-    this.ColumnsMapper  = ['Name']
+   this.ColumnsMapper  = ['Name']
 
-     this.orderCards()
-   }
+    this.orderCards()
+  }
 
    get Name(){ return this._name }
    set Name(value) { this._name = value}
@@ -40,8 +40,8 @@ class DeckEntity extends BaseEntity {
    * @constructor
    */
   set Cards(value) {
-    if(this._cards === undefined && !Array.isArray(value))
-     return this._cards = []
+    if(this._cards === undefined)
+      this._cards = []
 
     this._cards = value.filter( e => e.IsActive)
   }
@@ -107,16 +107,33 @@ class DeckEntity extends BaseEntity {
    * Change cards to view
    */
   reviewCards() {
-    if(!this.checkRevisedDeck())
-      return
+    //if(!this.checkRevisedDeck())
+    //  return
+    
+    let cards = this.Cards
 
     for(let i = 0; i < this.totalCards(); i += 1) {
-      let card = this.Cards[i]
+      let card = cards[i]
       card.undoReviewCard()
+      console.log(card)
     }
   }
 
-  getDeckRandom() {
+
+  isNextVisibleCard() {
+    let card = this.getNextCard()
+    , date = moment(card.DateNextView)
+    , nowDate = moment()
+
+    console.log('next date', date)
+    console.log('atual date', nowDate)
+
+
+    // true - data is past
+    return nowDate > date
+  }
+
+  getNextCard() {
 
     this.orderCards()
 
@@ -130,7 +147,10 @@ class DeckEntity extends BaseEntity {
     let card = unreviewedCards[0]
 
     card.DateLastView = new Date()
-    card.IdDeck = this.Id
+
+    card.Deck = {
+      Id : this.Id
+    }
 
     return card
   }
@@ -153,3 +173,4 @@ class DeckEntity extends BaseEntity {
 }
 
 export default DeckEntity
+
