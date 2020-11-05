@@ -53,6 +53,15 @@ export const AuthProvider = ({ children }) => {
     setLoadingSignIn(false);
   }, []);
 
+  const updateProfile = useCallback(
+    async (id) => {
+      const response = await api.get(`student/${id}`);
+      localStorage.setItem('@QuickCard:student', JSON.stringify(response.data));
+      setData({ ...data, student: response.data });
+    },
+    [data]
+  );
+
   const signOut = useCallback(() => {
     localStorage.removeItem('@QuickCard:token');
     localStorage.removeItem('@QuickCard:student');
@@ -68,6 +77,7 @@ export const AuthProvider = ({ children }) => {
         signIn,
         signOut,
         loadingSignIn,
+        updateProfile,
       }}
     >
       {children}
