@@ -167,7 +167,8 @@ function Deck() {
         setModalOpenDeck(false);
         fetchData();
       })
-      .catch(() => {
+      .catch((err) => {
+        console.log(err)
         swal('Falhou!', 'Falha na criação', 'error');
       });
   }

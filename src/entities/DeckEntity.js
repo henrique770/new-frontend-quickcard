@@ -40,8 +40,10 @@ class DeckEntity extends BaseEntity {
    * @constructor
    */
   set Cards(value) {
-    if(this._cards === undefined)
+    if(this._cards === undefined || !Array.isArray(value)) {
       this._cards = []
+      return
+    }
 
     this._cards = value.filter( e => e.IsActive)
   }

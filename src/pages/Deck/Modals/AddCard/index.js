@@ -62,6 +62,7 @@ const AddCard = ({ modalCard }) => {
         swal('Criado!', 'Criado com sucesso.', 'success');
 
         fetchData();
+        //location.reload()
       })
       .catch(() => {
         swal('Falhou!', 'Falha na criação.', 'error');
