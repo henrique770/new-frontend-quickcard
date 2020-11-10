@@ -399,7 +399,7 @@ function FlashCard() {
                   'Parabéns!! você terminou de responder o baralho'
                 )}
 
-              {!isNextVisibleCard &&
+              {!isNextVisibleCard && !isRevisedDeck &&
                 RenderDeckRevid('Nenhum cartão para revisar no momento')}
 
               {isNextVisibleCard && RenderCard()}

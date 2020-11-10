@@ -150,7 +150,7 @@ class CardEntity extends BaseEntity {
    * @returns {Date}
    */
   get DateNextView() {
-    if (this._dateNextView === undefined) {
+    if (this._dateNextView === undefined || this._dateNextView === null) {
       this._dateNextView = new Date().toISOString();
     }
 

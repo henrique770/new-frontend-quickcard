@@ -4,5 +4,6 @@ export default function DeckInfo(args) {
     this.Count = args.count
     this.CountReviewed = args.isReviewed
     this.CountNotReviewed = args.isNotReviewed
+    this.CardsReviewMoment = args.isCardsReviewMoment
     this.IsActive = args.isActive
 }
