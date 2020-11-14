@@ -9,6 +9,7 @@ import React, {
 import { Link, useParams } from 'react-router-dom';
 import { ThemeContext } from 'styled-components';
 import { ArrowBack } from '@styled-icons/material-outlined';
+import swal from 'sweetalert';
 
 import ReactCardFlip from 'react-card-flip';
 import Repository, { typeRepository } from 'context/Repository';
@@ -33,6 +34,7 @@ function FlashCard() {
   const [card, setCard] = useState({});
   const [isCardView, setIsCardView] = useState(false);
   const [isDeckEmpty, setIsDeckEmpty] = useState(false);
+  const [isNextVisibleCard, setIsNextVisibleCard] = useState(true);
   const [isRevisedDeck, setIsRevisedDeck] = useState(false);
 
   const themeContext = useContext(ThemeContext);
@@ -40,31 +42,35 @@ function FlashCard() {
   const modal = useRef();
   const [isShow, setIsShow] = useState(false);
 
+  // console.log(deck);
+
+  const validatedDeck = useCallback(
+    (data) => {
+      // console.log(data);
+      // console.log(data.isEmpty());
+
+      setIsRevisedDeck(data.checkRevisedDeck());
+      setIsDeckEmpty(data.isEmpty());
+      setIsNextVisibleCard(data.isNextVisibleCard());
+      setDeck(data);
+
+      if (isNextVisibleCard) {
+        const card = data.getNextCard();
+
+        setIsCardView(card != null);
+        if (card != null) {
+          setCard(card);
+        }
+      }
+    },
+    [isNextVisibleCard]
+  );
+
   const fetchData = useCallback(async () => {
     repositoryDeck.getById(id).then((data) => {
       validatedDeck(data);
     });
-  }, [id]);
-
-  // console.log(deck);
-
-  function validatedDeck(data) {
-    // console.log(data);
-    // console.log(data.isEmpty());
-
-    setIsRevisedDeck(data.checkRevisedDeck());
-    setIsDeckEmpty(data.isEmpty());
-    setDeck(data);
-
-    const card = data.getDeckRandom();
-
-    setIsCardView(card != null);
-    if (card != null) {
-      setCard(card);
-    }
-
-    // console.log(card);
-  }
+  }, [id, validatedDeck]);
 
   useEffect(() => {
     repositoryDeck.provaider({
@@ -140,12 +146,192 @@ function FlashCard() {
         Id: card.Id,
       })
       .then(() => {
-        alert('Alterado!', 'Alterado com sucesso.', 'success');
+        swal('Alterado!', 'Alterado com sucesso.', 'success');
         fetchData();
       })
       .catch(() => {
-        alert('Falhou!', 'Falha na atualização.', 'error');
+        swal('Falhou!', 'Falha na atualização.', 'error');
       });
+  }
+
+  function RenderDeckRevid(text) {
+    return (
+      <>
+        <S.ContainerEndDeck>
+          <Grid
+            container
+            xs={12}
+            justify="center"
+            direction="column"
+            alignItems="center"
+          >
+            <Grid
+              xs={12}
+              sm={6}
+              lg={3}
+              container
+              direction="column"
+              justify="center"
+              alignItems="center"
+            >
+              <Text size="4" weight="bold">
+                {text}
+              </Text>
+              <Grid xs={12} sm={8}>
+                <Spacing mt={1} />
+
+                <Link to="/deck">
+                  <Button
+                    type="button"
+                    radius="25px"
+                    style={{ width: '100%' }}
+                    padding="1rem 2rem"
+                    bgColor="#fe650e"
+                  >
+                    <Text size={1.4} weight="bold">
+                      Voltar para página inicial
+                    </Text>
+                  </Button>
+                </Link>
+
+                <Spacing mt={1} />
+                <Button
+                  type="button"
+                  radius="25px"
+                  style={{ width: '100%' }}
+                  padding="1rem 2rem"
+                  bgColor="#fe650e"
+                  onClick={() => {
+                    reviewCards();
+                  }}
+                >
+                  <Text size={1.4} weight="bold">
+                    Revisar novamente o baralho
+                  </Text>
+                </Button>
+              </Grid>
+            </Grid>
+          </Grid>
+        </S.ContainerEndDeck>
+      </>
+    );
+  }
+
+  function RenderCard() {
+    return (
+      <>
+        {isCardView && (
+          <Grid container xs={12} justify="center" alignItems="center">
+            <Grid xs={12} sm={6} lg={4}>
+              <ReactCardFlip isFlipped={isShow} flipDirection="horizontal">
+                <S.FlashCard
+                  noFlex
+                  textCenter
+                  paddingBody="3rem"
+                  radius="10"
+                  justifyContent="center"
+                  onClick={showAnswer}
+                >
+                  <S.TitleCard color="#fe650e" weight="bold">
+                    Frente
+                  </S.TitleCard>
+
+                  <Text size={3} weight="bold">
+                    {card.Front}
+                  </Text>
+                </S.FlashCard>
+
+                <S.FlashCard
+                  noFlex
+                  textCenter
+                  paddingBody="3rem"
+                  radius="10"
+                  justifyContent="center"
+                  onClick={showAnswer}
+                >
+                  <S.TitleCard color="#fe650e" weight="bold">
+                    Verso
+                  </S.TitleCard>
+                  <Text size={3} weight="bold">
+                    {card.Verse}
+                  </Text>
+                </S.FlashCard>
+              </ReactCardFlip>
+
+              <Spacing mb={3} />
+              {isShow && (
+                <Grid container xs={12} justify="center" spacing={2}>
+                  <Grid item>
+                    <U.ButtonResponsive
+                      radius="8px"
+                      bgColor={themeContext.backgroundSecondary}
+                      shadow="0px 1px 8px rgba(20, 46, 110, 0.1)"
+                      padding="1rem"
+                      style={{ height: 60, width: 80 }}
+                      onClick={hitCardDifficult}
+                    >
+                      <Text color="#fe650e" weight="bold">
+                        Difícil
+                      </Text>
+                      <Text
+                        size={1.2}
+                        weight="bold"
+                        color={themeContext.textColorSecondary}
+                      >
+                        {card.getTimeHitDifficult()}
+                      </Text>
+                    </U.ButtonResponsive>
+                  </Grid>
+                  <Grid item>
+                    <U.ButtonResponsive
+                      radius="8px"
+                      bgColor={themeContext.backgroundSecondary}
+                      shadow="0px 1px 8px rgba(20, 46, 110, 0.1)"
+                      padding="1rem"
+                      style={{ height: 60, width: 80 }}
+                      onClick={hitCardGood}
+                    >
+                      <Text color="#fe650e" weight="bold">
+                        Bom
+                      </Text>
+
+                      <Text
+                        size={1.2}
+                        weight="bold"
+                        color={themeContext.textColorSecondary}
+                      >
+                        {card.getTimeHitGood()}
+                      </Text>
+                    </U.ButtonResponsive>
+                  </Grid>
+                  <Grid item>
+                    <U.ButtonResponsive
+                      radius="8px"
+                      bgColor={themeContext.backgroundSecondary}
+                      shadow="0px 1px 8px rgba(20, 46, 110, 0.1)"
+                      padding="1rem"
+                      style={{ height: 60, width: 80 }}
+                      onClick={hitCardEasy}
+                    >
+                      <Text color="#fe650e" weight="bold">
+                        Fácil
+                      </Text>
+                      <Text
+                        size={1.2}
+                        weight="bold"
+                        color={themeContext.textColorSecondary}
+                      >
+                        {card.getTimeHitEasy()}
+                      </Text>
+                    </U.ButtonResponsive>
+                  </Grid>
+                </Grid>
+              )}
+            </Grid>
+          </Grid>
+        )}
+      </>
+    );
   }
 
   return (
@@ -208,178 +394,15 @@ function FlashCard() {
             <S.CardContainer>
               {isDeckEmpty && <Empty />}
 
-              {isRevisedDeck && (
-                <S.ContainerEndDeck>
-                  <Grid
-                    container
-                    xs={12}
-                    justify="center"
-                    direction="column"
-                    alignItems="center"
-                  >
-                    <Grid
-                      xs={12}
-                      sm={6}
-                      lg={3}
-                      container
-                      direction="column"
-                      justify="center"
-                      alignItems="center"
-                    >
-                      <Text size="4" weight="bold">
-                        Parabéns!! você terminou de responder o baralho
-                      </Text>
-                      <Grid xs={12} sm={8}>
-                        <Spacing mt={1} />
+              {isRevisedDeck &&
+                RenderDeckRevid(
+                  'Parabéns!! você terminou de responder o baralho'
+                )}
 
-                        <Link to="/deck">
-                          <Button
-                            type="button"
-                            radius="25px"
-                            style={{ width: '100%' }}
-                            padding="1rem 2rem"
-                            bgColor="#fe650e"
-                          >
-                            <Text size={1.4} weight="bold">
-                              Voltar para página inicial
-                            </Text>
-                          </Button>
-                        </Link>
+              {!isNextVisibleCard && !isRevisedDeck &&
+                RenderDeckRevid('Nenhum cartão para revisar no momento')}
 
-                        <Spacing mt={1} />
-                        <Button
-                          type="button"
-                          radius="25px"
-                          style={{ width: '100%' }}
-                          padding="1rem 2rem"
-                          bgColor="#fe650e"
-                          onClick={() => {
-                            reviewCards();
-                          }}
-                        >
-                          <Text size={1.4} weight="bold">
-                            Revisar novamente o baralho
-                          </Text>
-                        </Button>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </S.ContainerEndDeck>
-              )}
-
-              {isCardView && (
-                <Grid container xs={12} justify="center" alignItems="center">
-                  <Grid xs={12} sm={6} lg={4}>
-                    <ReactCardFlip
-                      isFlipped={isShow}
-                      flipDirection="horizontal"
-                    >
-                      <S.FlashCard
-                        noFlex
-                        textCenter
-                        paddingBody="3rem"
-                        radius="10"
-                        justifyContent="center"
-                        onClick={showAnswer}
-                      >
-                        <S.TitleCard color="#fe650e" weight="bold">
-                          Frente
-                        </S.TitleCard>
-
-                        <Text size={3} weight="bold">
-                          {card.Front}
-                        </Text>
-                      </S.FlashCard>
-
-                      <S.FlashCard
-                        noFlex
-                        textCenter
-                        paddingBody="3rem"
-                        radius="10"
-                        justifyContent="center"
-                        onClick={showAnswer}
-                      >
-                        <S.TitleCard color="#fe650e" weight="bold">
-                          Verso
-                        </S.TitleCard>
-                        <Text size={3} weight="bold">
-                          {card.Verse}
-                        </Text>
-                      </S.FlashCard>
-                    </ReactCardFlip>
-
-                    <Spacing mb={3} />
-                    {isShow && (
-                      <Grid container xs={12} justify="center" spacing={2}>
-                        <Grid item>
-                          <U.ButtonResponsive
-                            radius="8px"
-                            bgColor={themeContext.backgroundSecondary}
-                            shadow="0px 1px 8px rgba(20, 46, 110, 0.1)"
-                            padding="1rem"
-                            style={{ height: 60, width: 80 }}
-                            onClick={hitCardDifficult}
-                          >
-                            <Text color="#fe650e" weight="bold">
-                              Difícil
-                            </Text>
-                            <Text
-                              size={1.2}
-                              weight="bold"
-                              color={themeContext.textColorSecondary}
-                            >
-                              {card.getTimeHitDifficult()}
-                            </Text>
-                          </U.ButtonResponsive>
-                        </Grid>
-                        <Grid item>
-                          <U.ButtonResponsive
-                            radius="8px"
-                            bgColor={themeContext.backgroundSecondary}
-                            shadow="0px 1px 8px rgba(20, 46, 110, 0.1)"
-                            padding="1rem"
-                            style={{ height: 60, width: 80 }}
-                            onClick={hitCardGood}
-                          >
-                            <Text color="#fe650e" weight="bold">
-                              Bom
-                            </Text>
-
-                            <Text
-                              size={1.2}
-                              weight="bold"
-                              color={themeContext.textColorSecondary}
-                            >
-                              {card.getTimeHitGood()}
-                            </Text>
-                          </U.ButtonResponsive>
-                        </Grid>
-                        <Grid item>
-                          <U.ButtonResponsive
-                            radius="8px"
-                            bgColor={themeContext.backgroundSecondary}
-                            shadow="0px 1px 8px rgba(20, 46, 110, 0.1)"
-                            padding="1rem"
-                            style={{ height: 60, width: 80 }}
-                            onClick={hitCardEasy}
-                          >
-                            <Text color="#fe650e" weight="bold">
-                              Fácil
-                            </Text>
-                            <Text
-                              size={1.2}
-                              weight="bold"
-                              color={themeContext.textColorSecondary}
-                            >
-                              {card.getTimeHitEasy()}
-                            </Text>
-                          </U.ButtonResponsive>
-                        </Grid>
-                      </Grid>
-                    )}
-                  </Grid>
-                </Grid>
-              )}
+              {isNextVisibleCard && RenderCard()}
             </S.CardContainer>
             <Grid />
           </U.ContainerLimit>

@@ -199,4 +199,5 @@ export const Select = styled.select`
 
 export const ButtonNoBorder = styled.button`
   border: none;
+  background: none;
 `;

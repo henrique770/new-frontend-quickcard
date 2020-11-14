@@ -21,7 +21,7 @@ import 'react-toastify/dist/ReactToastify.css';
 const url = 'http://quickcard-io.herokuapp.com/api/v1';
 
 function Profile() {
-  const { user } = useContext(AuthContext);
+  const { user, updateProfile } = useContext(AuthContext);
 
   const themeContext = useContext(ThemeContext);
   const [isShown, setIsShown] = useState(false);
@@ -105,6 +105,8 @@ function Profile() {
         draggable: true,
         progress: undefined,
       });
+
+      updateProfile(_id);
 
       setInitialValues(response.data);
     } catch (err) {

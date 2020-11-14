@@ -117,11 +117,12 @@ function Deck() {
   const fetchData = useCallback(() => {
     setLoading(true);
     setEmpty(false);
-
+    
     repositoryDeckInfo
       .all()
       .then((data) => {
-        setDecks(data);
+        console.log(data)
+        setDecks(data === undefined ? [] : data);
         const hasActive = data.some((item) => item.IsActive === true);
 
         if (hasActive === false) {
@@ -167,7 +168,8 @@ function Deck() {
         setModalOpenDeck(false);
         fetchData();
       })
-      .catch(() => {
+      .catch((err) => {
+        console.log(err)
         swal('Falhou!', 'Falha na criação', 'error');
       });
   }
@@ -333,6 +335,16 @@ function Deck() {
                                 <Grid item>
                                   <Text weight="bold" color="#fe650e">
                                     {item.CountReviewed}
+                                  </Text>
+                                </Grid>
+                              </Grid>
+                              <Grid container spacing={1}>
+                                <Grid item>
+                                  <Text>Disponíveis:</Text>
+                                </Grid>
+                                <Grid item>
+                                  <Text weight="bold" color="#fe650e">
+                                    {item.CardsReviewMoment}
                                   </Text>
                                 </Grid>
                               </Grid>

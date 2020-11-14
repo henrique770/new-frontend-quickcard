@@ -18,6 +18,7 @@ export const CardContainer = styled.div`
   /* height: 70vh; */
   display: flex;
   flex-direction: column;
+  text-align: center;
   justify-content: center;
 
   min-height: calc(100vh - 280px);

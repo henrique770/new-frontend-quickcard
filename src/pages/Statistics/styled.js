@@ -7,7 +7,8 @@ export const DashInfo = styled.div`
   border-radius: 0.8rem;
   margin-bottom: 1rem;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
+  justify-content: flex-start;
 
   ${({ justifyContent }) =>
     justifyContent ? `justify-content: ${justifyContent}` : ``}
